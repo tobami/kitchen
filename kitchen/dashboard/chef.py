@@ -97,7 +97,7 @@ def filter_nodes(env, roles, nodes):
         append = False
         if env and node['chef_environment'] == env:
             append = True
-        elif roles: # and len(set(node['roles']).intersection(roles)) > 0:
+        elif roles: 
             for filter_role in roles:
                 for role in node['roles']:
                     if role.startswith(filter_role):
