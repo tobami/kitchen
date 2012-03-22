@@ -5,7 +5,7 @@ from kitchen.dashboard.chef import get_nodes, get_roles
 
 
 def main(request):
-    nodes = get_nodes()
+    nodes = get_nodes_extended()
     roles = get_roles()
     roles_groups = []
     environments = []
@@ -20,3 +20,4 @@ def main(request):
                                          'roles': roles,
                                          'roles_groups': roles_groups,
                                          'environments': environments}))
+
