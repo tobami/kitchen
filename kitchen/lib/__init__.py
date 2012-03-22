@@ -20,6 +20,7 @@ def _check_kitchen():
 
 
 def build_node_data_bag():
+    """Tell LittleChef to build the node data bag"""
     current_dir = os.getcwd()
     os.chdir(KITCHEN_DIR)
     try:
@@ -31,6 +32,7 @@ def build_node_data_bag():
 
 
 def load_data(data_type):
+    """Load the kitchen's node files"""
     if not _check_kitchen():
         return []
     current_dir = os.getcwd()
