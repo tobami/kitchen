@@ -3,3 +3,4 @@
 celerybeat-schedule
 settings_local.py
 repo
+node_map.png
