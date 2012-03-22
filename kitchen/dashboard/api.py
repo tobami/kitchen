@@ -4,7 +4,7 @@ import json
 from django.core import serializers
 from django.http import HttpResponse
 
-from kitchen.lib import load_data
+from kitchen.dashboard.chef import load_data
 
 
 def get_roles(request):
