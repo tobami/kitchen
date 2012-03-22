@@ -56,7 +56,7 @@
                             Roles
                         </li>
                         {% for group in roles_groups %}
-                        <li>
+                        <li {% if group in filter_roles %} class="active" {% endif %}>
                             <a href="?roles={{group}}">{{group}}</a>
                         </li>
                         {% endfor %}
