@@ -15,6 +15,7 @@ REPO = {
     'USER': "",
     'PASS': "",
     'SYNC_SCHEDULE': 60,  # seconds
+    'KITCHEN_LOCATION': ''
 }
 
 ADMINS = ()
