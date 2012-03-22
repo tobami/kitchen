@@ -89,22 +89,16 @@ def load_extended_node_data():
     return data
 
 
-def filter_nodes(request, nodes):
-    env = request.GET.get('env', '')
-    roles = request.GET.get('roles','')
+def filter_nodes(env, roles, nodes):
     retval = []
-    if not (env or roles):
-        # user hasn't requested filtering
-        return nodes
-    else:
-        if roles:
-            roles = roles.split(',')
-        for node in nodes:
-            if (env and node['chef_environment'] == env) or \
-                (roles and len(set(node['roles']).intersection(roles)) > 0):
-                retval.append(node)
-            else:
-                pass
+    if roles:
+        roles = roles.split(',')
+    for node in nodes:
+        if (env and node['chef_environment'] == env) or \
+            (roles and len(set(node['roles']).intersection(roles)) > 0):
+            retval.append(node)
+        else:
+            pass
     return retval
 
 

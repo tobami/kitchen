@@ -6,7 +6,12 @@ from kitchen.settings import REPO
 
 
 def get_data(request):
-    nodes = filter_nodes(request, get_nodes_extended())
+    filter_env = request.GET.get('env', '')
+    filter_roles = request.GET.get('roles','')
+    if filter_env or filter_roles:
+        nodes = filter_nodes(filter_env, filter_roles, get_nodes_extended())
+    else:
+        nodes = get_nodes_extended()
     roles = get_roles()
     environments = set()
     roles_groups = set()
