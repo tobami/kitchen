@@ -16,7 +16,7 @@ REPO = {
     'URL': "",
     'SYNC_SCHEDULE': 30,  # seconds
     'KITCHEN_LOCATION': '',
-    'ENV_PREFIX': 'envs',
+    'ENV_PREFIX': 'env',
 }
 
 ADMINS = ()

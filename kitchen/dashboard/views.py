@@ -4,6 +4,7 @@ from django.template.loader import render_to_string
 from kitchen.dashboard.chef import get_nodes, get_roles
 from kitchen.settings import REPO
 
+
 def main(request):
     nodes = get_nodes()
     roles = get_roles()
