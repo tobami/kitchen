@@ -1,10 +1,15 @@
 import os
 import json
-import logging
 
 from littlechef import runner, lib, chef
+from logbook import Logger, MonitoringFileHandler
 
-from kitchen.settings import REPO, REPO_BASE_PATH, KITCHEN_DIR
+from kitchen.settings import DEBUG, REPO, REPO_BASE_PATH, KITCHEN_DIR, LOG_FILE
+
+
+file_log_handler = MonitoringFileHandler(LOG_FILE, bubble=DEBUG)
+file_log_handler.push_application()
+log = Logger('kitchen.lib')
 
 
 def _check_kitchen():
@@ -62,7 +67,7 @@ def load_extended_node_data():
     data = []
     for node in nodes:
         filename = os.path.join(data_bag_path,
-                                node['name'].replace(".", "_") + ".json")
+                                node['name'].replace(".s", "_") + ".json")
         if not os.path.exists(filename):
             log.error("Node data bag is missing some node files")
             return [{"error": "Node data bag is missing some node files"}]

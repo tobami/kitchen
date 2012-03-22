@@ -22,6 +22,8 @@ ADMINS = ()
 
 MANAGERS = ADMINS
 
+LOG_FILE = '/tmp/kitchen.log'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
