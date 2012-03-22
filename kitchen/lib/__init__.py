@@ -1,11 +1,11 @@
 import os
 import json
 
-from kitchen.settings import KITCHEN_LOCATION
+from kitchen.settings import REPO
 
 def load_data(data_type):
     retval = []
-    nodes_dir = os.path.join(KITCHEN_LOCATION, data_type)
+    nodes_dir = os.path.join(REPO['KITCHEN_LOCATION'], data_type)
     if not os.path.isdir(nodes_dir):
         raise IOError('Invalid data type or kitchen location. Check your settings.')
     for filename in os.listdir(nodes_dir):
