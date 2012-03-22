@@ -5,6 +5,7 @@ from django.conf.urls.defaults import patterns, include, url
 # admin.autodiscover()
 
 urlpatterns = patterns('',
+    (r'^$', 'kitchen.dashboard.views.main'),
     # Examples:
     # url(r'^$', 'kitchen.views.home', name='home'),
     # url(r'^kitchen/', include('kitchen.foo.urls')),
