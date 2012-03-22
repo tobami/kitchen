@@ -1,4 +1,5 @@
 # Django settings for kitchen project.
+import os
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -27,13 +28,15 @@ DATABASES = {
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = 'Europe/Berlin'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
 
 SITE_ID = 1
+
+BASE_PATH = os.path.abspath(os.path.curdir) + '/'
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
@@ -69,9 +72,7 @@ ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    # Put strings here, like "/home/html/static" or "C:/www/django/static".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
+    #BASE_PATH + 'static',
 )
 
 # List of finder classes that know how to find static files in
@@ -103,9 +104,7 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'kitchen.urls'
 
 TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
+    BASE_PATH + 'templates',
 )
 
 INSTALLED_APPS = (
