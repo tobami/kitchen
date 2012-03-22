@@ -7,6 +7,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Environment</th>
+                    <th>Roles</th>
                     <th>IP Address</th>
                 </tr>
             </thead>
@@ -17,6 +18,9 @@
                     </td>
                     <td>
                         {{ node.chef_environment }}
+                    </td>
+                    <td>
+                        {% for role in node.role %}{{ role }}{% if not forloop.last %}, {% endif %}{% endfor %}
                     </td>
                     <td>
                         {{ node.ipaddress }}
