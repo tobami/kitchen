@@ -15,5 +15,7 @@ def load_data(data_type):
             entry['data'] = json.load(f)
             f.close()
             retval.append(entry)
-    return retval
+    return sort_list_by_data_key(retval, 'chef_environment')
 
+def sort_list_by_data_key(old_list, key):
+    return sorted(old_list, key=lambda k: k['data'][key]) 
