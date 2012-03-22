@@ -4,8 +4,9 @@ from subprocess import Popen, PIPE
 import logging
 
 from celery.task import PeriodicTask
-from kitchen.settings import REPO, REPO_BASE_PATH
 
+from kitchen.settings import REPO, REPO_BASE_PATH
+from kitchen.lib import load_nodes
 
 log = logging.getLogger(__name__)
 
@@ -15,6 +16,7 @@ class SyncRepo(PeriodicTask):
     REPO_ROOT = os.path.join(REPO_BASE_PATH, REPO['NAME'])
 
     def run(self, **kwargs):
+        log.info("Synching repo")
         if os.path.exists(self.REPO_ROOT):
             self._update()
         else:
@@ -24,7 +26,7 @@ class SyncRepo(PeriodicTask):
         """Do a 'git pull'"""
         cmd = ['git', 'pull']
         p = Popen(cmd, stdout=PIPE, stderr=PIPE, cwd=self.REPO_ROOT)
-        log.debug("Updating repo")
+        log.info("Updating repo")
         stdout, stderr = p.communicate()
         if p.returncode != 0:
             log.error("git pull returned {0}: {0}".format(

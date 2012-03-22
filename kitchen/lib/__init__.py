@@ -1,21 +1,57 @@
 import os
 import json
 
-from kitchen.settings import REPO
+from littlechef import runner, lib
 
-def load_data(data_type):
-    retval = []
-    nodes_dir = os.path.join(REPO['KITCHEN_LOCATION'], data_type)
-    if not os.path.isdir(nodes_dir):
-        raise IOError('Invalid data type or kitchen location. Check your settings.')
-    for filename in os.listdir(nodes_dir):
-        if filename.endswith('.json'):
-            entry = {'name': filename[:-5]}
-            f = open(os.path.join(nodes_dir, filename), 'r')
-            entry['data'] = json.load(f)
-            f.close()
-            retval.append(entry)
-    return sort_list_by_data_key(retval, 'chef_environment')
+from kitchen.settings import REPO, REPO_BASE_PATH, KITCHEN_DIR
 
-def sort_list_by_data_key(old_list, key):
-    return sorted(old_list, key=lambda k: k['data'][key]) 
+
+def check_kitchen():
+    current_dir = os.getcwd()
+    os.chdir(KITCHEN_DIR)
+    in_a_kitchen, missing = runner._check_appliances()
+    os.chdir(current_dir)
+    if not in_a_kitchen:
+        missing_str = lambda m: ' and '.join(', '.join(m).rsplit(', ', 1))
+        log.error("Couldn't find {0}. ".format(missing_str(missing)))
+        return False
+    else:
+        return True
+
+
+def load_nodes():
+    if not check_kitchen():
+        return []
+    current_dir = os.getcwd()
+    os.chdir(KITCHEN_DIR)
+    nodes = []
+    try:
+        nodes = lib.get_nodes()
+    except SystemExit as e:
+        log.error(e)
+    finally:
+        os.chdir(current_dir)
+    return nodes
+
+
+def load_roles():
+    if not check_kitchen():
+        return []
+    current_dir = os.getcwd()
+    os.chdir(KITCHEN_DIR)
+    nodes = []
+    try:
+        nodes = lib.get_roles()
+    except SystemExit as e:
+        log.error(e)
+    finally:
+        os.chdir(current_dir)
+    return nodes
+
+
+def get_roles():
+    return load_roles()
+
+
+def get_nodes():
+    return load_nodes()
