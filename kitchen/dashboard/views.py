@@ -2,21 +2,21 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 
 from kitchen.dashboard.chef import get_nodes, get_roles
-
+from kitchen.settings import REPO
 
 def main(request):
     nodes = get_nodes()
     roles = get_roles()
-    roles_groups = []
-    environments = []
+    environments = set()
+    roles_groups = set()
     for role in roles:
         split = role['name'].split('_')
-        if split[0] == 'env':
-            environments.append('_'.join(split[1:]))
-        elif split[0] not in roles_groups:
-            roles_groups.append(split[0])
+        if split[0] == REPO['ENV_PREFIX']:
+            environments.add('_'.join(split[1:]))
+        else:
+            roles_groups.add(split[0])
     return HttpResponse(render_to_string('main.html',
                                         {'nodes': nodes,
                                          'roles': roles,
-                                         'roles_groups': roles_groups,
-                                         'environments': environments}))
+                                         'roles_groups': sorted(roles_groups),
+                                         'environments': sorted(environments)}))
