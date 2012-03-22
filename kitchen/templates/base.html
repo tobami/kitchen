@@ -53,24 +53,17 @@
                         <li class="nav-header">
                             Environment
                         </li>
+                        {% for env in environments %}
                         <li>
-                            <a href="#">Kindergarten</a>
+                            <a href="#">{{env}}</a>
                         </li>
-                        <li>
-                            <a href="#">Staging</a>
-                        </li>
-                        <li>
-                            <a href="#">Testing</a>
-                        </li>
-                        <li>
-                            <a href="#">Production</a>
-                        </li>
+                        {% endfor %}
                         <li class="nav-header">
                             Roles
                         </li>
-                        {% for role in roles %}
+                        {% for group in roles_groups %}
                         <li>
-                            <a href="#{{role.name}}" title="{{role.description}}">{{role.name}}</a>
+                            <a href="#{{group}}">{{group}}</a>
                         </li>
                         {% endfor %}
                     </ul>
