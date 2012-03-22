@@ -5,5 +5,17 @@ from kitchen.lib import get_nodes, get_roles
 
 
 def main(request):
-    return HttpResponse(render_to_string('main.html', {'nodes': get_nodes(),
-                                                       'roles': get_roles()}))
+    nodes = get_nodes()
+    roles = get_roles()
+    roles_groups = []
+    environments = []
+    for role in roles:
+        split = role['name'].split('_')
+        if split[0] == 'env':
+            environments.append('_'.join(split[1:]))
+        elif split[0] not in roles_groups:
+            roles_groups.append(split[0])
+    return HttpResponse(render_to_string('main.html', {'nodes': nodes,
+                                                       'roles': roles,
+                                                       'roles_groups': roles_groups,
+                                                       'environments': environments}))
