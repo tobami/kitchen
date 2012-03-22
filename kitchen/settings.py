@@ -17,11 +17,16 @@ DATABASES = {
     }
 }
 
-BROKER_HOST = "localhost"
-BROKER_PORT = 5672
-BROKER_USER = "guest"
-BROKER_PASSWORD = "guest"
-BROKER_VHOST = "/"
+BROKER_URL = "django://"
+
+#CELERY_RESULT_BACKEND = "database"
+#CELERY_RESULT_DBURI = "sqlite:///celerydb.sqlite"
+
+#BROKER_HOST = "localhost"
+#BROKER_PORT = 5672
+#BROKER_USER = "guest"
+#BROKER_PASSWORD = "guest"
+#BROKER_VHOST = "/"
 
 MEDIA_ROOT = ''
 MEDIA_URL = ''
@@ -66,6 +71,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "djcelery",
+    "djkombu",
 )
 
 LOGGING = {

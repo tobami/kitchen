@@ -9,10 +9,10 @@ Data is taken from a Chef repository's node data bag
 
 ## Installation
 
-We will need sqlite, python 2.6+, Django 1.3+ and django-celery
+We will need sqlite, python 2.6+, Django 1.3+, django-celery and django-kombu
 
 `apt-get install sqlite3`
-`pip install django django-celery`
+`pip install django django-celery django-kombu`
 
 Then create the necessary celery tables
 
