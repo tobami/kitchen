@@ -37,7 +37,7 @@ def build_node_data_bag():
         os.chdir(current_dir)
 
 
-def load_data(data_type):
+def _load_data(data_type):
     """Load the kitchen's node files"""
     if not _check_kitchen():
         return []
@@ -63,7 +63,7 @@ def load_extended_node_data():
         log.error("Node data bag has not yet been built")
         return [{"error": "Node data bag has not yet been built"}]
 
-    nodes = load_data("nodes")
+    nodes = _load_data("nodes")
     data = []
     for node in nodes:
         filename = os.path.join(data_bag_path,
@@ -88,6 +88,7 @@ def load_extended_node_data():
         return [{"error": error}]
     return data
 
+
 def filter_nodes(request, nodes):
     env = request.GET.get('env', '')
     roles = request.GET.get('roles','')
@@ -106,13 +107,14 @@ def filter_nodes(request, nodes):
                 pass
     return retval
 
+
 def get_nodes_extended():
     return load_extended_node_data()
 
 
 def get_nodes():
-    return load_data("nodes")
+    return _load_data("nodes")
 
 
 def get_roles():
-    return load_data("roles")
+    return _load_data("roles")

@@ -5,7 +5,7 @@ from kitchen.dashboard.chef import get_nodes_extended, get_roles, filter_nodes
 from kitchen.settings import REPO
 
 
-def main(request):
+def get_data(request):
     nodes = filter_nodes(request, get_nodes_extended())
     roles = get_roles()
     environments = set()
@@ -16,7 +16,21 @@ def main(request):
             environments.add('_'.join(split[1:]))
         else:
             roles_groups.add(split[0])
+    return nodes, roles, roles_groups, environments
+
+
+def main(request):
+    nodes, roles, roles_groups, environments = get_data(request)
     return HttpResponse(render_to_string('main.html',
+                                        {'nodes': nodes,
+                                         'roles': roles,
+                                         'roles_groups': sorted(roles_groups),
+                                         'environments': sorted(environments)}))
+
+
+def graph(request):
+    nodes, roles, roles_groups, environments = get_data(request)
+    return HttpResponse(render_to_string('graph.html',
                                         {'nodes': nodes,
                                          'roles': roles,
                                          'roles_groups': sorted(roles_groups),
