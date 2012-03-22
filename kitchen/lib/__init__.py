@@ -1,24 +1,43 @@
 import os
 import json
 
+from littlechef import runner, lib
+
 from kitchen.settings import REPO, REPO_BASE_PATH, KITCHEN_DIR
 
 
-def load_data(data_type):
-    retval = []
-    data_dir = os.path.join(KITCHEN_DIR, data_type)
-    if not os.path.isdir(data_dir):
-        raise IOError(
-            'Invalid data type or kitchen location. Check your settings.')
-    for filename in os.listdir(data_dir):
-        if filename.endswith('.json'):
-            entry = {'name': filename[:-5]}
-            f = open(os.path.join(data_dir, filename), 'r')
-            entry['data'] = json.load(f)
-            f.close()
-            retval.append(entry)
-    return sort_list_by_data_key(retval, 'chef_environment')
+def check_kitchen():
+    current_dir = os.getcwd()
+    os.chdir(KITCHEN_DIR)
+    in_a_kitchen, missing = runner._check_appliances()
+    os.chdir(current_dir)
+    if not in_a_kitchen:
+        missing_str = lambda m: ' and '.join(', '.join(m).rsplit(', ', 1))
+        return False, "Couldn't find {0}. ".format(missing_str(missing))
+    else:
+        return True, None
 
 
-def sort_list_by_data_key(old_list, key):
-    return sorted(old_list, key=lambda k: k['data'][key]) 
+def load_nodes():
+    current_dir = os.getcwd()
+    os.chdir(KITCHEN_DIR)
+    nodes = False
+    try:
+        nodes = lib.get_nodes()
+    except SystemExit:
+        pass
+    finally:
+        os.chdir(current_dir)
+    return nodes
+
+
+def get_nodes():
+    in_a_kitchen, msg = check_kitchen()
+    if not in_a_kitchen:
+        return False, msg
+
+    nodes = load_nodes()
+    if not nodes:
+        return False, "A node file is not valid JSON"
+    else:
+        return True, nodes
