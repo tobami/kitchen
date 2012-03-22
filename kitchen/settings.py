@@ -34,7 +34,7 @@ BROKER_URL = "django://"
 
 MEDIA_ROOT = ''
 MEDIA_URL = ''
-STATIC_ROOT = ''
+STATIC_ROOT = BASE_PATH + 'dashboard/static'
 STATIC_URL = '/static/'
 
 # Additional locations of static files
