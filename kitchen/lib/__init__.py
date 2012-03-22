@@ -1,12 +1,12 @@
 import os
 import json
 
-from littlechef import runner, lib
+from littlechef import runner, lib, chef
 
 from kitchen.settings import REPO, REPO_BASE_PATH, KITCHEN_DIR
 
 
-def check_kitchen():
+def _check_kitchen():
     current_dir = os.getcwd()
     os.chdir(KITCHEN_DIR)
     in_a_kitchen, missing = runner._check_appliances()
@@ -19,8 +19,19 @@ def check_kitchen():
         return True
 
 
+def build_node_data_bag():
+    current_dir = os.getcwd()
+    os.chdir(KITCHEN_DIR)
+    try:
+        chef._build_node_data_bag()
+    except SystemExit as e:
+        log.error(e)
+    finally:
+        os.chdir(current_dir)
+
+
 def load_data(data_type):
-    if not check_kitchen():
+    if not _check_kitchen():
         return []
     current_dir = os.getcwd()
     os.chdir(KITCHEN_DIR)
