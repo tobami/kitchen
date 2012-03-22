@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block bodymain %}
+    <table>
+        {% for node in nodes %}
+            <tr>
+                <td>
+                    {{ node.name }}
+                </td>
+                <td>
+                    {{ node.data.chef_environment }}
+                </td>
+                <td>
+                    {{ node.data.ipaddress }}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
