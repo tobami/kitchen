@@ -1,5 +1,6 @@
 import os
 import json
+import logging
 
 from littlechef import runner, lib, chef
 
@@ -48,6 +49,40 @@ def load_data(data_type):
     finally:
         os.chdir(current_dir)
     return nodes
+
+
+def load_extended_node_data():
+    """Load JSON node files from node databag, which has merged attributes"""
+    data_bag_path = os.path.join(KITCHEN_DIR, "data_bags", "node")
+    if not os.path.exists(data_bag_path):
+        log.error("Node data bag has not yet been built")
+        return [{"error": "Node data bag has not yet been built"}]
+
+    nodes = load_data("nodes")
+    data = []
+    for node in nodes:
+        filename = os.path.join(data_bag_path,
+                                node['name'].replace(".", "_") + ".json")
+        if not os.path.exists(filename):
+            log.error("Node data bag is missing some node files")
+            return [{"error": "Node data bag is missing some node files"}]
+        with open(filename, 'r') as f:
+            try:
+                data.append(json.loads(f.read()))
+            except json.JSONDecodeError as e:
+                msg = 'LittleChef found the following error in'
+                msg += ' "{0}":\n                {1}'.format(node_path, str(e))
+    if len(data) != len(nodes):
+        error = "The node data bag doesn't have the same number of nodes as "
+        error += "there are node files: {0} => {1}".format(
+            len(data), len(nodes))
+        log.error(error)
+        return [{"error": error}]
+    return data
+
+
+def get_nodes_extended():
+    return load_extended_node_data()
 
 
 def get_nodes():
