@@ -13,14 +13,17 @@ def get_data(request):
     else:
         nodes = get_nodes_extended()
     roles = get_roles()
-    environments = set()
+    environments = []
     roles_groups = set()
     for role in roles:
         split = role['name'].split('_')
         if split[0] == REPO['ENV_PREFIX']:
-            environments.add('_'.join(split[1:]))
+            name = '_'.join(split[1:])
+            environments.append({'name': name, 
+                                 'count': len([node for node in nodes if node['chef_environment'] == name])})
         else:
             roles_groups.add(split[0])
+    print environments
     return nodes, roles, roles_groups, environments, filter_env
 
 
