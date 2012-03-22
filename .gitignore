@@ -1,3 +1,5 @@
 *.pyc
 *.sql
 celerybeat-schedule
+settings_local.py
+repo

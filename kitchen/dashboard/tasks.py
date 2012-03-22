@@ -1,10 +1,43 @@
-from celery.task import PeriodicTask
+import os
 from datetime import timedelta, datetime
-from settings import REPO_SYNC_SCHEDULE
+from subprocess import Popen, PIPE
+import logging
+
+from celery.task import PeriodicTask
+from kitchen.settings import REPO, REPO_BASE_PATH
+
+
+log = logging.getLogger(__name__)
 
 
 class SyncRepo(PeriodicTask):
-    run_every = timedelta(seconds=REPO_SYNC_SCHEDULE)
+    run_every = timedelta(seconds=REPO['SYNC_SCHEDULE'])
+    REPO_ROOT = os.path.join(REPO_BASE_PATH, REPO['NAME'])
 
     def run(self, **kwargs):
-        print "I am here! ({0})".format(str(datetime.now()))
+        if os.path.exists(self.REPO_ROOT):
+            self._update()
+        else:
+            self._clone()
+
+    def _update(self):
+        """Do a 'git pull'"""
+        cmd = ['git', 'pull']
+        p = Popen(cmd, stdout=PIPE, stderr=PIPE, cwd=self.REPO_ROOT)
+        log.debug("Updating repo")
+        stdout, stderr = p.communicate()
+        if p.returncode != 0:
+            log.error("git pull returned {0}: {0}".format(
+                      p.returncode, stderr))
+
+    def _clone(self):
+        """Clone a git repository"""
+        if not os.path.exists(REPO_BASE_PATH):
+            os.makedirs(REPO_BASE_PATH)
+        cmd = ['git', 'clone', '--depth', '1', REPO['URL'], REPO['NAME']]
+        p = Popen(cmd, stdout=PIPE, stderr=PIPE, cwd=REPO_BASE_PATH)
+        log.info('Cloning Git repo {0}'.format(REPO['URL']))
+        stdout, stderr = p.communicate()
+        if p.returncode != 0:
+            log.error("{0} returned {1}: {2}".format(
+                      " ".join(cmd), p.returncode, stderr))

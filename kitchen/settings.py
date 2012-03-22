@@ -1,12 +1,21 @@
 # Django settings for the Kitchen project.
-import djcelery
+import os
 
+import djcelery
 djcelery.setup_loader()
+
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-REPO_SYNC_SCHEDULE = 20  # seconds
+REPO_BASE_PATH = os.path.join(os.path.dirname(__file__), "repo")
+REPO = {
+    'NAME': "",
+    'URL': "",
+    'USER': "",
+    'PASS': "",
+    'SYNC_SCHEDULE': 10,  # seconds
+}
 
 ADMINS = ()
 
@@ -86,3 +95,8 @@ LOGGING = {
         },
     }
 }
+
+try:
+    from settings_local import *
+except:
+    pass
