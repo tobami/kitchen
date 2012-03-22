@@ -15,7 +15,7 @@ REPO = {
     'NAME': "",
     'URL': "",
     'SYNC_SCHEDULE': 30,  # seconds
-    'KITCHEN_LOCATION': '',
+    'KITCHEN_DIR': '',
     'ENV_PREFIX': 'env',
 }
 
@@ -109,4 +109,4 @@ except:
 
 # Needs to be last in case settings_local overwrites REPO
 KITCHEN_DIR = os.path.join(
-    REPO_BASE_PATH, REPO['NAME'], REPO['KITCHEN_LOCATION'])
+    REPO_BASE_PATH, REPO['NAME'], REPO['KITCHEN_DIR'])
