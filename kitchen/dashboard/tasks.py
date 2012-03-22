@@ -6,7 +6,7 @@ import logging
 from celery.task import PeriodicTask
 
 from kitchen.settings import REPO, REPO_BASE_PATH
-from kitchen.lib import get_nodes, build_node_data_bag
+from kitchen.dashboard import chef
 
 log = logging.getLogger(__name__)
 
@@ -32,7 +32,7 @@ class SyncRepo(PeriodicTask):
             log.error("git pull returned {0}: {0}".format(
                       p.returncode, stderr))
         else:
-            build_node_data_bag()
+            chef.build_node_data_bag()
 
     def _clone(self):
         """Clone a git repository"""
