@@ -6,6 +6,8 @@ djcelery.setup_loader()
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+REPO_SYNC_SCHEDULE = 10  # seconds
+
 ADMINS = ()
 
 MANAGERS = ADMINS
@@ -17,16 +19,8 @@ DATABASES = {
     }
 }
 
+# Celery broker url
 BROKER_URL = "django://"
-
-#CELERY_RESULT_BACKEND = "database"
-#CELERY_RESULT_DBURI = "sqlite:///celerydb.sqlite"
-
-#BROKER_HOST = "localhost"
-#BROKER_PORT = 5672
-#BROKER_USER = "guest"
-#BROKER_PASSWORD = "guest"
-#BROKER_VHOST = "/"
 
 MEDIA_ROOT = ''
 MEDIA_URL = ''
@@ -72,6 +66,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     "djcelery",
     "djkombu",
+    "dashboard"
 )
 
 LOGGING = {
