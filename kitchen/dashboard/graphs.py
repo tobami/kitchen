@@ -9,7 +9,8 @@ def generate_node_map(nodes):
     graph = pydot.Dot(graph_type='digraph')
     graph_nodes = {}
     for node in nodes:
-        label = node['name'] + "/" + "/".join([role for role in node['role']])
+        label = node['name'] + "\n" + "\n".join(
+            [role for role in node['role'] if not role.startswith("env")])
         node_el = pydot.Node(label, style="filled", fillcolor="red")
         graph_nodes[node['name']] = node_el
         graph.add_node(node_el)
