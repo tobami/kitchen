@@ -13,7 +13,7 @@ def get_data(request):
     else:
         nodes = get_nodes_extended()
     roles = get_roles()
-    environments = []
+    environments = [] # an 'implicit' set, as environments must be uniquely named
     roles_groups = set()
     for role in roles:
         split = role['name'].split('_')
@@ -23,7 +23,6 @@ def get_data(request):
                                  'count': len([node for node in nodes if node['chef_environment'] == name])})
         else:
             roles_groups.add(split[0])
-    print environments
     return nodes, roles, roles_groups, environments, filter_env
 
 
