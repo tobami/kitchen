@@ -14,7 +14,7 @@ REPO = {
     'URL': "",
     'USER': "",
     'PASS': "",
-    'SYNC_SCHEDULE': 10,  # seconds
+    'SYNC_SCHEDULE': 60,  # seconds
 }
 
 ADMINS = ()
