@@ -8,7 +8,7 @@ from kitchen.dashboard.chef import load_data
 
 
 def get_roles(request):
-    roles = load_data('data')
+    roles = load_data('roles')
     return HttpResponse(json.dumps(roles), content_type="application/json")
 
 def get_nodes(request):
