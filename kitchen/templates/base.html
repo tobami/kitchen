@@ -33,7 +33,11 @@
           </div>
         </div>
         {% endblock %}
-        {% block bodymain %}{% endblock %}
+        {% block bodymain %}
+        <div class="container">
+            {% block bodycontent %}{% endblock %}
+        </div>
+        {% endblock %}
         {% block bodytail %}{% endblock %}
     </body>
 </html>
