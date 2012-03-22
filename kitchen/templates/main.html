@@ -2,28 +2,28 @@
 
 {% block bodycontent %}
     {% if nodes %}
-    <table class='table'>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Environment</th>
-                <th>IP Address</th>
-            </tr>
-        </thead>
-        {% for node in nodes %}
-            <tr>
-                <td>
-                    {{ node.name }}
-                </td>
-                <td>
-                    {{ node.chef_environment }}
-                </td>
-                <td>
-                    {{ node.ipaddress }}
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
+        <table class='table'>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Environment</th>
+                    <th>IP Address</th>
+                </tr>
+            </thead>
+            {% for node in nodes %}
+                <tr>
+                    <td>
+                        {{ node.name }}
+                    </td>
+                    <td>
+                        {{ node.chef_environment }}
+                    </td>
+                    <td>
+                        {{ node.ipaddress }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
     {% else %}
         <h3>There are no nodes that fit the supplied criteria.</h3>
     {% endif %}
