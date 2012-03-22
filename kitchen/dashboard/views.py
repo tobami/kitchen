@@ -8,10 +8,7 @@ from kitchen.settings import REPO
 def get_data(request):
     filter_env = request.GET.get('env', '')
     filter_roles = request.GET.get('roles','')
-    if filter_env or filter_roles:
-        nodes = filter_nodes(filter_env, filter_roles, get_nodes_extended())
-    else:
-        nodes = get_nodes_extended()
+    nodes = get_nodes_extended()
     roles = get_roles()
     environments = [] # an 'implicit' set, as environments must be uniquely named
     roles_groups = set()
@@ -23,6 +20,8 @@ def get_data(request):
                                  'count': len([node for node in nodes if node['chef_environment'] == name])})
         else:
             roles_groups.add(split[0])
+    if filter_env or filter_roles:
+        nodes = filter_nodes(filter_env, filter_roles, get_nodes_extended())
     return nodes, roles, roles_groups, environments, filter_env
 
 
