@@ -67,16 +67,19 @@ def load_extended_node_data():
     data = []
     for node in nodes:
         filename = os.path.join(data_bag_path,
-                                node['name'].replace(".s", "_") + ".json")
+                                node['name'].replace(".", "_") + ".json")
         if not os.path.exists(filename):
-            log.error("Node data bag is missing {0}".format(filename))
-            return [{"error": "Node data bag is missing some node files"}]
+            error = "Node data bag is missing {0}".format(filename)
+            log.error(error)
+            return [{"error": error}]
         with open(filename, 'r') as f:
             try:
                 data.append(json.loads(f.read()))
             except json.JSONDecodeError as e:
-                msg = 'LittleChef found the following error in'
-                msg += ' "{0}":\n                {1}'.format(node_path, str(e))
+                error = 'LittleChef found the following error in'
+                error += ' "{0}":\n                {1}'.format(node_path, str(e))
+                log.error(error)
+                return [{"error": error}]
     if len(data) != len(nodes):
         error = "The node data bag doesn't have the same number of nodes as "
         error += "there are node files: {0} => {1}".format(
