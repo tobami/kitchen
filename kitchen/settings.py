@@ -143,3 +143,5 @@ LOGGING = {
         },
     }
 }
+
+KITCHEN_LOCATION = '/home/aengus/workspace/devops/config_management'
