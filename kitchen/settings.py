@@ -80,7 +80,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     "djcelery",
     "djkombu",
-    "dashboard"
+    "kitchen.dashboard"
 )
 
 LOGGING = {
