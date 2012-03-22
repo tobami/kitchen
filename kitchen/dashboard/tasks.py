@@ -4,8 +4,9 @@ from subprocess import Popen, PIPE
 import logging
 
 from celery.task import PeriodicTask
-from kitchen.settings import REPO, REPO_BASE_PATH
 
+from kitchen.settings import REPO, REPO_BASE_PATH
+from kitchen.lib import load_nodes
 
 log = logging.getLogger(__name__)
 
