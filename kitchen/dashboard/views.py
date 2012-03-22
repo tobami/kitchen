@@ -1,11 +1,11 @@
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 
-from kitchen.dashboard.chef import get_nodes, get_roles
+from kitchen.dashboard.chef import get_nodes_extended, get_roles, filter_nodes
 
 
 def main(request):
-    nodes = get_nodes_extended()
+    nodes = filter_nodes(request, get_nodes_extended())
     roles = get_roles()
     roles_groups = []
     environments = []
