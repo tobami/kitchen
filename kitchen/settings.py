@@ -7,15 +7,15 @@ djcelery.setup_loader()
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
-BASE_PATH = os.path.abspath(os.path.curdir) + '/'
-REPO_BASE_PATH = os.path.join(os.path.dirname(__file__), "repo")
+
+BASE_PATH = os.path.abspath(os.path.dirname(__file__))
+
+REPO_BASE_PATH = os.path.join(BASE_PATH, "repo")
 REPO = {
     'NAME': "",
     'URL': "",
-    'USER': "",
-    'PASS': "",
-    'SYNC_SCHEDULE': 60,  # seconds
-    'KITCHEN_LOCATION': ''
+    'SYNC_SCHEDULE': 30,  # seconds
+    'KITCHEN_LOCATION': '',
 }
 
 ADMINS = ()
@@ -66,7 +66,7 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'kitchen.urls'
 
 TEMPLATE_DIRS = (
-    BASE_PATH + 'templates',
+    BASE_PATH + '/templates',
 )
 
 INSTALLED_APPS = (
@@ -103,3 +103,7 @@ try:
     from settings_local import *
 except:
     pass
+
+# Needs to be last in case settings_local overwrites REPO
+KITCHEN_DIR = os.path.join(
+    REPO_BASE_PATH, REPO['NAME'], REPO['KITCHEN_LOCATION'])
