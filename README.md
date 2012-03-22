@@ -16,10 +16,12 @@ We will need:
 * Django 1.3+
 * django-celery and django-kombu
 * Littlechef
+* graphviz
+* pydot for graphviz graphs
 
 `apt-get install sqlite3`
 
-`pip install django django-celery django-kombu`
+`pip install django django-celery django-kombu pydot`
 
 `pip install littlechef`
 

@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 
 from kitchen.dashboard.chef import get_nodes_extended, get_roles, filter_nodes
+from kitchen.dashboard import graphs
 from kitchen.settings import REPO
 
 
@@ -30,6 +31,7 @@ def main(request):
 
 def graph(request):
     nodes, roles, roles_groups, environments = get_data(request)
+    graphs.generate_node_map(nodes)
     return HttpResponse(render_to_string('graph.html',
                                         {'nodes': nodes,
                                          'roles': roles,
