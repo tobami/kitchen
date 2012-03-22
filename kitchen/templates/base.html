@@ -65,6 +65,14 @@
                         <li>
                             <a href="#">Production</a>
                         </li>
+                        <li class="nav-header">
+                            Roles
+                        </li>
+                        {% for role in roles %}
+                        <li>
+                            <a href="#{{role.name}}" title="{{role.description}}">{{role.name}}</a>
+                        </li>
+                        {% endfor %}
                     </ul>
                 </div>
                 <div class="span10">
