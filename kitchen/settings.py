@@ -6,7 +6,7 @@ djcelery.setup_loader()
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-REPO_SYNC_SCHEDULE = 10  # seconds
+REPO_SYNC_SCHEDULE = 20  # seconds
 
 ADMINS = ()
 
