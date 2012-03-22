@@ -1,7 +1,7 @@
 import os
 
 import pydot
-from kitchen.settings import STATIC_ROOT
+from kitchen.settings import STATIC_ROOT, REPO
 
 
 def generate_node_map(nodes):
@@ -10,7 +10,8 @@ def generate_node_map(nodes):
     graph_nodes = {}
     for node in nodes:
         label = node['name'] + "\n" + "\n".join(
-            [role for role in node['role'] if not role.startswith("env")])
+            [role for role in node['role'] \
+                if not role.startswith(REPO['ENV_PREFIX'])])
         node_el = pydot.Node(label, style="filled", fillcolor="red")
         graph_nodes[node['name']] = node_el
         graph.add_node(node_el)
