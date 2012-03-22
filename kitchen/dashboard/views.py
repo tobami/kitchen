@@ -7,7 +7,12 @@ from kitchen.settings import REPO
 
 
 def get_data(request):
-    nodes = filter_nodes(request, get_nodes_extended())
+    filter_env = request.GET.get('env', '')
+    filter_roles = request.GET.get('roles','')
+    if filter_env or filter_roles:
+        nodes = filter_nodes(filter_env, filter_roles, get_nodes_extended())
+    else:
+        nodes = get_nodes_extended()
     roles = get_roles()
     environments = set()
     roles_groups = set()
@@ -17,23 +22,25 @@ def get_data(request):
             environments.add('_'.join(split[1:]))
         else:
             roles_groups.add(split[0])
-    return nodes, roles, roles_groups, environments
+    return nodes, roles, roles_groups, environments, filter_env
 
 
 def main(request):
-    nodes, roles, roles_groups, environments = get_data(request)
+    nodes, roles, roles_groups, environments, filter_env = get_data(request)
     return HttpResponse(render_to_string('main.html',
                                         {'nodes': nodes,
                                          'roles': roles,
                                          'roles_groups': sorted(roles_groups),
-                                         'environments': sorted(environments)}))
+                                         'environments': sorted(environments),
+                                         'filter_env': filter_env}))
 
 
 def graph(request):
-    nodes, roles, roles_groups, environments = get_data(request)
+    nodes, roles, roles_groups, environments, filter_env = get_data(request)
     graphs.generate_node_map(nodes)
     return HttpResponse(render_to_string('graph.html',
                                         {'nodes': nodes,
                                          'roles': roles,
                                          'roles_groups': sorted(roles_groups),
-                                         'environments': sorted(environments)}))
+                                         'environments': sorted(environments),
+                                         'filter_env': filter_env}))
