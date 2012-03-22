@@ -19,39 +19,27 @@ def check_kitchen():
         return True
 
 
-def load_nodes():
+def load_data(data_type):
     if not check_kitchen():
         return []
     current_dir = os.getcwd()
     os.chdir(KITCHEN_DIR)
     nodes = []
+    if data_type not in ["nodes", "roles"]:
+        log.error("Unsupported data type '{0}'".format(data_type))
+        return nodes
     try:
-        nodes = lib.get_nodes()
+        nodes = getattr(lib, "get_" + data_type)()
     except SystemExit as e:
         log.error(e)
     finally:
         os.chdir(current_dir)
     return nodes
-
-
-def load_roles():
-    if not check_kitchen():
-        return []
-    current_dir = os.getcwd()
-    os.chdir(KITCHEN_DIR)
-    nodes = []
-    try:
-        nodes = lib.get_roles()
-    except SystemExit as e:
-        log.error(e)
-    finally:
-        os.chdir(current_dir)
-    return nodes
-
-
-def get_roles():
-    return load_roles()
 
 
 def get_nodes():
-    return load_nodes()
+    return load_data("nodes")
+
+
+def get_roles():
+    return load_data("roles")
