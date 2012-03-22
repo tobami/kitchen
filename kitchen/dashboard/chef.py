@@ -100,8 +100,7 @@ def filter_nodes(request, nodes):
             roles = roles.split(',')
         for node in nodes:
             if (env and node['chef_environment'] == env) or \
-                (roles and len(set(node['roles']).intersection(roles)) == 0):
-                print 'roles is %s' % roles
+                (roles and len(set(node['roles']).intersection(roles)) > 0):
                 retval.append(node)
             else:
                 pass
