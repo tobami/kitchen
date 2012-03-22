@@ -47,7 +47,7 @@
                             Environments
                         </li>
                         {% for env in environments %}
-                        <li {% if env == filter_env %} class="active" {% endif %}>
+                        <li {% if env.name == filter_env %} class="active" {% endif %}>
                             <a href="/?env={{env.name}}"><span class="badge">{{env.count}}</span> {{env.name}}</a>
                             
                         </li>
