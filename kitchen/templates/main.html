@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block bodycontent %}
+    {% if nodes %}
     <table class='table'>
         <thead>
             <tr>
@@ -23,4 +24,7 @@
             </tr>
         {% endfor %}
     </table>
+    {% else %}
+        <h3>There are no nodes that fit the supplied criteria.</h3>
+    {% endif %}
 {% endblock %}
