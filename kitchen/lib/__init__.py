@@ -69,7 +69,7 @@ def load_extended_node_data():
         filename = os.path.join(data_bag_path,
                                 node['name'].replace(".s", "_") + ".json")
         if not os.path.exists(filename):
-            log.error("Node data bag is missing some node files")
+            log.error("Node data bag is missing {0}".format(filename))
             return [{"error": "Node data bag is missing some node files"}]
         with open(filename, 'r') as f:
             try:
