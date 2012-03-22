@@ -21,22 +21,24 @@ def get_data(request):
             environments.add('_'.join(split[1:]))
         else:
             roles_groups.add(split[0])
-    return nodes, roles, roles_groups, environments
+    return nodes, roles, roles_groups, environments, filter_env
 
 
 def main(request):
-    nodes, roles, roles_groups, environments = get_data(request)
+    nodes, roles, roles_groups, environments, filter_env = get_data(request)
     return HttpResponse(render_to_string('main.html',
                                         {'nodes': nodes,
                                          'roles': roles,
                                          'roles_groups': sorted(roles_groups),
-                                         'environments': sorted(environments)}))
+                                         'environments': sorted(environments),
+                                         'filter_env': filter_env}))
 
 
 def graph(request):
-    nodes, roles, roles_groups, environments = get_data(request)
+    nodes, roles, roles_groups, environments, filter_env = get_data(request)
     return HttpResponse(render_to_string('graph.html',
                                         {'nodes': nodes,
                                          'roles': roles,
                                          'roles_groups': sorted(roles_groups),
-                                         'environments': sorted(environments)}))
+                                         'environments': sorted(environments),
+                                         'filter_env': filter_env}))

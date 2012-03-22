@@ -47,7 +47,7 @@
                             Environments
                         </li>
                         {% for env in environments %}
-                        <li>
+                        <li {% if env == filter_env %} class="active" {% endif %}>
                             <a href="/?env={{env}}">{{env}}</a>
                         </li>
                         {% endfor %}
