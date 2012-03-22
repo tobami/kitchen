@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 
-from kitchen.lib import get_nodes, get_roles
+from kitchen.dashboard.chef import get_nodes, get_roles
 
 
 def main(request):
@@ -15,7 +15,8 @@ def main(request):
             environments.append('_'.join(split[1:]))
         elif split[0] not in roles_groups:
             roles_groups.append(split[0])
-    return HttpResponse(render_to_string('main.html', {'nodes': nodes,
-                                                       'roles': roles,
-                                                       'roles_groups': roles_groups,
-                                                       'environments': environments}))
+    return HttpResponse(render_to_string('main.html',
+                                        {'nodes': nodes,
+                                         'roles': roles,
+                                         'roles_groups': roles_groups,
+                                         'environments': environments}))
