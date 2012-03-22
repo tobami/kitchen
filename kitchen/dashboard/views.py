@@ -23,25 +23,27 @@ def get_data(request):
             roles_groups.add(split[0])
     if filter_env or filter_roles:
         nodes = filter_nodes(filter_env, filter_roles, get_nodes_extended())
-    return nodes, roles, roles_groups, environments, filter_env
+    return nodes, roles, roles_groups, environments, filter_env, filter_roles
 
 
 def main(request):
-    nodes, roles, roles_groups, environments, filter_env = get_data(request)
+    nodes, roles, roles_groups, environments, filter_env, filter_roles = get_data(request)
     return HttpResponse(render_to_string('main.html',
                                         {'nodes': nodes,
                                          'roles': roles,
                                          'roles_groups': sorted(roles_groups),
                                          'environments': sorted(environments),
-                                         'filter_env': filter_env}))
+                                         'filter_env': filter_env,
+                                         'filter_roles': filter_roles}))
 
 
 def graph(request):
-    nodes, roles, roles_groups, environments, filter_env = get_data(request)
+    nodes, roles, roles_groups, environments, filter_env, filter_roles = get_data(request)
     graphs.generate_node_map(nodes)
     return HttpResponse(render_to_string('graph.html',
                                         {'nodes': nodes,
                                          'roles': roles,
                                          'roles_groups': sorted(roles_groups),
                                          'environments': sorted(environments),
-                                         'filter_env': filter_env}))
+                                         'filter_env': filter_env,
+                                         'filter_roles': filter_roles}))

@@ -48,7 +48,7 @@
                         </li>
                         {% for env in environments %}
                         <li {% if env.name == filter_env %} class="active" {% endif %}>
-                            <a href="/?env={{env.name}}"><span class="badge">{{env.count}}</span> {{env.name}}</a>
+                            <a href="?env={{env.name}}"><span class="badge">{{env.count}}</span> {{env.name}}</a>
                             
                         </li>
                         {% endfor %}
@@ -56,8 +56,8 @@
                             Roles
                         </li>
                         {% for group in roles_groups %}
-                        <li>
-                            <a href="#{{group}}">{{group}}</a>
+                        <li {% if group in filter_roles %} class="active" {% endif %}>
+                            <a href="?roles={{group}}">{{group}}</a>
                         </li>
                         {% endfor %}
                     </ul>

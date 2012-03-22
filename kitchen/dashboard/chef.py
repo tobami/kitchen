@@ -94,11 +94,17 @@ def filter_nodes(env, roles, nodes):
     if roles:
         roles = roles.split(',')
     for node in nodes:
-        if (env and node['chef_environment'] == env) or \
-            (roles and len(set(node['roles']).intersection(roles)) > 0):
+        append = False
+        if env and node['chef_environment'] == env:
+            append = True
+        elif roles: # and len(set(node['roles']).intersection(roles)) > 0:
+            for filter_role in roles:
+                for role in node['roles']:
+                    if role.startswith(filter_role):
+                        append = True
+                        break
+        if append:
             retval.append(node)
-        else:
-            pass
     return retval
 
 
