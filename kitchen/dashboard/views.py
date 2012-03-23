@@ -38,7 +38,12 @@ def main(request):
 
 
 def graph(request):
-    nodes, roles, roles_groups, environments, filter_env, filter_roles = get_data(request)
+    nodes, roles, roles_groups, environments, filter_env, filter_roles = \
+        get_data(request)
+    msg = ""
+    if not request.GET.get('env'):
+        nodes = []
+        msg = "Please select an environment"
     graphs.generate_node_map(nodes)
     return HttpResponse(render_to_string('graph.html',
                                         {'nodes': nodes,
@@ -46,4 +51,6 @@ def graph(request):
                                          'roles_groups': sorted(roles_groups),
                                          'environments': sorted(environments),
                                          'filter_env': filter_env,
-                                         'filter_roles': filter_roles}))
+                                         'filter_roles': filter_roles,
+                                         'msg': msg,
+                                         }))

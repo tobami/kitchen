@@ -10,3 +10,6 @@ body {
 .brand img {
     margin: -10px 12px;
 }
+.badge {
+    float: right;
+}
