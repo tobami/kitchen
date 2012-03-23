@@ -1,5 +1,5 @@
 {% extends "base.html" %}
 
 {% block bodycontent %}
-<img src="/static/img/node_map.png">
+{% if msg %}{{ msg }}{% else %}<img src="/static/img/node_map.png">{% endif %}
 {% endblock %}

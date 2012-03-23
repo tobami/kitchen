@@ -31,7 +31,6 @@
                 <ul class="nav">
                   <li class="active"><a href="#">List</a></li>
                   <li><a href="/graph/">Graph</a></li>
-                  <li><a href="#xen">Xen</a></li>
                 </ul>
               </div><!--/.nav-collapse -->
             </div>
@@ -44,12 +43,11 @@
                 <div class="span2">
                     <ul class="nav nav-list">
                         <li class="nav-header">
-                            Environments
+                            Environment
                         </li>
                         {% for env in environments %}
                         <li {% if env.name == filter_env %} class="active" {% endif %}>
                             <a href="?env={{env.name}}"><span class="badge badge-warning">{{env.count}}</span> {{env.name}}</a>
-                            
                         </li>
                         {% endfor %}
                         <li class="nav-header">
