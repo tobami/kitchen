@@ -17,13 +17,13 @@
                         {{ node.name }}
                     </td>
                     <td>
+                        {{ node.ipaddress }}
+                    </td>
+                    <td>
                         {{ node.chef_environment }}
                     </td>
                     <td>
                         {% for role in node.role %}{{ role }}{% if not forloop.last %}, {% endif %}{% endfor %}
-                    </td>
-                    <td>
-                        {{ node.ipaddress }}
                     </td>
                 </tr>
             {% endfor %}
