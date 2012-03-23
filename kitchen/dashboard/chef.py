@@ -99,15 +99,18 @@ def filter_nodes(env, roles, virt_roles, nodes):
         append = True
         if env and node['chef_environment'] != env:
             append = False
-        elif roles:
+        if roles:
             if not set.intersection(set(roles),
                     set([role.split("_")[0] for role in node['roles']])):
                 append = False
-        elif virt_roles:
-            if not node.get('virtualization', {}).get('role') in virt_roles:
-                append = False
-            elif not ('guest' in virt_roles and (
-                    not node.get('virtualization', {}).get('role'))):
+        if virt_roles:
+            # Exclude node in two cases:
+            #   * the virtualization role is not in the desired virt_roles
+            #   * the virtualization role is node defined for the node AND
+            #     'guest' is a desired virt_role
+            if not node.get('virtualization', {}).get('role') in virt_roles \
+                    and not ('guest' in virt_roles and
+                             not node.get('virtualization', {}).get('role')):
                 append = False
         if append:
             retval.append(node)
