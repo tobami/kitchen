@@ -100,11 +100,9 @@ def filter_nodes(env, roles, virt_roles, nodes):
         if env and node['chef_environment'] == env:
             append = True
         elif roles:
-            for filter_role in roles:
-                for role in node['roles']:
-                    if role.startswith(filter_role):
-                        append = True
-                        break
+            if set.intersection(set(roles),
+                    set([role.split("_")[0] for role in node['roles']])):
+                append = True
         elif virt_roles:
             if node.get('virtualization', {}).get('role') in virt_roles:
                 append = True
