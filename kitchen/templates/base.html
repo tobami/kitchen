@@ -9,11 +9,15 @@
             <link rel="stylesheet" href="/static/css/base.css">
             <link rel="stylesheet" href="/static/css/bootstrap.css">
         {% endblock %}
+        {% block headjs %}
+        <script type="text/javascript" src="/static/js/jquery-1.7.2.js"></script>
+        <script type="text/javascript" src="/static/js/sidebar.js"></script>
+        {% endblock %}
         {% block extrastyles %}{% endblock %}
         {% block extrahead %}{% endblock %}
         <title>{% block title %}Kitchen{% endblock %}</title>
     </head>
-    <body>
+    <body onload="setupClickHandlers();">
         {% block bodyhead %}
         <div class="navbar navbar-fixed-top">
           <div class="navbar-inner">
@@ -49,7 +53,7 @@
                         </li>
                         {% for env in environments %}
                         <li {% if env.name == filter_env %} class="active" {% endif %}>
-                            <a href="?env={{env.name}}">{{env.name}} <span class="badge badge-warning">{{env.count}}</span></a>
+                            <a href="#" data-type="env" data-name="{{env.name}}" class="sidebar_link">{{env.name}} <span class="badge badge-warning">{{env.count}}</span></a>
                         </li>
                         {% endfor %}
                         <li class="nav-header">
@@ -57,7 +61,7 @@
                         </li>
                         {% for group in roles_groups %}
                         <li {% if group in filter_roles %} class="active" {% endif %}>
-                            <a href="?roles={{ group }}">{{ group }}</a>
+                            <a href="#" data-type="roles" data-name="{{group}}" class="sidebar_link">{{group}}</a>
                         </li>
                         {% endfor %}
                         {% if show_virt %}
