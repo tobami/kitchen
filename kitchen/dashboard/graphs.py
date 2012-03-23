@@ -13,7 +13,10 @@ def generate_node_map(nodes):
         label = node['name'] + "\n" + "\n".join(
             [role for role in node['role'] \
                 if not role.startswith(REPO['ENV_PREFIX'])])
-        node_el = pydot.Node(label, style="filled", fillcolor="red")
+        node_el = pydot.Node(label,
+                             style="filled",
+                             fillcolor="lightyellow",
+                             fontsize="8")
         graph_nodes[node['name']] = node_el
         graph.add_node(node_el)
     # Create links
