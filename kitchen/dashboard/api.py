@@ -11,6 +11,7 @@ def get_roles(request):
     roles = chef.get_roles()
     return HttpResponse(json.dumps(roles), content_type="application/json")
 
+
 def get_nodes(request):
     extended = request.GET.get('extended')
     if extended:
