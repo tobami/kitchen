@@ -8,9 +8,9 @@ from kitchen.settings import REPO, SHOW_VIRT_VIEW
 
 def get_data(request):
     data = {
-        'filter_env': request.GET.get('env', ''),
+        'filter_env': request.GET.get('env', REPO['DEFAULT_ENV']),
         'filter_roles': request.GET.get('roles', ''),
-        'filter_virt': request.GET.get('virt', ''),
+        'filter_virt': request.GET.get('virt', REPO['DEFAULT_VIRT']),
     }
     nodes = get_nodes_extended()
     roles = get_roles()

@@ -17,6 +17,8 @@ REPO = {
     'SYNC_SCHEDULE': 30,  # seconds
     'KITCHEN_DIR': '',
     'ENV_PREFIX': 'env',
+    'DEFAULT_ENV': 'production',
+    'DEFAULT_VIRT': 'guest',
 }
 SHOW_VIRT_VIEW = True
 
