@@ -7,6 +7,15 @@ body {
     padding: 9px 0;
 }
 
+.sidebar_link {
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+}
+
+.sidebar_link .badge {
+    padding: 0px 7px;
+}
+
 .brand img {
     margin: -10px 12px;
 }
