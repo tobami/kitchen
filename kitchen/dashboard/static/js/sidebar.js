@@ -44,6 +44,6 @@ function setupClickHandlers() {
         for (var param in parameters) {
             url += param + '=' + parameters[param] + '&';
         }
-        window.location = url;
+        window.location = url.slice(0, -1); // remove trailing '&'
     });
 }
