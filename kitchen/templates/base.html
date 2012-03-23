@@ -64,6 +64,15 @@
                             <a href="#" data-type="roles" data-name="{{group}}" class="sidebar_link">{{group}}</a>
                         </li>
                         {% endfor %}
+                        {% if show_virt %}
+                        <li class="nav-header">
+                            Virtualization
+                        </li>
+                        {% for virt_role in virt_roles %}
+                        <li {% if virt_role in filter_virt %} class="active" {% endif %}>
+                            <a href="?virt={{ virt_role }}">{{ virt_role }}</a>
+                        </li>
+                        {% endfor %}{% endif %}
                     </ul>
                 </div>
                 <div class="span10">
