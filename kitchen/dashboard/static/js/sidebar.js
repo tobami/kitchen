@@ -12,6 +12,7 @@ function setupClickHandlers() {
             active_buttons = $.fn.add.call(active_buttons, this);
         }
         var changed_environment = false;
+        var changed_virt_environment = false;
         // add already selected buttons to the params
         for (var i=0; i < active_buttons.length; i++) {
             var datatype = active_buttons[i].dataset['type'];
@@ -21,6 +22,13 @@ function setupClickHandlers() {
                     parameters[datatype] = dataname;
                     changed_environment = true;
                 } else if (!changed_environment) {
+                    parameters[datatype] = dataname;
+                }
+            } else if (datatype === 'virt') {
+                if (active_buttons[i] === this) {
+                    parameters[datatype] = dataname;
+                    changed_virt_environment = true;
+                } else if (!changed_virt_environment) {
                     parameters[datatype] = dataname;
                 }
             } else {

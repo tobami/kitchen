@@ -70,7 +70,7 @@
                         </li>
                         {% for virt_role in virt_roles %}
                         <li {% if virt_role in filter_virt %} class="active" {% endif %}>
-                            <a href="?virt={{ virt_role }}">{{ virt_role }}</a>
+                            <a href="#" data-type="virt" data-name="{{virt_role}}" class="sidebar_link">{{ virt_role }}</a>
                         </li>
                         {% endfor %}{% endif %}
                     </ul>
