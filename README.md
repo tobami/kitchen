@@ -14,12 +14,13 @@ We will need:
 * sqlite (or another celery broker)
 * python 2.6+
 * Django 1.3+
-* django-celery and django-kombu
+* django-celery
+* django-kombu *or* RabbitMQ
 * Littlechef
 * graphviz
 * pydot for graphviz graphs
 
-`apt-get install sqlite3`
+`apt-get install sqlite3 graphviz`
 
 `pip install django django-celery django-kombu pydot`
 
@@ -33,7 +34,7 @@ Then create the necessary celery tables
 
 To see the web interface on localhost:8000:
 
-`python manager.py runserver`
+`python manage.py runserver`
 
 To start the celerybeat job scheduler
 
