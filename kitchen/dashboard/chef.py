@@ -89,20 +89,28 @@ def load_extended_node_data():
     return data
 
 
-def filter_nodes(env, roles, nodes):
+def filter_nodes(env, roles, virt_roles, nodes):
     retval = []
     if roles:
         roles = roles.split(',')
+    if virt_roles:
+        virt_roles = virt_roles.split(',')
     for node in nodes:
         append = False
         if env and node['chef_environment'] == env:
             append = True
-        elif roles: 
+        elif roles:
             for filter_role in roles:
                 for role in node['roles']:
                     if role.startswith(filter_role):
                         append = True
                         break
+        elif virt_roles:
+            if node.get('virtualization', {}).get('role') in virt_roles:
+                append = True
+            elif 'guest' in virt_roles and (
+                    not node.get('virtualization', {}).get('role')):
+                append = True
         if append:
             retval.append(node)
     return retval

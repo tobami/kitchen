@@ -18,6 +18,7 @@ REPO = {
     'KITCHEN_DIR': '',
     'ENV_PREFIX': 'env',
 }
+SHOW_VIRT_VIEW = True
 
 ADMINS = ()
 

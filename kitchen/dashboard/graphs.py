@@ -10,8 +10,7 @@ def generate_node_map(nodes):
     graph_nodes = {}
     # Create nodes
     for node in nodes:
-        virt = node.get('virtualization')
-        if virt and virt.get('role') == "host":
+        if node.get('virtualization', {}).get('role') == "host":
             # Don't include Hosts in the graph
             continue
         label = node['name'] + "\n" + "\n".join(
