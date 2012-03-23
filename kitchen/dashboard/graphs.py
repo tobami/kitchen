@@ -10,10 +10,15 @@ def generate_node_map(nodes):
     graph_nodes = {}
     # Create nodes
     for node in nodes:
+        if "xen_host" in node['role']:
+            continue
         label = node['name'] + "\n" + "\n".join(
             [role for role in node['role'] \
                 if not role.startswith(REPO['ENV_PREFIX'])])
-        node_el = pydot.Node(label, style="filled", fillcolor="red")
+        node_el = pydot.Node(label,
+                             style="filled",
+                             fillcolor="lightyellow",
+                             fontsize="8")
         graph_nodes[node['name']] = node_el
         graph.add_node(node_el)
     # Create links
@@ -24,7 +29,8 @@ def generate_node_map(nodes):
                     if set.intersection(set(node[attr]['client_roles']),
                                         set(client_node['roles'])):
                         edge = pydot.Edge(graph_nodes[client_node['name']],
-                                          graph_nodes[node['name']])
+                                          graph_nodes[node['name']],
+                                          fontsize="8")
                         edge.set_label(attr)
                         graph.add_edge(edge)
     # Generate graph
