@@ -96,19 +96,19 @@ def filter_nodes(env, roles, virt_roles, nodes):
     if virt_roles:
         virt_roles = virt_roles.split(',')
     for node in nodes:
-        append = False
-        if env and node['chef_environment'] == env:
-            append = True
+        append = True
+        if env and node['chef_environment'] != env:
+            append = False
         elif roles:
-            if set.intersection(set(roles),
+            if not set.intersection(set(roles),
                     set([role.split("_")[0] for role in node['roles']])):
-                append = True
+                append = False
         elif virt_roles:
-            if node.get('virtualization', {}).get('role') in virt_roles:
-                append = True
-            elif 'guest' in virt_roles and (
-                    not node.get('virtualization', {}).get('role')):
-                append = True
+            if not node.get('virtualization', {}).get('role') in virt_roles:
+                append = False
+            elif not ('guest' in virt_roles and (
+                    not node.get('virtualization', {}).get('role'))):
+                append = False
         if append:
             retval.append(node)
     return retval
