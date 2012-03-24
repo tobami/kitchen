@@ -19,7 +19,7 @@ We will need:
 * Logbook
 * Littlechef
 * graphviz
-* pydot for graphviz graphs
+* pydot 1.0.25+ (for graphviz graphs)
 
 `apt-get install sqlite3 graphviz`
 
