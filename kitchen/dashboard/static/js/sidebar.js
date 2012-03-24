@@ -44,8 +44,8 @@ function setupClickHandlers() {
         // to prevent server-side defaults from setting them
         var datatypesWithDefaults = ['env', 'virt'];
         for (var datatype in datatypesWithDefaults) {
-            if (!(datatypes[datatype] in parameters)) {
-                parameters[datatypes[datatype]] = "";
+            if (!(datatypesWithDefaults[datatype] in parameters)) {
+                parameters[datatypesWithDefaults[datatype]] = "";
             }
         }
         
