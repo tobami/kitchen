@@ -16,13 +16,14 @@ We will need:
 * Django 1.3+
 * django-celery
 * django-kombu *or* RabbitMQ
+* Logbook
 * Littlechef
 * graphviz
-* pydot for graphviz graphs
+* pydot 1.0.25+ (for graphviz graphs)
 
 `apt-get install sqlite3 graphviz`
 
-`pip install django django-celery django-kombu pydot`
+`pip install django django-celery django-kombu logbook pydot`
 
 `pip install littlechef`
 

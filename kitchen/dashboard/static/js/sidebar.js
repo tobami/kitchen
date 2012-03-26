@@ -2,7 +2,7 @@ function setupClickHandlers() {
     /**
      * Assign click handlers to all sidebar entries.
      */
-    $('.sidebar_link').click(function() { 
+    $('.sidebar_link').click(function() {
         var parameters = {};
         var active_buttons = $('.active .sidebar_link');
         if (active_buttons.index(this) > -1) {
@@ -39,11 +39,22 @@ function setupClickHandlers() {
                 }
             }
         }
+
+        // If there are no env or virt selections set parameter to an empty string
+        // to prevent server-side defaults from setting them
+        var datatypesWithDefaults = ['env', 'virt'];
+        for (var datatype in datatypesWithDefaults) {
+            if (!(datatypesWithDefaults[datatype] in parameters)) {
+                parameters[datatypesWithDefaults[datatype]] = "";
+            }
+        }
         
+        // Build url parameters
         var url = '?';
         for (var param in parameters) {
             url += param + '=' + parameters[param] + '&';
         }
-        window.location = url.slice(0, -1); // remove trailing '&'
+        // Remove trailing '&' and redirect to new url
+        window.location = url.slice(0, -1);
     });
 }
