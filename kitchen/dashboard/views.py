@@ -6,12 +6,8 @@ from kitchen.dashboard import graphs
 from kitchen.settings import REPO, SHOW_VIRT_VIEW
 
 
-def get_data(request):
-    data = {
-        'filter_env': request.GET.get('env', REPO['DEFAULT_ENV']),
-        'filter_roles': request.GET.get('roles', ''),
-        'filter_virt': request.GET.get('virt', REPO['DEFAULT_VIRT']),
-    }
+def get_data(env, roles, virt):
+    data = {'filter_env': env, 'filter_roles': roles, 'filter_virt': virt}
     nodes = get_nodes_extended()
     roles = get_roles()
     environments = []  # an 'implicit' set, as envs must be uniquely named
@@ -37,7 +33,9 @@ def get_data(request):
 
 
 def main(request):
-    data = get_data(request)
+    data = get_data(request.GET.get('env', REPO['DEFAULT_ENV']),
+                    request.GET.get('roles', ''),
+                    request.GET.get('virt', REPO['DEFAULT_VIRT']))
     return HttpResponse(
         render_to_string('main.html',
                         {'nodes': data['nodes'],
@@ -52,7 +50,9 @@ def main(request):
 
 
 def graph(request):
-    data = get_data(request)
+    data = get_data(request.GET.get('env', REPO['DEFAULT_ENV']),
+                    request.GET.get('roles', ''),
+                    'guest')
     msg = ""
     if not request.GET.get('env'):
         data['nodes'] = []
