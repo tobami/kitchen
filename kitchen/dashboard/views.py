@@ -67,4 +67,5 @@ def graph(request):
                         'filter_env': data['filter_env'],
                         'filter_roles': data['filter_roles'],
                         'msg': msg,
+                        'show_virt': False,
                         }))

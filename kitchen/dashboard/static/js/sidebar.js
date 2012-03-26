@@ -42,13 +42,15 @@ function setupClickHandlers() {
 
         // If there are no env or virt selections set parameter to an empty string
         // to prevent server-side defaults from setting them
-        var datatypesWithDefaults = ['env', 'virt'];
-        for (var datatype in datatypesWithDefaults) {
-            if (!(datatypesWithDefaults[datatype] in parameters)) {
-                parameters[datatypesWithDefaults[datatype]] = "";
+        var datatypes = ['env', 'roles'];
+        if ( show_virt ) { datatypes.push('virt'); }
+        console.log(datatypes);
+        for (var datatype in datatypes) {
+            if (!(datatypes[datatype] in parameters)) {
+                parameters[datatypes[datatype]] = "";
             }
         }
-        
+
         // Build url parameters
         var url = '?';
         for (var param in parameters) {
