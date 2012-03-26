@@ -39,14 +39,14 @@ def main(request):
     return HttpResponse(
         render_to_string('main.html',
                          {'nodes': data['nodes'],
-                         'roles': data['roles'],
-                         'roles_groups': sorted(data['roles_groups']),
-                         'environments': sorted(data['environments']),
-                         'virt_roles': data['virt_roles'],
-                         'filter_env': data['filter_env'],
-                         'filter_roles': data['filter_roles'],
-                         'filter_virt': data['filter_virt'],
-                         'show_virt': SHOW_VIRT_VIEW}))
+                          'roles': data['roles'],
+                          'roles_groups': sorted(data['roles_groups']),
+                          'environments': sorted(data['environments']),
+                          'virt_roles': data['virt_roles'],
+                          'filter_env': data['filter_env'],
+                          'filter_roles': data['filter_roles'],
+                          'filter_virt': data['filter_virt'],
+                          'show_virt': SHOW_VIRT_VIEW}))
 
 
 def graph(request):
@@ -61,11 +61,11 @@ def graph(request):
     return HttpResponse(
         render_to_string('graph.html',
                          {'nodes': data['nodes'],
-                         'roles': data['roles'],
-                         'roles_groups': sorted(data['roles_groups']),
-                         'environments': sorted(data['environments']),
-                         'filter_env': data['filter_env'],
-                         'filter_roles': data['filter_roles'],
-                         'msg': msg,
-                         'show_virt': False,
+                          'roles': data['roles'],
+                          'roles_groups': sorted(data['roles_groups']),
+                          'environments': sorted(data['environments']),
+                          'filter_env': data['filter_env'],
+                          'filter_roles': data['filter_roles'],
+                          'msg': msg,
+                          'show_virt': False,
                          }))
