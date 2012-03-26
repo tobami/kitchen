@@ -106,7 +106,7 @@ def filter_nodes(env, roles, virt_roles, nodes):
         if virt_roles:
             # Exclude node in two cases:
             #   * the virtualization role is not in the desired virt_roles
-            #   * the virtualization role is node defined for the node AND
+            #   * the virtualization role is not defined for the node AND
             #     'guest' is a desired virt_role
             if not node.get('virtualization', {}).get('role') in virt_roles \
                     and not ('guest' in virt_roles and

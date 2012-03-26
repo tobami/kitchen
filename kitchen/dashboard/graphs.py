@@ -10,9 +10,6 @@ def generate_node_map(nodes):
     graph_nodes = {}
     # Create nodes
     for node in nodes:
-        if node.get('virtualization', {}).get('role') == "host":
-            # Don't include Hosts in the graph
-            continue
         label = node['name'] + "\n" + "\n".join(
             [role for role in node['role'] \
                 if not role.startswith(REPO['ENV_PREFIX'])])
@@ -31,7 +28,7 @@ def generate_node_map(nodes):
                                         set(client_node['roles'])):
                         edge = pydot.Edge(graph_nodes[client_node['name']],
                                           graph_nodes[node['name']],
-                                          fontsize="8")
+                                          fontsize="7")
                         edge.set_label(attr)
                         graph.add_edge(edge)
     # Generate graph
