@@ -43,26 +43,27 @@ def main(request):
                          request.GET.get('virt', REPO['DEFAULT_VIRT']))
     except RepoError as e:
         messages.add_message(request, messages.ERROR, str(e))
+    else:
+        if not len(data['nodes']):
+            messages.add_message(request, messages.ERROR,
+                "There are no nodes that fit the supplied criteria.")
     data['show_virt'] = SHOW_VIRT_VIEW
     return render_to_response('main.html',
-                              data,
-                              context_instance=RequestContext(request))
+                              data, context_instance=RequestContext(request))
 
 
 def graph(request):
     data = {}
+    env_filter = request.GET.get('env', REPO['DEFAULT_ENV'])
     try:
-        data = _get_data(request.GET.get('env', REPO['DEFAULT_ENV']),
-                         request.GET.get('roles', ''),
-                         'guest')
+        data = _get_data(env_filter, request.GET.get('roles', ''), 'guest')
     except RepoError as e:
         messages.add_message(request, messages.ERROR, str(e))
-    msg = ""
-    if not request.GET.get('env'):
+
+    if not env_filter:
         data['nodes'] = []
         messages.add_message(request,
                              messages.INFO, "Please select an environment")
     graphs.generate_node_map(data['nodes'])
     return render_to_response('graph.html',
-                              data,
-                              context_instance=RequestContext(request))
+                              data, context_instance=RequestContext(request))
