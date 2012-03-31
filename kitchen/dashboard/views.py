@@ -26,8 +26,8 @@ def _get_data(env, roles, virt):
     data['virt_roles'] = ['host', 'guest']
     # Filter nodes
     if data['filter_env'] or data['filter_roles'] or data['filter_virt']:
-        nodes = filter_nodes(data['filter_env'], data['filter_roles'],
-                             data['filter_virt'], nodes)
+        nodes = filter_nodes(nodes,
+                data['filter_env'], data['filter_roles'], data['filter_virt'])
     data['nodes'] = nodes
     data['roles'] = roles
     data['roles_groups'] = sorted(roles_groups)

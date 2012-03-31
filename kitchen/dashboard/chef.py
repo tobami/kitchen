@@ -42,7 +42,6 @@ def _build_node_data_bag():
     """Tells LittleChef to build the node data bag"""
     current_dir = os.getcwd()
     os.chdir(KITCHEN_DIR)
-    print KITCHEN_DIR
     try:
         lib.get_recipes()  # This builds metadata.json for all recipes
         chef._build_node_data_bag()
@@ -50,6 +49,7 @@ def _build_node_data_bag():
         log.error(e)
     finally:
         os.chdir(current_dir)
+    return True
 
 
 def _load_data(data_type):
@@ -98,7 +98,7 @@ def load_extended_node_data():
     return data
 
 
-def filter_nodes(env, roles, virt_roles, nodes):
+def filter_nodes(nodes, env='', roles='', virt_roles=''):
     """Returns nodes which fulfill env, roles and virt_roles criteria"""
     retval = []
     if roles:
@@ -107,7 +107,7 @@ def filter_nodes(env, roles, virt_roles, nodes):
         virt_roles = virt_roles.split(',')
     for node in nodes:
         append = True
-        if env and node['chef_environment'] != env:
+        if env and node.get('chef_environment', '') != env:
             append = False
         if roles:
             if not set.intersection(set(roles),
@@ -118,9 +118,9 @@ def filter_nodes(env, roles, virt_roles, nodes):
             #   * the virtualization role is not in the desired virt_roles
             #   * the virtualization role is not defined for the node AND
             #     'guest' is a desired virt_role
-            if not node.get('virtualization', {}).get('role') in virt_roles \
-                    and not ('guest' in virt_roles and
-                             not node.get('virtualization', {}).get('role')):
+            virt_role = node.get('virtualization', {}).get('role')
+            if not virt_role in virt_roles and \
+                    not ('guest' in virt_roles and not virt_role):
                 append = False
         if append:
             retval.append(node)

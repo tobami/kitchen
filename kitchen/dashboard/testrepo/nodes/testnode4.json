@@ -1,0 +1,7 @@
+{
+    "chef_environment": "staging",
+    "virtualization": {"role": "guest"},
+    "run_list": [
+        "role[webserver]"
+    ]
+}

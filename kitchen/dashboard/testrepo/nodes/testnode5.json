@@ -1,0 +1,7 @@
+{
+    "chef_environment": "staging",
+    "virtualization": {"role": "host"},
+    "run_list": [
+        "role[dbserver]"
+    ]
+}

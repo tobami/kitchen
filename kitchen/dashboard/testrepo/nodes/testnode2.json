@@ -1,5 +1,5 @@
 {
-    "chef_environment": "staging",
+    "chef_environment": "production",
     "run_list": [
         "role[webserver]"
     ]
