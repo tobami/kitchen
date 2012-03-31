@@ -4,7 +4,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 from kitchen.dashboard.chef import (get_nodes_extended, get_roles,
-    filter_nodes, RepoError)
+    get_environments, filter_nodes, RepoError)
 from kitchen.dashboard import graphs
 from kitchen.settings import REPO, SHOW_VIRT_VIEW
 
@@ -12,26 +12,21 @@ from kitchen.settings import REPO, SHOW_VIRT_VIEW
 def _get_data(env, roles, virt):
     data = {'filter_env': env, 'filter_roles': roles, 'filter_virt': virt}
     nodes = get_nodes_extended()
-    roles = get_roles()
+    data['roles'] = get_roles()
     environments = []  # an 'implicit' set, as envs must be uniquely named
     roles_groups = set()
-    for role in roles:
+    for role in data['roles']:
         split = role['name'].split('_')
-        if split[0] == REPO['ENV_PREFIX']:
-            name = '_'.join(split[1:])
-            environments.append({'name': name, 'count': len(
-                [node for node in nodes if node['chef_environment'] == name])})
-        else:
+        if split[0] != REPO['EXCLUDE_ROLE_PREFIX']:
             roles_groups.add(split[0])
     data['virt_roles'] = ['host', 'guest']
-    # Filter nodes
+    # Get environments before we filter nodes
+    data['environments'] = get_environments(nodes)
     if data['filter_env'] or data['filter_roles'] or data['filter_virt']:
         nodes = filter_nodes(nodes,
-                data['filter_env'], data['filter_roles'], data['filter_virt'])
+            data['filter_env'], data['filter_roles'], data['filter_virt'])
     data['nodes'] = nodes
-    data['roles'] = roles
     data['roles_groups'] = sorted(roles_groups)
-    data['environments'] = sorted(environments)
     return data
 
 

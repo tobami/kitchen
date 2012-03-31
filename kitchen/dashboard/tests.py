@@ -38,10 +38,12 @@ class TestData(TestCase):
 
     def test_get_environments(self):
         """Should return a list of all chef_environment values found"""
-        data = chef._get_environments(self.nodes)
+        data = chef.get_environments(self.nodes)
         self.assertEqual(len(data), 3)
-        self.assertEqual(data, ['', u'production', u'staging'])
-
+        expected = [{'counts': 1, 'name': 'none'},
+                    {'counts': 3, 'name': u'production'},
+                    {'counts': 2, 'name': u'staging'}]
+        self.assertEqual(data, expected)
 
     def test_filter_nodes_all(self):
         """Should return all nodes when empty filters are are given"""
@@ -91,7 +93,9 @@ class TestData(TestCase):
     def test_filter_nodes_bomined(self):
         """Should filter nodes acording to their virt value"""
         data = chef.filter_nodes(self.nodes,
-            env='production', roles='loadbalancer,webserver', virt_roles='guest')
+                                 env='production',
+                                 roles='loadbalancer,webserver',
+                                 virt_roles='guest')
         self.assertEqual(len(data), 2)
 
         data = chef.filter_nodes(self.nodes,

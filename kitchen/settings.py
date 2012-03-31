@@ -16,8 +16,8 @@ REPO = {
     'NAME': "testrepo",
     'URL': "",
     'SYNC_SCHEDULE': 60,  # seconds
-    'KITCHEN_DIR': '',
-    'ENV_PREFIX': 'env',
+    'KITCHEN_SUBDIR': '',
+    'EXCLUDE_ROLE_PREFIX': 'env',
     'DEFAULT_ENV': 'production',
     'DEFAULT_VIRT': 'guest',
 }

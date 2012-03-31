@@ -11,7 +11,8 @@ file_log_handler = MonitoringFileHandler(LOG_FILE, bubble=DEBUG)
 file_log_handler.push_application()
 log = Logger('kitchen.lib')
 
-KITCHEN_DIR = os.path.join(REPO_BASE_PATH, REPO['NAME'], REPO['KITCHEN_DIR'])
+KITCHEN_DIR = os.path.join(
+    REPO_BASE_PATH, REPO['NAME'], REPO['KITCHEN_SUBDIR'])
 DATA_BAG_PATH = os.path.join(KITCHEN_DIR, "data_bags", "node")
 
 
@@ -52,12 +53,16 @@ def _build_node_data_bag():
     return True
 
 
-def _get_environments(nodes):
+def get_environments(nodes):
     """Returns an environments set out of chef_environment values found"""
     envs = set()
+    counts = {}
     for node in nodes:
-        envs.add(node.get('chef_environment', ''))
-    return sorted(envs)
+        env = node.get('chef_environment', 'none')
+        envs.add(env)
+        counts.setdefault(env, 0)
+        counts[env] += 1
+    return [{'name': env, 'counts': counts[env]} for env in sorted(envs)]
 
 
 def _load_data(data_type):
@@ -115,7 +120,7 @@ def filter_nodes(nodes, env='', roles='', virt_roles=''):
         virt_roles = virt_roles.split(',')
     for node in nodes:
         append = True
-        if env and node.get('chef_environment', '') != env:
+        if env and node.get('chef_environment', 'none') != env:
             append = False
         if roles:
             if not set.intersection(set(roles),
