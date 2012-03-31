@@ -12,19 +12,27 @@ file_log_handler.push_application()
 log = Logger('kitchen.lib')
 
 KITCHEN_DIR = os.path.join(REPO_BASE_PATH, REPO['NAME'], REPO['KITCHEN_DIR'])
+DATA_BAG_PATH = os.path.join(KITCHEN_DIR, "data_bags", "node")
+
+
+class RepoError(Exception):
+    pass
 
 
 def _check_kitchen():
+    if not os.path.exists(KITCHEN_DIR):
+        raise RepoError("Repo dir doesn't exist at '{0}'".format(KITCHEN_DIR))
+
     current_dir = os.getcwd()
     os.chdir(KITCHEN_DIR)
     in_a_kitchen, missing = runner._check_appliances()
     os.chdir(current_dir)
+
     if not in_a_kitchen:
         missing_str = lambda m: ' and '.join(', '.join(m).rsplit(', ', 1))
-        log.error("Couldn't find {0}. ".format(missing_str(missing)))
-        return False
-    else:
-        return True
+        raise RepoError("Couldn't find {0}. ".format(missing_str(missing)))
+    elif not os.path.exists(DATA_BAG_PATH):
+        raise RepoError("Node data bag has not yet been built")
 
 
 def build_node_data_bag():
@@ -41,34 +49,29 @@ def build_node_data_bag():
 
 def _load_data(data_type):
     """Load the kitchen's node files"""
-    if not _check_kitchen():
-        return []
+    _check_kitchen()
     current_dir = os.getcwd()
     os.chdir(KITCHEN_DIR)
-    nodes = []
+    data = []
     if data_type not in ["nodes", "roles"]:
         log.error("Unsupported data type '{0}'".format(data_type))
-        return nodes
+        return data
     try:
-        nodes = getattr(lib, "get_" + data_type)()
+        data = getattr(lib, "get_" + data_type)()
     except SystemExit as e:
         log.error(e)
     finally:
         os.chdir(current_dir)
-    return nodes
+    return data
 
 
 def load_extended_node_data():
     """Load JSON node files from node databag, which has merged attributes"""
-    data_bag_path = os.path.join(KITCHEN_DIR, "data_bags", "node")
-    if not os.path.exists(data_bag_path):
-        log.error("Node data bag has not yet been built")
-        return [{"error": "Node data bag has not yet been built"}]
-
     nodes = _load_data("nodes")
     data = []
     for node in nodes:
-        filename = os.path.join(data_bag_path,
+        # Read corresponding data bag item for each node
+        filename = os.path.join(DATA_BAG_PATH,
                                 node['name'].replace(".", "_") + ".json")
         if not os.path.exists(filename):
             error = "Node data bag is missing {0}".format(filename)
@@ -99,6 +102,7 @@ def filter_nodes(env, roles, virt_roles, nodes):
         virt_roles = virt_roles.split(',')
     for node in nodes:
         append = True
+        print node
         if env and node['chef_environment'] != env:
             append = False
         if roles:

@@ -1,7 +1,10 @@
 from django.http import HttpResponse
-from django.template.loader import render_to_string
+from django.contrib import messages
+from django.shortcuts import render_to_response
+from django.template import RequestContext
 
-from kitchen.dashboard.chef import get_nodes_extended, get_roles, filter_nodes
+from kitchen.dashboard.chef import (get_nodes_extended, get_roles,
+    filter_nodes, RepoError)
 from kitchen.dashboard import graphs
 from kitchen.settings import REPO, SHOW_VIRT_VIEW
 
@@ -27,45 +30,38 @@ def _get_data(env, roles, virt):
                              data['filter_virt'], nodes)
     data['nodes'] = nodes
     data['roles'] = roles
-    data['roles_groups'] = roles_groups
-    data['environments'] = environments
+    data['roles_groups'] = sorted(roles_groups)
+    data['environments'] = sorted(environments)
     return data
 
 
 def main(request):
-    data = _get_data(request.GET.get('env', REPO['DEFAULT_ENV']),
-                    request.GET.get('roles', ''),
-                    request.GET.get('virt', REPO['DEFAULT_VIRT']))
-    return HttpResponse(
-        render_to_string('main.html',
-                         {'nodes': data['nodes'],
-                          'roles': data['roles'],
-                          'roles_groups': sorted(data['roles_groups']),
-                          'environments': sorted(data['environments']),
-                          'virt_roles': data['virt_roles'],
-                          'filter_env': data['filter_env'],
-                          'filter_roles': data['filter_roles'],
-                          'filter_virt': data['filter_virt'],
-                          'show_virt': SHOW_VIRT_VIEW}))
+    data = {}
+    try:
+        data = _get_data(request.GET.get('env', REPO['DEFAULT_ENV']),
+                         request.GET.get('roles', ''),
+                         request.GET.get('virt', REPO['DEFAULT_VIRT']))
+    except RepoError as e:
+        messages.add_message(request, messages.ERROR, str(e))
+    data['show_virt'] = SHOW_VIRT_VIEW
+    return render_to_response('main.html',
+                              data,
+                              context_instance=RequestContext(request))
 
 
 def graph(request):
-    data = _get_data(request.GET.get('env', REPO['DEFAULT_ENV']),
-                    request.GET.get('roles', ''),
-                    'guest')
+    data = {}
+    try:
+        data = _get_data(request.GET.get('env', REPO['DEFAULT_ENV']),
+                         request.GET.get('roles', ''),
+                         'guest')
+    except RepoError as e:
+        messages.add_message(request, messages.ERROR, str(e))
     msg = ""
     if not request.GET.get('env'):
         data['nodes'] = []
         msg = "Please select an environment"
     graphs.generate_node_map(data['nodes'])
-    return HttpResponse(
-        render_to_string('graph.html',
-                         {'nodes': data['nodes'],
-                          'roles': data['roles'],
-                          'roles_groups': sorted(data['roles_groups']),
-                          'environments': sorted(data['environments']),
-                          'filter_env': data['filter_env'],
-                          'filter_roles': data['filter_roles'],
-                          'msg': msg,
-                          'show_virt': False,
-                         }))
+    return render_to_response('graph.html',
+                              data,
+                              context_instance=RequestContext(request))
