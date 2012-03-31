@@ -20,6 +20,7 @@ class RepoError(Exception):
 
 
 def _check_kitchen():
+    """Checks whether there is a valid Chef repository"""
     if not os.path.exists(KITCHEN_DIR):
         raise RepoError("Repo dir doesn't exist at '{0}'".format(KITCHEN_DIR))
 
@@ -33,13 +34,17 @@ def _check_kitchen():
         raise RepoError("Couldn't find {0}. ".format(missing_str(missing)))
     elif not os.path.exists(DATA_BAG_PATH):
         raise RepoError("Node data bag has not yet been built")
+    else:
+        return True
 
 
-def build_node_data_bag():
-    """Tell LittleChef to build the node data bag"""
+def _build_node_data_bag():
+    """Tells LittleChef to build the node data bag"""
     current_dir = os.getcwd()
     os.chdir(KITCHEN_DIR)
+    print KITCHEN_DIR
     try:
+        lib.get_recipes()  # This builds metadata.json for all recipes
         chef._build_node_data_bag()
     except SystemExit as e:
         log.error(e)
@@ -48,7 +53,7 @@ def build_node_data_bag():
 
 
 def _load_data(data_type):
-    """Load the kitchen's node files"""
+    """Loads the kitchen's node files"""
     _check_kitchen()
     current_dir = os.getcwd()
     os.chdir(KITCHEN_DIR)
@@ -66,35 +71,35 @@ def _load_data(data_type):
 
 
 def load_extended_node_data():
-    """Load JSON node files from node databag, which has merged attributes"""
+    """Loads JSON node files from node databag, which has merged attributes"""
     nodes = _load_data("nodes")
     data = []
     for node in nodes:
         # Read corresponding data bag item for each node
-        filename = os.path.join(DATA_BAG_PATH,
-                                node['name'].replace(".", "_") + ".json")
-        if not os.path.exists(filename):
-            error = "Node data bag is missing {0}".format(filename)
-            log.error(error)
-            return [{"error": error}]
-        with open(filename, 'r') as f:
+        filename = node['name'].replace(".", "_") + ".json"
+        filepath = os.path.join(DATA_BAG_PATH, filename)
+        if not os.path.exists(filepath):
+            error = "'node' data bag was not generated correctly: item "
+            error += "'data_bag/node/{0}' is missing".format(filename)
+            raise RepoError(error)
+        with open(filepath, 'r') as f:
             try:
                 data.append(json.loads(f.read()))
             except json.JSONDecodeError as e:
                 error = 'LittleChef found the following error in'
                 error += ' "{0}":\n {1}'.format(node_path, str(e))
-                log.error(error)
-                return [{"error": error}]
+                raise RepoError(error)
     if len(data) != len(nodes):
         error = "The node data bag doesn't have the same number of nodes as "
         error += "there are node files: {0} => {1}".format(
             len(data), len(nodes))
         log.error(error)
-        return [{"error": error}]
+        raise RepoError(error)
     return data
 
 
 def filter_nodes(env, roles, virt_roles, nodes):
+    """Returns nodes which fulfill env, roles and virt_roles criteria"""
     retval = []
     if roles:
         roles = roles.split(',')
@@ -102,7 +107,6 @@ def filter_nodes(env, roles, virt_roles, nodes):
         virt_roles = virt_roles.split(',')
     for node in nodes:
         append = True
-        print node
         if env and node['chef_environment'] != env:
             append = False
         if roles:
@@ -124,12 +128,15 @@ def filter_nodes(env, roles, virt_roles, nodes):
 
 
 def get_nodes_extended():
+    """Returns node data from the automatic 'node' data_bag"""
     return load_extended_node_data()
 
 
 def get_nodes():
+    """Returns nodes present in the repository's 'nodes' directory"""
     return _load_data("nodes")
 
 
 def get_roles():
+    """Returns roles present in the repository's 'roles' directory"""
     return _load_data("roles")

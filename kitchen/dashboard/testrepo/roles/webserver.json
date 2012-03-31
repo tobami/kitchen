@@ -1,0 +1,11 @@
+{
+    "name": "webserver",
+    "default_attributes": { },
+    "override_attributes": { },
+    "json_class": "Chef::Role",
+    "description": "An apache web server",
+    "chef_type": "role",
+    "run_list": [
+        "recipe[apache2]"
+    ]
+}

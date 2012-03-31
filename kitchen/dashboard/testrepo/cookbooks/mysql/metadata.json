@@ -1,0 +1,269 @@
+{
+  "recipes": {
+    "mysql::server": "Installs packages required for mysql servers w/o manual intervention",
+    "mysql::client": "Installs packages required for mysql clients using run_action magic",
+    "mysql": "Includes the client recipe to configure a client",
+    "mysql::server_ec2": "Performs EC2-specific mountpoint manipulation"
+  },
+  "maintainer": "Opscode, Inc.",
+  "recommendations": {
+  },
+  "license": "Apache 2.0",
+  "description": "Installs and configures mysql for client or server",
+  "dependencies": {
+    "openssl": ">= 0.0.0"
+  },
+  "platforms": {
+    "debian": ">= 0.0.0",
+    "fedora": ">= 0.0.0",
+    "freebsd": ">= 0.0.0",
+    "redhat": ">= 0.0.0",
+    "centos": ">= 0.0.0",
+    "suse": ">= 0.0.0",
+    "ubuntu": ">= 0.0.0",
+    "amazon": ">= 0.0.0",
+    "scientific": ">= 0.0.0"
+  },
+  "version": "1.2.4",
+  "attributes": {
+    "mysql/tunable/net_read_timeout": {
+      "calculated": false,
+      "recipes": [
+
+      ],
+      "display_name": "MySQL Tunable Net Read Timeout",
+      "required": "optional",
+      "default": "30",
+      "choice": [
+
+      ],
+      "type": "string"
+    },
+    "mysql/tunable/back_log": {
+      "calculated": false,
+      "recipes": [
+
+      ],
+      "display_name": "MySQL Tunable Back Log",
+      "required": "optional",
+      "default": "128",
+      "choice": [
+
+      ],
+      "type": "string"
+    },
+    "mysql/conf_dir": {
+      "calculated": false,
+      "recipes": [
+
+      ],
+      "display_name": "MySQL Conf Directory",
+      "required": "optional",
+      "description": "Location of mysql conf files",
+      "default": "/etc/mysql",
+      "choice": [
+
+      ],
+      "type": "string"
+    },
+    "mysql/tunable/wait_timeout": {
+      "calculated": false,
+      "recipes": [
+
+      ],
+      "display_name": "MySQL Tunable Wait Timeout",
+      "required": "optional",
+      "default": "180",
+      "choice": [
+
+      ],
+      "type": "string"
+    },
+    "mysql/tunable/max_connections": {
+      "calculated": false,
+      "recipes": [
+
+      ],
+      "display_name": "MySQL Tunable Max Connections",
+      "required": "optional",
+      "default": "800",
+      "choice": [
+
+      ],
+      "type": "string"
+    },
+    "mysql/ec2_path": {
+      "calculated": false,
+      "recipes": [
+
+      ],
+      "display_name": "MySQL EC2 Path",
+      "required": "optional",
+      "description": "Location of mysql directory on EC2 instance EBS volumes",
+      "default": "/mnt/mysql",
+      "choice": [
+
+      ],
+      "type": "string"
+    },
+    "mysql/tunable/table_cache": {
+      "calculated": false,
+      "recipes": [
+
+      ],
+      "display_name": "MySQL Tunable Table Cache for MySQL < 5.1.3",
+      "required": "optional",
+      "default": "128",
+      "choice": [
+
+      ],
+      "type": "string"
+    },
+    "mysql/tunable/max_binlog_size": {
+      "calculated": false,
+      "recipes": [
+
+      ],
+      "display_name": "MySQL Max Binlog Size",
+      "required": "optional",
+      "default": "100M",
+      "choice": [
+
+      ],
+      "type": "string"
+    },
+    "mysql/tunable/expire_logs_days": {
+      "calculated": false,
+      "recipes": [
+
+      ],
+      "display_name": "MySQL Exipre Log Days",
+      "required": "optional",
+      "default": "10",
+      "choice": [
+
+      ],
+      "type": "string"
+    },
+    "mysql/tunable/net_write_timeout": {
+      "calculated": false,
+      "recipes": [
+
+      ],
+      "display_name": "MySQL Tunable Net Write Timeout",
+      "required": "optional",
+      "default": "30",
+      "choice": [
+
+      ],
+      "type": "string"
+    },
+    "mysql/tunable": {
+      "calculated": false,
+      "recipes": [
+
+      ],
+      "display_name": "MySQL Tunables",
+      "required": "optional",
+      "description": "Hash of MySQL tunable attributes",
+      "choice": [
+
+      ],
+      "type": "hash"
+    },
+    "mysql/tunable/table_open_cache": {
+      "calculated": false,
+      "recipes": [
+
+      ],
+      "display_name": "MySQL Tunable Table Cache for MySQL >= 5.1.3",
+      "required": "optional",
+      "default": "128",
+      "choice": [
+
+      ],
+      "type": "string"
+    },
+    "mysql/data_dir": {
+      "calculated": false,
+      "recipes": [
+
+      ],
+      "display_name": "MySQL Data Directory",
+      "required": "optional",
+      "description": "Location of mysql databases",
+      "default": "/var/lib/mysql",
+      "choice": [
+
+      ],
+      "type": "string"
+    },
+    "mysql/bind_address": {
+      "calculated": false,
+      "recipes": [
+
+      ],
+      "display_name": "MySQL Bind Address",
+      "required": "optional",
+      "description": "Address that mysqld should listen on",
+      "default": "ipaddress",
+      "choice": [
+
+      ],
+      "type": "string"
+    },
+    "mysql/tunable/key_buffer": {
+      "calculated": false,
+      "recipes": [
+
+      ],
+      "display_name": "MySQL Tuntable Key Buffer",
+      "required": "optional",
+      "default": "250M",
+      "choice": [
+
+      ],
+      "type": "string"
+    },
+    "mysql/server_root_password": {
+      "calculated": false,
+      "recipes": [
+
+      ],
+      "display_name": "MySQL Server Root Password",
+      "required": "optional",
+      "description": "Randomly generated password for the mysqld root user",
+      "default": "randomly generated",
+      "choice": [
+
+      ],
+      "type": "string"
+    },
+    "mysql/tunable/max_heap_table_size": {
+      "calculated": false,
+      "recipes": [
+
+      ],
+      "display_name": "MySQL Tunable Max Heap Table Size",
+      "required": "optional",
+      "default": "32M",
+      "choice": [
+
+      ],
+      "type": "string"
+    }
+  },
+  "suggestions": {
+  },
+  "groupings": {
+  },
+  "replacing": {
+  },
+  "conflicting": {
+  },
+  "maintainer_email": "cookbooks@opscode.com",
+  "providing": {
+  },
+  "long_description": "",
+  "name": "mysql"
+}

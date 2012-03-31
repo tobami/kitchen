@@ -1,0 +1,6 @@
+{
+    "chef_environment": "staging",
+    "run_list": [
+        "role[webserver]"
+    ]
+}

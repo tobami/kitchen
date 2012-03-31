@@ -60,7 +60,8 @@ def graph(request):
     msg = ""
     if not request.GET.get('env'):
         data['nodes'] = []
-        msg = "Please select an environment"
+        messages.add_message(request,
+                             messages.INFO, "Please select an environment")
     graphs.generate_node_map(data['nodes'])
     return render_to_response('graph.html',
                               data,
