@@ -36,6 +36,13 @@ class TestData(TestCase):
         data = chef._load_data('rolezzzz')
         self.assertEqual(len(data), 0)
 
+    def test_get_environments(self):
+        """Should return a list of all chef_environment values found"""
+        data = chef._get_environments(self.nodes)
+        self.assertEqual(len(data), 3)
+        self.assertEqual(data, ['', u'production', u'staging'])
+
+
     def test_filter_nodes_all(self):
         """Should return all nodes when empty filters are are given"""
         data = chef.filter_nodes(self.nodes, '', '')

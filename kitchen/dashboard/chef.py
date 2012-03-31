@@ -52,6 +52,14 @@ def _build_node_data_bag():
     return True
 
 
+def _get_environments(nodes):
+    """Returns an environments set out of chef_environment values found"""
+    envs = set()
+    for node in nodes:
+        envs.add(node.get('chef_environment', ''))
+    return sorted(envs)
+
+
 def _load_data(data_type):
     """Loads the kitchen's node files"""
     _check_kitchen()
