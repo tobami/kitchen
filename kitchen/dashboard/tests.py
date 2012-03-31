@@ -3,6 +3,9 @@ from mock import patch
 
 from kitchen.dashboard import chef
 
+# We need to always regenerate the node data bag in case there where changes
+chef._build_node_data_bag()
+
 
 class TestData(TestCase):
     nodes = chef.load_extended_node_data()
@@ -19,7 +22,7 @@ class TestData(TestCase):
     def test_load_data_nodes(self):
         """Should return nodes when the given argument is 'nodes'"""
         data = chef._load_data('nodes')
-        self.assertEqual(len(data), 5)
+        self.assertEqual(len(data), 6)
         self.assertEqual(data[1]['name'], "testnode2")
 
     def test_load_data_roles(self):
@@ -36,7 +39,7 @@ class TestData(TestCase):
     def test_filter_nodes_all(self):
         """Should return all nodes when empty filters are are given"""
         data = chef.filter_nodes(self.nodes, '', '')
-        self.assertEqual(len(data), 5)
+        self.assertEqual(len(data), 6)
 
     def test_filter_nodes_env(self):
         """Should filter nodes belonging to a given environment"""
@@ -60,23 +63,23 @@ class TestData(TestCase):
         self.assertEqual(data[0]['name'], "testnode1")
 
         data = chef.filter_nodes(self.nodes, roles='webserver')
-        self.assertEqual(len(data), 2)
+        self.assertEqual(len(data), 3)
         self.assertEqual(data[0]['name'], "testnode2")
 
-        data = chef.filter_nodes(self.nodes, roles='webserver, dbserver')
-        self.assertEqual(len(data), 2)
-        self.assertEqual(data[1]['name'], "testnode4")
+        data = chef.filter_nodes(self.nodes, roles='webserver,dbserver')
+        self.assertEqual(len(data), 5)
+        self.assertEqual(data[1]['name'], "testnode3.mydomain.com")
 
     def test_filter_nodes_virt(self):
         """Should filter nodes acording to their virt value"""
         data = chef.filter_nodes(self.nodes, virt_roles='guest')
-        self.assertEqual(len(data), 4)
+        self.assertEqual(len(data), 5)
 
         data = chef.filter_nodes(self.nodes, virt_roles='host')
         self.assertEqual(len(data), 1)
 
         data = chef.filter_nodes(self.nodes, virt_roles='host,guest')
-        self.assertEqual(len(data), 5)
+        self.assertEqual(len(data), 6)
 
     def test_filter_nodes_bomined(self):
         """Should filter nodes acording to their virt value"""

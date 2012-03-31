@@ -20,6 +20,7 @@ We will need:
 * littlechef 1.1+
 * graphviz
 * pydot 1.0.25+ (for graphviz graphs)
+* mock (for the unit tests)
 
 `apt-get install sqlite3 graphviz`
 
