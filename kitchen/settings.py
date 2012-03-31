@@ -10,11 +10,12 @@ TEMPLATE_DEBUG = DEBUG
 
 BASE_PATH = os.path.abspath(os.path.dirname(__file__))
 
-REPO_BASE_PATH = os.path.join(BASE_PATH, "repo")
+# Kitchen settings #
+REPO_BASE_PATH = os.path.join(BASE_PATH, "dashboard")
 REPO = {
-    'NAME': "",
+    'NAME': "testrepo",
     'URL': "",
-    'SYNC_SCHEDULE': 30,  # seconds
+    'SYNC_SCHEDULE': 60,  # seconds
     'KITCHEN_DIR': '',
     'ENV_PREFIX': 'env',
     'DEFAULT_ENV': 'production',
@@ -22,11 +23,12 @@ REPO = {
 }
 SHOW_VIRT_VIEW = True
 
+LOG_FILE = '/tmp/kitchen.log'
+##
+
 ADMINS = ()
 
 MANAGERS = ADMINS
-
-LOG_FILE = '/tmp/kitchen.log'
 
 DATABASES = {
     'default': {
@@ -40,7 +42,7 @@ BROKER_URL = "django://"
 
 MEDIA_ROOT = ''
 MEDIA_URL = ''
-STATIC_ROOT = os.path.join(BASE_PATH, 'dashboard/static')
+STATIC_ROOT = os.path.join(BASE_PATH, 'dashboard', 'static')
 STATIC_URL = '/static/'
 
 # Additional locations of static files
@@ -104,12 +106,3 @@ LOGGING = {
         },
     }
 }
-
-try:
-    from settings_local import *
-except:
-    pass
-
-# Needs to be last in case settings_local overwrites REPO
-KITCHEN_DIR = os.path.join(
-    REPO_BASE_PATH, REPO['NAME'], REPO['KITCHEN_DIR'])

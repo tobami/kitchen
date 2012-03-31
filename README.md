@@ -16,8 +16,8 @@ We will need:
 * Django 1.3+
 * django-celery
 * django-kombu *or* RabbitMQ
-* Logbook
-* Littlechef
+* logbook
+* littlechef 1.1+
 * graphviz
 * pydot 1.0.25+ (for graphviz graphs)
 
@@ -27,13 +27,13 @@ We will need:
 
 `pip install littlechef`
 
-Then create the necessary celery tables
+Then create the necessary celery SQL tables
 
 `python manage.py syncdb`
 
 ## Running the development server and job queue
 
-To see the web interface on localhost:8000:
+To see the web interface on `localhost:8000`:
 
 `python manage.py runserver`
 

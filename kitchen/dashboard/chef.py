@@ -4,12 +4,14 @@ import json
 from littlechef import runner, lib, chef
 from logbook import Logger, MonitoringFileHandler
 
-from kitchen.settings import DEBUG, REPO, REPO_BASE_PATH, KITCHEN_DIR, LOG_FILE
+from kitchen.settings import DEBUG, REPO, REPO_BASE_PATH, LOG_FILE
 
 
 file_log_handler = MonitoringFileHandler(LOG_FILE, bubble=DEBUG)
 file_log_handler.push_application()
 log = Logger('kitchen.lib')
+
+KITCHEN_DIR = os.path.join(REPO_BASE_PATH, REPO['NAME'], REPO['KITCHEN_DIR'])
 
 
 def _check_kitchen():
