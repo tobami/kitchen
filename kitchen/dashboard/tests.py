@@ -1,7 +1,10 @@
+import os
+
 from django.test import TestCase
 from mock import patch
 
-from kitchen.dashboard import chef
+from kitchen.dashboard import chef, graphs
+from kitchen.settings import STATIC_ROOT
 
 # We need to always regenerate the node data bag in case there where changes
 chef._build_node_data_bag()
@@ -102,6 +105,14 @@ class TestData(TestCase):
             env='staging', roles='webserver', virt_roles='guest')
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]['name'], "testnode4")
+
+    def test_generate_node_map(self):
+        """Should generate a graph when some nodes are given"""
+        filepath = os.path.join(STATIC_ROOT, 'img', 'node_map.png')
+        if os.path.exists(filepath):
+            os.remove(filepath)
+        graphs.generate_node_map(chef.load_extended_node_data())
+        self.assertTrue(os.path.exists(filepath))
 
 
 class TestViews(TestCase):

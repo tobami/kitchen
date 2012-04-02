@@ -12,7 +12,7 @@ def generate_node_map(nodes):
     for node in nodes:
         label = node['name'] + "\n" + "\n".join(
             [role for role in node['role'] \
-                if not role.startswith(REPO['ENV_PREFIX'])])
+                if not role.startswith(REPO['EXCLUDE_ROLE_PREFIX'])])
         node_el = pydot.Node(label,
                              style="filled",
                              fillcolor="lightyellow",
