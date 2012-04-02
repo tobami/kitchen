@@ -113,6 +113,7 @@ class TestData(TestCase):
             os.remove(filepath)
         graphs.generate_node_map(chef.load_extended_node_data())
         self.assertTrue(os.path.exists(filepath))
+        self.assertTrue(os.path.getsize(filepath) > 90)
 
 
 class TestViews(TestCase):
