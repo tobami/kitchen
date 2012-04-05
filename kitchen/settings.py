@@ -86,8 +86,11 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     "djcelery",
     "djkombu",
-    "kitchen.dashboard"
+    "kitchen.dashboard",
+    'django_nose',
 )
+
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 LOGGING = {
     'version': 1,
