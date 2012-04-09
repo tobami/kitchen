@@ -48,7 +48,7 @@ def main(request):
 
 
 def graph(request):
-    data = {}
+    data = {'nodes': []}
     env_filter = request.GET.get('env', REPO['DEFAULT_ENV'])
     try:
         data = _get_data(env_filter, request.GET.get('roles', ''), 'guest')
@@ -56,7 +56,6 @@ def graph(request):
         messages.add_message(request, messages.ERROR, str(e))
 
     if not env_filter:
-        data['nodes'] = []
         messages.add_message(request,
                              messages.INFO, "Please select an environment")
     graphs.generate_node_map(data['nodes'])
