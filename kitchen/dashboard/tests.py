@@ -10,8 +10,7 @@ from kitchen.settings import STATIC_ROOT
 chef._build_node_data_bag()
 
 
-class TestData(TestCase):
-    nodes = chef.load_extended_node_data()
+class TestRepo(TestCase):
 
     def test_good_repo(self):
         """Should return true when a valid repository is found"""
@@ -19,12 +18,27 @@ class TestData(TestCase):
 
     @patch('kitchen.dashboard.chef.KITCHEN_DIR', '/badrepopath/')
     def test_bad_repo(self):
-        """Should raise RepoError when kitchen is not found"""
+        """Should raise RepoError when the kitchen is not found"""
         self.assertRaises(chef.RepoError, chef._check_kitchen)
+
+    @patch('kitchen.dashboard.chef.KITCHEN_DIR', '../kitchen/')
+    def test_invalid_kitchen(self):
+        """Should raise RepoError when the kitchen is incomplete"""
+        self.assertRaises(chef.RepoError, chef._check_kitchen)
+
+
+class TestData(TestCase):
+    nodes = chef.load_extended_node_data()
 
     def test_load_data_nodes(self):
         """Should return nodes when the given argument is 'nodes'"""
         data = chef._load_data('nodes')
+        self.assertEqual(len(data), 6)
+        self.assertEqual(data[1]['name'], "testnode2")
+
+    def test_get_nodes(self):
+        """Should return all nodes"""
+        data = chef.get_nodes()
         self.assertEqual(len(data), 6)
         self.assertEqual(data[1]['name'], "testnode2")
 
@@ -179,6 +193,5 @@ class TestViews(TestCase):
         """Should display an error message when there is a repo error"""
         resp = self.client.get("/graph/")
         self.assertEqual(resp.status_code, 200)
-        print resp.content
         expected = "Repo dir doesn&#39;t exist at &#39;/badrepopath/&#39;"
         self.assertTrue(expected in resp.content)

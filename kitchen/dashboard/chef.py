@@ -29,7 +29,6 @@ def _check_kitchen():
     os.chdir(KITCHEN_DIR)
     in_a_kitchen, missing = runner._check_appliances()
     os.chdir(current_dir)
-
     if not in_a_kitchen:
         missing_str = lambda m: ' and '.join(', '.join(m).rsplit(', ', 1))
         raise RepoError("Couldn't find {0}. ".format(missing_str(missing)))
