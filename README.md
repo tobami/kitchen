@@ -17,9 +17,9 @@ We will need:
 * django-celery
 * django-kombu *or* RabbitMQ
 * logbook
-* littlechef 1.1+
+* littlechef 1.2+
 * graphviz
-* pydot 1.0.25+ (for graphviz graphs)
+* pydot 1.0.26+ (for graphviz graphs)
 * mock (for the unit tests)
 
 They can be installed on Debian or Ubuntu by typing:
