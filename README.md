@@ -5,7 +5,9 @@ It never has been so easy to find and orginize all your nodes!
 
 ## How it works
 
-Data is taken from a Chef repository's node data bag
+A Chef repository is kept in sync and the node data bag is created. From that,
+nodes, roles and environments will be inferred, and the UI will use
+that data to create the browsing interface.
 
 ## Installation
 
