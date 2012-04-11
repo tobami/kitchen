@@ -22,29 +22,32 @@ We will need:
 * littlechef 1.2+
 * graphviz
 * pydot 1.0.26+ (for graphviz graphs)
-* mock (for the unit tests)
 
-They can be installed on Debian or Ubuntu by typing:
+For tests:
 
-`apt-get install sqlite3 graphviz`
+* django-nose
+* mock
 
-`pip install django django-celery django-kombu logbook pydot`
+The dependencies can be installed on Debian or Ubuntu by typing:
 
-`pip install littlechef`
+    $ apt-get install sqlite3 graphviz
+
+    $ pip install -r requirements.txt
+
 
 Then create the celery SQL tables (only necessary if you are using the sqlite
 backend):
 
-`python manage.py syncdb`
+    $ python manage.py syncdb
 
 ## Running the development server and job queue
 
 To see the web interface on `localhost:8000`:
 
-`python manage.py runserver`
+    $ python manage.py runserver
 
 The repo is configured to work straightaway with the test kitchen, without a need
 to configure an external repo and sync it. If you want however to check out the 
 sync functionality, you can start the celerybeat job scheduler:
 
-`python manage.py celeryd -B -l info`
+    $ python manage.py celeryd -B -l info
