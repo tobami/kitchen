@@ -6,8 +6,8 @@ It never has been so easy to find and organize all your nodes!
 ## How it works
 
 A Chef repository is kept in sync and the node data bag is created. From that,
-nodes, roles and environments will be inferred, and the UI will use
-that data to create the browsing interface.
+nodes, roles and environments will be detected, resulting in a browseable 
+web interface to your server infrastructure. 
 
 ## Installation
 
@@ -46,8 +46,8 @@ To see the web interface on `localhost:8000`:
 
     $ python manage.py runserver
 
-The repo is configured to work straightaway with the test kitchen, without a need
-to configure an external repo and sync it. If you want however to check out the 
-sync functionality, you can start the celerybeat job scheduler:
+The repo is configured to work straightaway with the test kitchen, without the need
+to configure an external repo and sync it. However, if you want to check out the 
+sync functionality, you can start the celerybeat job scheduler by issuing:
 
     $ python manage.py celeryd -B -l info
