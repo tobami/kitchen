@@ -1,3 +1,4 @@
+"""Functions to read and process data from a Chef repository"""
 import os
 import json
 
@@ -99,7 +100,7 @@ def load_extended_node_data():
                 data.append(json.loads(f.read()))
             except json.JSONDecodeError as e:
                 error = 'LittleChef found the following error in'
-                error += ' "{0}":\n {1}'.format(node_path, str(e))
+                error += ' "{0}":\n {1}'.format(filepath, str(e))
                 raise RepoError(error)
     if len(data) != len(nodes):
         error = "The node data bag doesn't have the same number of nodes as "

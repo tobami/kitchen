@@ -1,4 +1,4 @@
-# Django settings for the Kitchen project.
+"""Django settings for the Kitchen project"""
 import os
 
 import djcelery

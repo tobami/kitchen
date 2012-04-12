@@ -1,5 +1,5 @@
 import os
-from datetime import timedelta, datetime
+from datetime import timedelta
 from subprocess import Popen, PIPE
 import logging
 

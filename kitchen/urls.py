@@ -1,6 +1,5 @@
-from django.conf.urls.defaults import patterns, include, url
+from django.conf.urls.defaults import patterns
 from django.conf.urls.static import static
-from django.http import HttpResponse
 
 from kitchen.dashboard import api
 import kitchen.settings as settings

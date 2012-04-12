@@ -13,7 +13,6 @@ def _get_data(env, roles, virt):
     data = {'filter_env': env, 'filter_roles': roles, 'filter_virt': virt}
     nodes = get_nodes_extended()
     data['roles'] = get_roles()
-    environments = []  # an 'implicit' set, as envs must be uniquely named
     roles_groups = set()
     for role in data['roles']:
         split = role['name'].split('_')
