@@ -23,7 +23,7 @@
                         {{ node.chef_environment }}
                     </td>
                     <td>
-                        {% for entry in node.run_list %}{{ entry }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                        {% for entry in node.role %}{{ entry }}{% if not forloop.last %}, {% endif %}{% endfor %}
                     </td>
                 </tr>
             {% endfor %}
