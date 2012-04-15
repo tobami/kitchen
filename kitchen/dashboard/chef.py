@@ -39,7 +39,7 @@ def _check_kitchen():
         return True
 
 
-def _build_node_data_bag():
+def build_node_data_bag():
     """Tells LittleChef to build the node data bag"""
     current_dir = os.getcwd()
     os.chdir(KITCHEN_DIR)

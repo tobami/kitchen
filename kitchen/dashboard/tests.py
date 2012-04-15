@@ -7,7 +7,7 @@ from kitchen.dashboard import chef, graphs
 from kitchen.settings import STATIC_ROOT
 
 # We need to always regenerate the node data bag in case there where changes
-chef._build_node_data_bag()
+chef.build_node_data_bag()
 
 
 class TestRepo(TestCase):

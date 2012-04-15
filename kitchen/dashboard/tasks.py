@@ -32,7 +32,7 @@ class SyncRepo(PeriodicTask):
             log.error("git pull returned {0}: {0}".format(
                       p.returncode, stderr))
         else:
-            chef._build_node_data_bag()
+            chef.build_node_data_bag()
 
     def _clone(self):
         """Clone a git repository"""
