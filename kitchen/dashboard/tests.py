@@ -1,5 +1,6 @@
 """Tests for the kitchen.dashboard app"""
 import os
+import json
 
 from django.test import TestCase
 from mock import patch
@@ -196,3 +197,19 @@ class TestViews(TestCase):
         self.assertEqual(resp.status_code, 200)
         expected = "Repo dir doesn&#39;t exist at &#39;/badrepopath/&#39;"
         self.assertTrue(expected in resp.content)
+
+
+class TestAPI(TestCase):
+
+    def test_get_roles(self):
+        """Should return all available roles in JSON format"""
+        resp = self.client.get("/api/roles")
+        self.assertEqual(resp.status_code, 200)
+        data = json.loads(resp.content)
+        self.assertEqual(len(data), 3)
+        existing_roles = ['loadbalancer', 'webserver', 'dbserver']
+        for role in data:
+            self.assertTrue(role['name'] in existing_roles,
+                            role['name'] + " is not an existing role name")
+        self.assertEqual(data[0]['name'], 'dbserver')
+        self.assertEqual(data[0]['run_list'], ['recipe[mysql::server]'])

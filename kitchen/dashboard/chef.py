@@ -18,6 +18,7 @@ DATA_BAG_PATH = os.path.join(KITCHEN_DIR, "data_bags", "node")
 
 
 class RepoError(Exception):
+    """An error related to repository validity"""
     pass
 
 
