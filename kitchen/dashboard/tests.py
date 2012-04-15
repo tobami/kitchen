@@ -1,3 +1,4 @@
+"""Tests for the kitchen.dashboard app"""
 import os
 
 from django.test import TestCase

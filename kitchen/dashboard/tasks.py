@@ -1,3 +1,4 @@
+"""Celery tasks for the dashboard app"""
 import os
 from datetime import timedelta
 from subprocess import Popen, PIPE

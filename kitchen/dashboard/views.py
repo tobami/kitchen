@@ -1,3 +1,4 @@
+"""Dashboard app views"""
 from django.http import HttpResponse
 from django.contrib import messages
 from django.shortcuts import render_to_response
@@ -10,6 +11,8 @@ from kitchen.settings import REPO, SHOW_VIRT_VIEW
 
 
 def _get_data(env, roles, virt):
+    """Returns processed repository data, filtering nodes based on given args
+    """
     data = {'filter_env': env, 'filter_roles': roles, 'filter_virt': virt}
     nodes = get_nodes_extended()
     data['roles'] = get_roles()
@@ -30,6 +33,7 @@ def _get_data(env, roles, virt):
 
 
 def main(request):
+    """Default main view showing a list of nodes"""
     data = {}
     try:
         data = _get_data(request.GET.get('env', REPO['DEFAULT_ENV']),
@@ -47,6 +51,10 @@ def main(request):
 
 
 def graph(request):
+    """Graph view where users can visualize graphs of their nodes
+    generated using Graphviz open source graph visualization library
+
+    """
     data = {'nodes': []}
     env_filter = request.GET.get('env', REPO['DEFAULT_ENV'])
     try:
