@@ -14,6 +14,7 @@ def generate_node_map(nodes):
             [role for role in node['role'] \
                 if not role.startswith(REPO['EXCLUDE_ROLE_PREFIX'])])
         node_el = pydot.Node(label,
+                             shape="box",
                              style="filled",
                              fillcolor="lightyellow",
                              fontsize="8")

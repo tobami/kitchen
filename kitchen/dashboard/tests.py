@@ -122,17 +122,46 @@ class TestData(TestCase):
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]['name'], "testnode4")
 
-    def test_generate_node_map(self):
+
+class TestGraph(TestCase):
+    nodes = chef.load_extended_node_data()
+    filepath = os.path.join(STATIC_ROOT, 'img', 'node_map.png')
+
+    def setUp(self):
+        if os.path.exists(self.filepath):
+            os.remove(self.filepath)
+
+    def test_generate_empty_graph(self):
+        """Should generate an empty graph when no nodes are given"""
+        data = chef.filter_nodes(self.nodes, 'stadging')
+        graphs.generate_node_map(data)
+        self.assertTrue(os.path.exists(self.filepath))
+        size = os.path.getsize(self.filepath)
+        self.assertTrue(os.path.getsize(self.filepath) < 100,
+                        "Size greater than 1000: {0}".format(size))
+
+    def test_generate_small_graph(self):
         """Should generate a graph when some nodes are given"""
-        filepath = os.path.join(STATIC_ROOT, 'img', 'node_map.png')
-        if os.path.exists(filepath):
-            os.remove(filepath)
-        graphs.generate_node_map(chef.load_extended_node_data())
-        self.assertTrue(os.path.exists(filepath))
-        self.assertTrue(os.path.getsize(filepath) > 90)
+        data = chef.filter_nodes(self.nodes, 'staging')
+        graphs.generate_node_map(data)
+        self.assertTrue(os.path.exists(self.filepath))
+        size = os.path.getsize(self.filepath)
+        self.assertTrue(size > 1700 and size < 2000,
+                        "Size not between 1700 and 2000: {0}".format(size))
+
+    def test_generate_connected_graph(self):
+        """Should generate a graph when some nodes are given"""
+        data = chef.filter_nodes(self.nodes, 'production')
+        graphs.generate_node_map(data)
+        self.assertTrue(os.path.exists(self.filepath))
+        size = os.path.getsize(self.filepath)
+        # Size without connections ~3000
+        self.assertTrue(size > 5100 and size < 5500,
+                        "Size not between 5100 and 5500: {0}".format(size))
 
 
 class TestViews(TestCase):
+    filepath = os.path.join(STATIC_ROOT, 'img', 'node_map.png')
 
     def test_list(self):
         """Should display the default node list page when no params are given"""
@@ -189,6 +218,11 @@ class TestViews(TestCase):
         self.assertTrue("<title>Kitchen</title>" in resp.content)
         self.assertTrue("Environment" in resp.content)
         self.assertTrue("Please select an environment" in resp.content)
+
+        self.assertTrue(os.path.exists(self.filepath))
+        size = os.path.getsize(self.filepath)
+        self.assertTrue(os.path.getsize(self.filepath) < 100,
+                        "Size greater than 1000: {0}".format(size))
 
     @patch('kitchen.dashboard.chef.KITCHEN_DIR', '/badrepopath/')
     def test_graph_no_nodes(self):

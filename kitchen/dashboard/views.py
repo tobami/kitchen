@@ -21,6 +21,7 @@ def _get_data(env, roles, virt):
         split = role['name'].split('_')
         if split[0] != REPO['EXCLUDE_ROLE_PREFIX']:
             roles_groups.add(split[0])
+    data['roles_groups'] = sorted(roles_groups)
     data['virt_roles'] = ['host', 'guest']
     # Get environments before we filter nodes
     data['environments'] = get_environments(nodes)
@@ -28,7 +29,6 @@ def _get_data(env, roles, virt):
         nodes = filter_nodes(nodes,
             data['filter_env'], data['filter_roles'], data['filter_virt'])
     data['nodes'] = nodes
-    data['roles_groups'] = sorted(roles_groups)
     return data
 
 
@@ -63,6 +63,7 @@ def graph(request):
         messages.add_message(request, messages.ERROR, str(e))
 
     if not env_filter:
+        data['nodes'] = []
         messages.add_message(request,
                              messages.INFO, "Please select an environment")
     graphs.generate_node_map(data['nodes'])
