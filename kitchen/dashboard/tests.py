@@ -213,3 +213,19 @@ class TestAPI(TestCase):
                             role['name'] + " is not an existing role name")
         self.assertEqual(data[0]['name'], 'dbserver')
         self.assertEqual(data[0]['run_list'], ['recipe[mysql::server]'])
+
+    def test_get_nodes(self):
+        """Should return all available nodes in JSON format"""
+        resp = self.client.get("/api/nodes")
+        self.assertEqual(resp.status_code, 200)
+        data = json.loads(resp.content)
+        self.assertEqual(len(data), 6)
+        self.assertTrue('role' not in data[0])
+
+    def test_get_nodes_extended(self):
+        """Should return all available nodes in JSON format and with extended info"""
+        resp = self.client.get("/api/nodes/?extended=true")
+        self.assertEqual(resp.status_code, 200)
+        data = json.loads(resp.content)
+        self.assertEqual(len(data), 6)
+        self.assertTrue('role' in data[0])
