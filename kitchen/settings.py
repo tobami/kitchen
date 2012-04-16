@@ -87,6 +87,7 @@ INSTALLED_APPS = (
     "djcelery",
     "djkombu",
     "kitchen.dashboard",
+    "kitchen.dashboard.templatetags",
     'django_nose',
 )
 

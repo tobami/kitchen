@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load filters %}
 {% block bodycontent %}
     {% if nodes %}
         <table class='table'>
@@ -8,7 +8,7 @@
                     <th>Name</th>
                     <th>IP Address</th>
                     <th>Environment</th>
-                    <th>Run List</th>
+                    <th>Roles</th>
                 </tr>
             </thead>
             {% for node in nodes %}
@@ -23,7 +23,7 @@
                         {{ node.chef_environment }}
                     </td>
                     <td>
-                        {% for entry in node.role %}{{ entry }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                        {% for entry in node.role %}{% if not entry|is_environment_role %}{{ entry }}{% if not forloop.last %}, {% endif %}{% endif %}{% endfor %}
                     </td>
                 </tr>
             {% endfor %}
