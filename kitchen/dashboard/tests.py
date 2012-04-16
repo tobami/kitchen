@@ -150,14 +150,14 @@ class TestGraph(TestCase):
                         "Size not between 1700 and 2000: {0}".format(size))
 
     def test_generate_connected_graph(self):
-        """Should generate a graph when some nodes are given"""
+        """Should generate a connected graph when nodes with connections are given"""
         data = chef.filter_nodes(self.nodes, 'production')
         graphs.generate_node_map(data)
         self.assertTrue(os.path.exists(self.filepath))
         size = os.path.getsize(self.filepath)
         # Size without connections ~3000
-        self.assertTrue(size > 5100 and size < 5500,
-                        "Size not between 5100 and 5500: {0}".format(size))
+        self.assertTrue(size > 5000 and size < 5500,
+                        "Size not between 5000 and 5500: {0}".format(size))
 
 
 class TestViews(TestCase):
