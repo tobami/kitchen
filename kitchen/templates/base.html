@@ -79,9 +79,9 @@
                 </div>
                 <div class="span10">
                 {% if messages %}
-                    <ul class="messages">{% for message in messages %}
-                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>{% endfor %}
-                    </ul>
+                    {% for message in messages %}
+                        <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}">{{ message }}</div>
+                    {% endfor %}
                 {% endif %}
                     {% block bodycontent %}{% endblock %}
                 </div>
