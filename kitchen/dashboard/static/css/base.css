@@ -22,3 +22,8 @@ body {
 .badge {
     float: right;
 }
+
+.node_name, .node_ip,
+.node_env {
+    width: 17em;
+}
