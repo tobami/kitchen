@@ -1,3 +1,4 @@
+"""Facility to render node graphs using pydot"""
 import os
 
 import pydot

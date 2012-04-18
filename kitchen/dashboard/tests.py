@@ -150,7 +150,7 @@ class TestGraph(TestCase):
                         "Size not between 1700 and 2000: {0}".format(size))
 
     def test_generate_connected_graph(self):
-        """Should generate a connected graph when nodes with connections are given"""
+        """Should generate a connected graph when connected nodes are given"""
         data = chef.filter_nodes(self.nodes, 'production')
         graphs.generate_node_map(data)
         self.assertTrue(os.path.exists(self.filepath))
@@ -164,14 +164,14 @@ class TestViews(TestCase):
     filepath = os.path.join(STATIC_ROOT, 'img', 'node_map.png')
 
     def test_list(self):
-        """Should display the default node list page when no params are given"""
+        """Should display the default node list when no params are given"""
         resp = self.client.get("/")
         self.assertEqual(resp.status_code, 200)
         self.assertTrue("<title>Kitchen</title>" in resp.content)
         self.assertTrue("Environment" in resp.content)
         self.assertTrue("Roles" in resp.content)
         # 3 nodes in the production environment, which is default
-        nodes = ["testnode" + str(i) for i in range(1,4)]
+        nodes = ["testnode" + str(i) for i in range(1, 4)]
         for node in nodes:
             self.assertTrue(node in resp.content, node)
 
@@ -187,7 +187,7 @@ class TestViews(TestCase):
         # Should not display any nodes
         resp = self.client.get("/?env=testing")
         self.assertEqual(resp.status_code, 200)
-        nodes = ["testnode" + str(i) for i in range(1,7)]
+        nodes = ["testnode" + str(i) for i in range(1, 7)]
         for node in nodes:
             self.assertTrue(node not in resp.content, node)
 
@@ -257,7 +257,7 @@ class TestAPI(TestCase):
         self.assertTrue('role' not in data[0])
 
     def test_get_nodes_extended(self):
-        """Should return all available nodes in JSON format and with extended info"""
+        """Should return all available nodes with extended info"""
         resp = self.client.get("/api/nodes/?extended=true")
         self.assertEqual(resp.status_code, 200)
         data = json.loads(resp.content)

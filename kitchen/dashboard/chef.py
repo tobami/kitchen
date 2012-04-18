@@ -1,6 +1,6 @@
 """Functions to read and process data from a Chef repository"""
 import os
-import json
+import simplejson as json
 
 from littlechef import runner, lib, chef
 from logbook import Logger, MonitoringFileHandler

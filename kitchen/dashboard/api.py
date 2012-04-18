@@ -1,7 +1,7 @@
+"""Data API"""
 # -*- coding: utf-8 -*-
 import json
 
-from django.core import serializers
 from django.http import HttpResponse
 
 from kitchen.dashboard import chef

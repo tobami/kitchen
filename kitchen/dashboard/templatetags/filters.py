@@ -1,3 +1,4 @@
+"""Dashboard template filters"""
 from django.template.defaultfilters import stringfilter
 from django import template
 
@@ -8,4 +9,5 @@ register = template.Library()
 
 @register.filter(name='is_environment_role')
 def is_environment_role(string):
+    """Returns true if string begins with excluded role prefixes"""
     return string.startswith(REPO['EXCLUDE_ROLE_PREFIX'])
