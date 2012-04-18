@@ -43,7 +43,7 @@ def main(request):
         messages.add_message(request, messages.ERROR, str(e))
     else:
         if not len(data['nodes']):
-            messages.add_message(request, messages.ERROR,
+            messages.add_message(request, messages.INFO,
                 "There are no nodes that fit the supplied criteria.")
     data['show_virt'] = SHOW_VIRT_VIEW
     data['query_string'] = request.META['QUERY_STRING']
