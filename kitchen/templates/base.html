@@ -37,7 +37,7 @@
                 {% block topnav %}
                 <ul class="nav">
                   <li class="active"><a href="/">List</a></li>
-                  <li><a href="/graph/">Graph</a></li>
+                  <li><a href="/graph?{{query_string}}">Graph</a></li>
                 </ul>
                 {% endblock %}
               </div><!--/.nav-collapse -->
@@ -79,9 +79,11 @@
                 </div>
                 <div class="span10">
                 {% if messages %}
-                    <ul class="messages">{% for message in messages %}
-                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>{% endfor %}
-                    </ul>
+                    {% for message in messages %}
+                        <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
                 {% endif %}
                     {% block bodycontent %}{% endblock %}
                 </div>
