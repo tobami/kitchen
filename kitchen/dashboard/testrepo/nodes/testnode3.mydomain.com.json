@@ -1,5 +1,8 @@
 {
     "chef_environment": "production",
+    "mysql": {
+        "client_roles": ["webserver"]
+    },
     "run_list": [
         "role[dbserver]"
     ]

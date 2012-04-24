@@ -155,8 +155,8 @@ class TestGraph(TestCase):
         graphs.generate_node_map(data)
         self.assertTrue(os.path.exists(self.filepath))
         size = os.path.getsize(self.filepath)
-        # Size without connections ~3000
-        self.assertTrue(size > 5000 and size < 5500,
+        # Size with connections
+        self.assertTrue(size > 7000 and size < 7500,
                         "Size not between 5000 and 5500: {0}".format(size))
 
 
