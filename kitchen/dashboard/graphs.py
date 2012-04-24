@@ -24,14 +24,17 @@ def generate_node_map(nodes):
     # Create links
     for node in nodes:
         for attr in node.keys():
-            if isinstance(node[attr], dict) and 'client_roles' in node[attr]:
-                for client_node in nodes:
-                    if set.intersection(set(node[attr]['client_roles']),
-                                        set(client_node['roles'])):
-                        edge = pydot.Edge(graph_nodes[client_node['name']],
-                                          graph_nodes[node['name']],
-                                          fontsize="7")
-                        edge.set_label(attr)
-                        graph.add_edge(edge)
+            try:
+                client_roles = node[attr]['client_roles']
+            except (TypeError, KeyError):
+                continue
+            for client_node in nodes:
+                if set.intersection(
+                        set(client_roles), set(client_node['roles'])):
+                    edge = pydot.Edge(graph_nodes[client_node['name']],
+                                      graph_nodes[node['name']],
+                                      fontsize="7")
+                    edge.set_label(attr)
+                    graph.add_edge(edge)
     # Generate graph
     graph.write_png(os.path.join(STATIC_ROOT, 'img', 'node_map.png'))
