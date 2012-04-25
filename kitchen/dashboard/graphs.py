@@ -12,6 +12,11 @@ from kitchen.settings import STATIC_ROOT, REPO
 }
 
 def _build_links(nodes):
+    """Returns a dictionary of nodes that have links to other nodes
+    A node builds its links by looking for other nodes with roles present
+    in its 'client_nodes' lists
+
+    """
     linked_nodes = {}
     for node in nodes:
         for attr in node.keys():
@@ -29,7 +34,7 @@ def _build_links(nodes):
 
 
 def generate_node_map(nodes):
-    """Generates a graphviz nodemap"""
+    """Generates a graphviz node map"""
     graph = pydot.Dot(graph_type='digraph')
     graph_nodes = {}
     # Create nodes
@@ -48,8 +53,8 @@ def generate_node_map(nodes):
     for node in links:
         for client in links[node]['client_nodes']:
             edge = pydot.Edge(
-                graph_nodes[node],
                 graph_nodes[client[0]],
+                graph_nodes[node],
                 fontsize="7"
             )
             edge.set_label(client[1])

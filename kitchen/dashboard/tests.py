@@ -35,13 +35,13 @@ class TestData(TestCase):
     def test_load_data_nodes(self):
         """Should return nodes when the given argument is 'nodes'"""
         data = chef._load_data('nodes')
-        self.assertEqual(len(data), 6)
+        self.assertEqual(len(data), 7)
         self.assertEqual(data[1]['name'], "testnode2")
 
     def test_get_nodes(self):
         """Should return all nodes"""
         data = chef.get_nodes()
-        self.assertEqual(len(data), 6)
+        self.assertEqual(len(data), 7)
         self.assertEqual(data[1]['name'], "testnode2")
 
     def test_load_data_roles(self):
@@ -60,19 +60,19 @@ class TestData(TestCase):
         data = chef.get_environments(self.nodes)
         self.assertEqual(len(data), 3)
         expected = [{'counts': 1, 'name': 'none'},
-                    {'counts': 3, 'name': u'production'},
-                    {'counts': 2, 'name': u'staging'}]
+                    {'counts': 4, 'name': 'production'},
+                    {'counts': 2, 'name': 'staging'}]
         self.assertEqual(data, expected)
 
     def test_filter_nodes_all(self):
         """Should return all nodes when empty filters are are given"""
         data = chef.filter_nodes(self.nodes, '', '')
-        self.assertEqual(len(data), 6)
+        self.assertEqual(len(data), 7)
 
     def test_filter_nodes_env(self):
         """Should filter nodes belonging to a given environment"""
         data = chef.filter_nodes(self.nodes, 'production')
-        self.assertEqual(len(data), 3)
+        self.assertEqual(len(data), 4)
 
         data = chef.filter_nodes(self.nodes, 'staging')
         self.assertEqual(len(data), 2)
@@ -91,31 +91,31 @@ class TestData(TestCase):
         self.assertEqual(data[0]['name'], "testnode1")
 
         data = chef.filter_nodes(self.nodes, roles='webserver')
-        self.assertEqual(len(data), 3)
+        self.assertEqual(len(data), 4)
         self.assertEqual(data[0]['name'], "testnode2")
 
         data = chef.filter_nodes(self.nodes, roles='webserver,dbserver')
-        self.assertEqual(len(data), 5)
+        self.assertEqual(len(data), 6)
         self.assertEqual(data[1]['name'], "testnode3.mydomain.com")
 
     def test_filter_nodes_virt(self):
         """Should filter nodes acording to their virt value"""
         data = chef.filter_nodes(self.nodes, virt_roles='guest')
-        self.assertEqual(len(data), 5)
+        self.assertEqual(len(data), 6)
 
         data = chef.filter_nodes(self.nodes, virt_roles='host')
         self.assertEqual(len(data), 1)
 
         data = chef.filter_nodes(self.nodes, virt_roles='host,guest')
-        self.assertEqual(len(data), 6)
+        self.assertEqual(len(data), 7)
 
-    def test_filter_nodes_bomined(self):
+    def test_filter_nodes_combined(self):
         """Should filter nodes acording to their virt value"""
         data = chef.filter_nodes(self.nodes,
                                  env='production',
                                  roles='loadbalancer,webserver',
                                  virt_roles='guest')
-        self.assertEqual(len(data), 2)
+        self.assertEqual(len(data), 3)
 
         data = chef.filter_nodes(self.nodes,
             env='staging', roles='webserver', virt_roles='guest')
@@ -144,8 +144,11 @@ class TestGraph(TestCase):
         expected = {
             'testnode2': {'client_nodes': [('testnode1', 'apache2')]},
             'testnode3.mydomain.com': {
-                'client_nodes': [('testnode2', 'mysql')]
-            }
+                'client_nodes': [
+                    ('testnode2', 'mysql'), ('testnode7', 'mysql')
+                ]
+            },
+            'testnode7': {'client_nodes': [('testnode1', 'apache2')]}
         }
         self.assertEqual(links, expected)
 
@@ -174,8 +177,11 @@ class TestGraph(TestCase):
         self.assertTrue(os.path.exists(self.filepath))
         size = os.path.getsize(self.filepath)
         # Size with connections
-        self.assertTrue(size > 7000 and size < 7500,
-                        "Size not between 5000 and 5500: {0}".format(size))
+        max_size = 12000
+        min_size = 10000
+        self.assertTrue(size > min_size and size < max_size,
+                        "Size not between {0} and {1}: {2}".format(
+                            min_size, max_size, size))
 
 
 class TestViews(TestCase):
@@ -271,7 +277,7 @@ class TestAPI(TestCase):
         resp = self.client.get("/api/nodes")
         self.assertEqual(resp.status_code, 200)
         data = json.loads(resp.content)
-        self.assertEqual(len(data), 6)
+        self.assertEqual(len(data), 7)
         self.assertTrue('role' not in data[0])
 
     def test_get_nodes_extended(self):
@@ -279,5 +285,5 @@ class TestAPI(TestCase):
         resp = self.client.get("/api/nodes/?extended=true")
         self.assertEqual(resp.status_code, 200)
         data = json.loads(resp.content)
-        self.assertEqual(len(data), 6)
+        self.assertEqual(len(data), 7)
         self.assertTrue('role' in data[0])
