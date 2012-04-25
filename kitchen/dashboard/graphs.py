@@ -3,6 +3,12 @@ import os
 
 import pydot
 from kitchen.settings import STATIC_ROOT, REPO
+from kitchen.dashboard.chef import get_roles, get_role_groups
+
+
+COLORS = [
+    "#FCD975", "#9ACEEB", "/blues5/1:/blues5/4", "#97CE8A",
+]
 
 
 def _build_links(nodes):
@@ -41,19 +47,31 @@ def _build_links(nodes):
     return linked_nodes
 
 
-def generate_node_map(nodes):
+def generate_node_map(nodes, roles):
     """Generates a graphviz node map"""
     graph = pydot.Dot(graph_type='digraph')
     graph_nodes = {}
+
+    role_colors = {}
+    color_index = 0
+    for role in get_role_groups(roles):
+        role_colors[role] = COLORS[color_index]
+        color_index += 1
+        if color_index >= len(COLORS):
+            color_index = 0
+
     # Create nodes
     for node in nodes:
         label = node['name'] + "\n" + "\n".join(
             [role for role in node['role'] \
                 if not role.startswith(REPO['EXCLUDE_ROLE_PREFIX'])])
+        color = "lightyellow"
+        if len(node['role']):
+            color = role_colors[node['role'][0]]
         node_el = pydot.Node(label,
                              shape="box",
                              style="filled",
-                             fillcolor="lightyellow",
+                             fillcolor=color,
                              fontsize="8")
         graph_nodes[node['name']] = node_el
         graph.add_node(node_el)
@@ -64,6 +82,7 @@ def generate_node_map(nodes):
                 graph_nodes[client[0]],
                 graph_nodes[node],
                 fontsize="7",
+                arrowsize=.6,
             )
             edge.set_label(client[1])
             graph.add_edge(edge)
@@ -73,6 +92,7 @@ def generate_node_map(nodes):
                 graph_nodes[client[0]],
                 fontsize="7",
                 style="dashed",
+                arrowsize=.6,
             )
             edge.set_label(client[1])
             graph.add_edge(edge)

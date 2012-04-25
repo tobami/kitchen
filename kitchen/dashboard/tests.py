@@ -128,6 +128,7 @@ class TestData(TestCase):
 
 class TestGraph(TestCase):
     nodes = chef.load_extended_node_data()
+    roles = chef.get_roles()
     filepath = os.path.join(STATIC_ROOT, 'img', 'node_map.png')
 
     def setUp(self):
@@ -187,7 +188,7 @@ class TestGraph(TestCase):
     def test_generate_empty_graph(self):
         """Should generate an empty graph when no nodes are given"""
         data = chef.filter_nodes(self.nodes, 'badenv')
-        graphs.generate_node_map(data)
+        graphs.generate_node_map(data, self.roles)
         self.assertTrue(os.path.exists(self.filepath))
         size = os.path.getsize(self.filepath)
         self.assertTrue(os.path.getsize(self.filepath) < 100,
@@ -196,7 +197,7 @@ class TestGraph(TestCase):
     def test_generate_small_graph(self):
         """Should generate a graph when some nodes are given"""
         data = chef.filter_nodes(self.nodes, 'staging', None, 'guest')
-        graphs.generate_node_map(data)
+        graphs.generate_node_map(data, self.roles)
         self.assertTrue(os.path.exists(self.filepath))
         size = os.path.getsize(self.filepath)
         min_size = 1500
@@ -208,7 +209,7 @@ class TestGraph(TestCase):
     def test_generate_connected_graph(self):
         """Should generate a connected graph when connected nodes are given"""
         data = chef.filter_nodes(self.nodes, 'production')
-        graphs.generate_node_map(data)
+        graphs.generate_node_map(data, self.roles)
         self.assertTrue(os.path.exists(self.filepath))
         size = os.path.getsize(self.filepath)
         # Graph size with connections

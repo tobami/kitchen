@@ -154,3 +154,13 @@ def get_nodes():
 def get_roles():
     """Returns roles present in the repository's 'roles' directory"""
     return _load_data("roles")
+
+
+def get_role_groups(roles):
+    """Compiles a set of role prefixes"""
+    groups = set()
+    for role in roles:
+        split = role['name'].split('_')
+        if split[0] != REPO['EXCLUDE_ROLE_PREFIX']:
+            groups.add(split[0])
+    return sorted(groups)
