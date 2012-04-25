@@ -1,9 +1,7 @@
 {
     "name": "dbserver",
     "default_attributes": {
-    "mysql": {
-        "client_roles": ["webserver"]
-        }
+        "mysql": {"client_roles": ["webserver"]}
     },
     "override_attributes": { },
     "json_class": "Chef::Role",
