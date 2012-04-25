@@ -1,8 +1,5 @@
 {
     "chef_environment": "production",
-    "apache2": {
-        "client_roles": ["loadbalancer"]
-    },
     "run_list": [
         "role[webserver]"
     ]

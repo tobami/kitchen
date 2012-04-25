@@ -10,6 +10,7 @@ from kitchen.settings import STATIC_ROOT
 
 # We need to always regenerate the node data bag in case there where changes
 chef.build_node_data_bag()
+TOTAL_NODES = 8
 
 
 class TestRepo(TestCase):
@@ -35,19 +36,19 @@ class TestData(TestCase):
     def test_load_data_nodes(self):
         """Should return nodes when the given argument is 'nodes'"""
         data = chef._load_data('nodes')
-        self.assertEqual(len(data), 7)
+        self.assertEqual(len(data), TOTAL_NODES)
         self.assertEqual(data[1]['name'], "testnode2")
 
     def test_get_nodes(self):
         """Should return all nodes"""
         data = chef.get_nodes()
-        self.assertEqual(len(data), 7)
+        self.assertEqual(len(data), TOTAL_NODES)
         self.assertEqual(data[1]['name'], "testnode2")
 
     def test_load_data_roles(self):
         """Should return roles when the given argument is 'roles'"""
         data = chef._load_data('roles')
-        self.assertEqual(len(data), 3)
+        self.assertEqual(len(data), 4)
         self.assertEqual(data[0]['name'], "dbserver")
 
     def test_load_data_unsupported(self):
@@ -60,19 +61,19 @@ class TestData(TestCase):
         data = chef.get_environments(self.nodes)
         self.assertEqual(len(data), 3)
         expected = [{'counts': 1, 'name': 'none'},
-                    {'counts': 4, 'name': 'production'},
+                    {'counts': 5, 'name': 'production'},
                     {'counts': 2, 'name': 'staging'}]
         self.assertEqual(data, expected)
 
     def test_filter_nodes_all(self):
         """Should return all nodes when empty filters are are given"""
         data = chef.filter_nodes(self.nodes, '', '')
-        self.assertEqual(len(data), 7)
+        self.assertEqual(len(data), TOTAL_NODES)
 
     def test_filter_nodes_env(self):
         """Should filter nodes belonging to a given environment"""
         data = chef.filter_nodes(self.nodes, 'production')
-        self.assertEqual(len(data), 4)
+        self.assertEqual(len(data), 5)
 
         data = chef.filter_nodes(self.nodes, 'staging')
         self.assertEqual(len(data), 2)
@@ -100,14 +101,16 @@ class TestData(TestCase):
 
     def test_filter_nodes_virt(self):
         """Should filter nodes acording to their virt value"""
+        total_guests = 7
+        total_hosts = 1
         data = chef.filter_nodes(self.nodes, virt_roles='guest')
-        self.assertEqual(len(data), 6)
+        self.assertEqual(len(data), total_guests)
 
         data = chef.filter_nodes(self.nodes, virt_roles='host')
-        self.assertEqual(len(data), 1)
+        self.assertEqual(len(data), total_hosts)
 
         data = chef.filter_nodes(self.nodes, virt_roles='host,guest')
-        self.assertEqual(len(data), 7)
+        self.assertEqual(len(data), TOTAL_NODES)
 
     def test_filter_nodes_combined(self):
         """Should filter nodes acording to their virt value"""
@@ -133,14 +136,16 @@ class TestGraph(TestCase):
 
     def test_build_links_empty(self):
         """Should not generate links when nodes do not have any defined"""
-        data = chef.filter_nodes(self.nodes, 'staging')
+        data = chef.filter_nodes(self.nodes, 'staging', virt_roles='guest')
         links = graphs._build_links(data)
         self.assertEqual(links, {})
 
     def test_build_links_client_nodes(self):
         """Should generate links when nodes have client_nodes set"""
-        data = chef.filter_nodes(self.nodes, 'production')
+        data = chef.filter_nodes(
+            self.nodes, 'production', 'loadbalancer,webserver,dbserver')
         links = graphs._build_links(data)
+        self.maxDiff = None
         expected = {
             'testnode2': {'client_nodes': [('testnode1', 'apache2')]},
             'testnode3.mydomain.com': {
@@ -149,6 +154,33 @@ class TestGraph(TestCase):
                 ]
             },
             'testnode7': {'client_nodes': [('testnode1', 'apache2')]}
+        }
+        self.assertEqual(links, expected)
+
+    def test_build_links_needs_nodes(self):
+        """Should generate links when nodes have needs_nodes set"""
+        data = chef.filter_nodes(
+            self.nodes, 'production', 'worker,dbserver')
+        links = graphs._build_links(data)
+        expected = {
+            'testnode8': {'needs_nodes': [('testnode3.mydomain.com', 'mysql')]}
+        }
+        self.assertEqual(links, expected)
+
+    def test_build_links_all(self):
+        """Should generate all links when nodes define connections"""
+        data = chef.filter_nodes(
+            self.nodes, 'production')
+        links = graphs._build_links(data)
+        expected = {
+            'testnode2': {'client_nodes': [('testnode1', 'apache2')]},
+            'testnode3.mydomain.com': {
+                'client_nodes': [
+                    ('testnode2', 'mysql'), ('testnode7', 'mysql')
+                ]
+            },
+            'testnode7': {'client_nodes': [('testnode1', 'apache2')]},
+            'testnode8': {'needs_nodes': [('testnode3.mydomain.com', 'mysql')]}
         }
         self.assertEqual(links, expected)
 
@@ -163,12 +195,15 @@ class TestGraph(TestCase):
 
     def test_generate_small_graph(self):
         """Should generate a graph when some nodes are given"""
-        data = chef.filter_nodes(self.nodes, 'staging')
+        data = chef.filter_nodes(self.nodes, 'staging', None, 'guest')
         graphs.generate_node_map(data)
         self.assertTrue(os.path.exists(self.filepath))
         size = os.path.getsize(self.filepath)
-        self.assertTrue(size > 1700 and size < 2000,
-                        "Size not between 1700 and 2000: {0}".format(size))
+        min_size = 1600
+        max_size = 1700
+        self.assertTrue(size > min_size and size < max_size,
+                        "Size not between {0} and {1}: {2}".format(
+                            min_size, max_size, size))
 
     def test_generate_connected_graph(self):
         """Should generate a connected graph when connected nodes are given"""
@@ -176,9 +211,9 @@ class TestGraph(TestCase):
         graphs.generate_node_map(data)
         self.assertTrue(os.path.exists(self.filepath))
         size = os.path.getsize(self.filepath)
-        # Size with connections
-        max_size = 12000
+        # Graph size with connections
         min_size = 10000
+        max_size = 12000
         self.assertTrue(size > min_size and size < max_size,
                         "Size not between {0} and {1}: {2}".format(
                             min_size, max_size, size))
@@ -264,8 +299,8 @@ class TestAPI(TestCase):
         resp = self.client.get("/api/roles")
         self.assertEqual(resp.status_code, 200)
         data = json.loads(resp.content)
-        self.assertEqual(len(data), 3)
-        existing_roles = ['loadbalancer', 'webserver', 'dbserver']
+        self.assertEqual(len(data), 4)
+        existing_roles = ['loadbalancer', 'webserver', 'dbserver', 'worker']
         for role in data:
             self.assertTrue(role['name'] in existing_roles,
                             role['name'] + " is not an existing role name")
@@ -277,7 +312,7 @@ class TestAPI(TestCase):
         resp = self.client.get("/api/nodes")
         self.assertEqual(resp.status_code, 200)
         data = json.loads(resp.content)
-        self.assertEqual(len(data), 7)
+        self.assertEqual(len(data), TOTAL_NODES)
         self.assertTrue('role' not in data[0])
 
     def test_get_nodes_extended(self):
@@ -285,5 +320,5 @@ class TestAPI(TestCase):
         resp = self.client.get("/api/nodes/?extended=true")
         self.assertEqual(resp.status_code, 200)
         data = json.loads(resp.content)
-        self.assertEqual(len(data), 7)
+        self.assertEqual(len(data), TOTAL_NODES)
         self.assertTrue('role' in data[0])

@@ -1,0 +1,1 @@
+{"domain": "", "name": "testnode8", "roles": ["worker"], "recipes": [], "chef_environment": "production", "hostname": "testnode8", "fqdn": "testnode8", "role": ["worker"], "run_list": ["role[worker]"], "mysql": {"needs_roles": ["dbserver"]}, "id": "testnode8"}
