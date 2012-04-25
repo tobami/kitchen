@@ -4,12 +4,6 @@ import os
 import pydot
 from kitchen.settings import STATIC_ROOT, REPO
 
-{
-    'testnode1': {
-        'client_nodes': [('testnode2', 'mysql')],
-        'needs_nodes': [('testnode2', 'mysql')],
-    }
-}
 
 def _build_links(nodes):
     """Returns a dictionary of nodes that have links to other nodes
