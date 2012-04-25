@@ -131,9 +131,27 @@ class TestGraph(TestCase):
         if os.path.exists(self.filepath):
             os.remove(self.filepath)
 
+    def test_build_links_empty(self):
+        """Should not generate links when nodes do not have any defined"""
+        data = chef.filter_nodes(self.nodes, 'staging')
+        links = graphs._build_links(data)
+        self.assertEqual(links, {})
+
+    def test_build_links_client_nodes(self):
+        """Should generate links when nodes have client_nodes set"""
+        data = chef.filter_nodes(self.nodes, 'production')
+        links = graphs._build_links(data)
+        expected = {
+            'testnode2': {'client_nodes': [('testnode1', 'apache2')]},
+            'testnode3.mydomain.com': {
+                'client_nodes': [('testnode2', 'mysql')]
+            }
+        }
+        self.assertEqual(links, expected)
+
     def test_generate_empty_graph(self):
         """Should generate an empty graph when no nodes are given"""
-        data = chef.filter_nodes(self.nodes, 'stadging')
+        data = chef.filter_nodes(self.nodes, 'badenv')
         graphs.generate_node_map(data)
         self.assertTrue(os.path.exists(self.filepath))
         size = os.path.getsize(self.filepath)
