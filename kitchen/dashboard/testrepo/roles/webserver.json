@@ -1,6 +1,8 @@
 {
     "name": "webserver",
-    "default_attributes": { },
+    "default_attributes": {
+        "apache2": {"client_roles": ["loadbalancer"]}
+    },
     "override_attributes": { },
     "json_class": "Chef::Role",
     "description": "An apache web server",

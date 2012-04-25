@@ -1,0 +1,11 @@
+{
+    "name": "worker",
+    "default_attributes": {
+        "mysql": {"needs_roles": ["dbserver"]}
+    },
+    "override_attributes": { },
+    "json_class": "Chef::Role",
+    "description": "A worker node",
+    "chef_type": "role",
+    "run_list": [ ]
+}

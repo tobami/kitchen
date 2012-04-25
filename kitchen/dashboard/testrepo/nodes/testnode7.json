@@ -1,6 +1,6 @@
 {
     "chef_environment": "production",
     "run_list": [
-        "role[dbserver]"
+        "role[webserver]"
     ]
 }

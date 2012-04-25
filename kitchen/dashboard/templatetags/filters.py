@@ -1,5 +1,4 @@
 """Dashboard template filters"""
-from django.template.defaultfilters import stringfilter
 from django import template
 
 from kitchen.settings import REPO

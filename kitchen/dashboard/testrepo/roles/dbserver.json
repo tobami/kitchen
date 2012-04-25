@@ -1,6 +1,8 @@
 {
     "name": "dbserver",
-    "default_attributes": { },
+    "default_attributes": {
+        "mysql": {"client_roles": ["webserver"]}
+    },
     "override_attributes": { },
     "json_class": "Chef::Role",
     "description": "A load balancer",
