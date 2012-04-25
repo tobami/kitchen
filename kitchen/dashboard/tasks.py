@@ -13,10 +13,12 @@ log = logging.getLogger(__name__)
 
 
 class SyncRepo(PeriodicTask):
+    """A Periodic Task that syncs the git kitchen repository"""
     run_every = timedelta(seconds=REPO['SYNC_SCHEDULE'])
     REPO_ROOT = os.path.join(REPO_BASE_PATH, REPO['NAME'])
 
     def run(self, **kwargs):
+        """Task execution"""
         log.info("Synching repo")
         if os.path.exists(self.REPO_ROOT):
             self._update()

@@ -200,7 +200,7 @@ class TestGraph(TestCase):
         self.assertTrue(os.path.exists(self.filepath))
         size = os.path.getsize(self.filepath)
         min_size = 1600
-        max_size = 1700
+        max_size = 1900
         self.assertTrue(size > min_size and size < max_size,
                         "Size not between {0} and {1}: {2}".format(
                             min_size, max_size, size))
@@ -213,7 +213,7 @@ class TestGraph(TestCase):
         size = os.path.getsize(self.filepath)
         # Graph size with connections
         min_size = 10000
-        max_size = 12000
+        max_size = 13000
         self.assertTrue(size > min_size and size < max_size,
                         "Size not between {0} and {1}: {2}".format(
                             min_size, max_size, size))

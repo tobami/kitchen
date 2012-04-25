@@ -1,5 +1,4 @@
 """Dashboard app views"""
-from django.http import HttpResponse
 from django.contrib import messages
 from django.shortcuts import render_to_response
 from django.template import RequestContext

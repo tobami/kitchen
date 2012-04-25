@@ -1,9 +1,7 @@
 {
     "name": "worker",
     "default_attributes": {
-        "mysql": {
-            "needs_roles": ["dbserver"]
-        }
+        "mysql": {"needs_roles": ["dbserver"]}
     },
     "override_attributes": { },
     "json_class": "Chef::Role",

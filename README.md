@@ -72,7 +72,7 @@ Using the test repo as an example:
 That will generate an arrow from `loadbalancer` nodes to `webserver` nodes,
 with `apache2` as label.
 
-* The worker role defines:
+* The `worker` role defines:
 
 ```javascript
     "default_attributes": {
