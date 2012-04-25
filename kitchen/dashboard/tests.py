@@ -199,8 +199,8 @@ class TestGraph(TestCase):
         graphs.generate_node_map(data)
         self.assertTrue(os.path.exists(self.filepath))
         size = os.path.getsize(self.filepath)
-        min_size = 1600
-        max_size = 1900
+        min_size = 1500
+        max_size = 1800
         self.assertTrue(size > min_size and size < max_size,
                         "Size not between {0} and {1}: {2}".format(
                             min_size, max_size, size))
