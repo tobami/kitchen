@@ -70,10 +70,10 @@ def generate_node_map(nodes, roles):
             [role for role in node['role'] \
                 if not role.startswith(REPO['EXCLUDE_ROLE_PREFIX'])])
         color = "lightyellow"
-        role = None
+        role_prefix = None
         try:
-            role = node['role'][0]
-            color = role_colors[node['role'][0]]
+            role_prefix = node['role'][0].split("_")[0]
+            color = role_colors[role_prefix]
         except IndexError:
             pass
         node_el = pydot.Node(label,
