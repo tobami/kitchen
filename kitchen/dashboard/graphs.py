@@ -73,8 +73,10 @@ def generate_node_map(nodes, roles):
         role_prefix = None
         try:
             role_prefix = node['role'][0].split("_")[0]
+            if role_prefix == REPO['EXCLUDE_ROLE_PREFIX']:
+                role_prefix = node['role'][1].split("_")[0]
             color = role_colors[role_prefix]
-        except IndexError:
+        except (IndexError, KeyError):
             pass
         node_el = pydot.Node(label,
                              shape="box",
