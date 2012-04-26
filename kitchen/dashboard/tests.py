@@ -200,8 +200,8 @@ class TestGraph(TestCase):
         graphs.generate_node_map(data, self.roles)
         self.assertTrue(os.path.exists(self.filepath))
         size = os.path.getsize(self.filepath)
-        min_size = 1500
-        max_size = 1800
+        min_size = 3000
+        max_size = 4000
         self.assertTrue(size > min_size and size < max_size,
                         "Size not between {0} and {1}: {2}".format(
                             min_size, max_size, size))
@@ -213,8 +213,8 @@ class TestGraph(TestCase):
         self.assertTrue(os.path.exists(self.filepath))
         size = os.path.getsize(self.filepath)
         # Graph size with connections
-        min_size = 10000
-        max_size = 13000
+        min_size = 21000
+        max_size = 23000
         self.assertTrue(size > min_size and size < max_size,
                         "Size not between {0} and {1}: {2}".format(
                             min_size, max_size, size))

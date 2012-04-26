@@ -7,7 +7,7 @@ from kitchen.dashboard.chef import get_roles, get_role_groups
 
 
 COLORS = [
-    "#FCD975", "#9ACEEB", "/blues5/1:/blues5/4", "#97CE8A",
+    "#FCD975", "#9ACEEB", "/blues5/1", "#97CE8A",
 ]
 
 
@@ -50,11 +50,15 @@ def _build_links(nodes):
 def generate_node_map(nodes, roles):
     """Generates a graphviz node map"""
     graph = pydot.Dot(graph_type='digraph')
+    clusters = {}
     graph_nodes = {}
 
     role_colors = {}
     color_index = 0
     for role in get_role_groups(roles):
+        clusters[role] = pydot.Cluster(
+            role, label=role, color=COLORS[color_index], fontsize="12")
+        graph.add_subgraph(clusters[role])
         role_colors[role] = COLORS[color_index]
         color_index += 1
         if color_index >= len(COLORS):
@@ -66,22 +70,29 @@ def generate_node_map(nodes, roles):
             [role for role in node['role'] \
                 if not role.startswith(REPO['EXCLUDE_ROLE_PREFIX'])])
         color = "lightyellow"
-        if len(node['role']):
+        role = None
+        try:
+            role = node['role'][0]
             color = role_colors[node['role'][0]]
+        except IndexError:
+            pass
         node_el = pydot.Node(label,
                              shape="box",
                              style="filled",
                              fillcolor=color,
-                             fontsize="8")
+                             fontsize="9")
         graph_nodes[node['name']] = node_el
-        graph.add_node(node_el)
+        if role:
+            clusters[role].add_node(node_el)
+        else:
+            graph.add_node(node_el)
     links = _build_links(nodes)
     for node in links:
         for client in links[node].get('client_nodes', []):
             edge = pydot.Edge(
                 graph_nodes[client[0]],
                 graph_nodes[node],
-                fontsize="7",
+                fontsize="8",
                 arrowsize=.6,
             )
             edge.set_label(client[1])
