@@ -4,7 +4,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 from kitchen.dashboard.chef import (get_nodes_extended, get_roles,
-    get_environments, filter_nodes, RepoError)
+    get_role_groups, get_environments, filter_nodes, RepoError)
 from kitchen.dashboard import graphs
 from kitchen.settings import REPO, SHOW_VIRT_VIEW
 
@@ -15,12 +15,8 @@ def _get_data(env, roles, virt):
     data = {'filter_env': env, 'filter_roles': roles, 'filter_virt': virt}
     nodes = get_nodes_extended()
     data['roles'] = get_roles()
-    roles_groups = set()
-    for role in data['roles']:
-        split = role['name'].split('_')
-        if split[0] != REPO['EXCLUDE_ROLE_PREFIX']:
-            roles_groups.add(split[0])
-    data['roles_groups'] = sorted(roles_groups)
+    roles_groups = get_role_groups(data['roles'])
+    data['roles_groups'] = roles_groups
     data['virt_roles'] = ['host', 'guest']
     # Get environments before we filter nodes
     data['environments'] = get_environments(nodes)
@@ -66,7 +62,7 @@ def graph(request):
         data['nodes'] = []
         messages.add_message(request,
                              messages.INFO, "Please select an environment")
-    graphs.generate_node_map(data['nodes'])
+    graphs.generate_node_map(data['nodes'], data.get('roles', []))
     data['query_string'] = request.META['QUERY_STRING']
     return render_to_response('graph.html',
                               data, context_instance=RequestContext(request))

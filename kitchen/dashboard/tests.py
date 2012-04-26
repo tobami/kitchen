@@ -1,6 +1,6 @@
 """Tests for the kitchen.dashboard app"""
 import os
-import json
+import simplejson as json
 
 from django.test import TestCase
 from mock import patch
@@ -29,9 +29,29 @@ class TestRepo(TestCase):
         """Should raise RepoError when the kitchen is incomplete"""
         self.assertRaises(chef.RepoError, chef._check_kitchen)
 
+    @patch('kitchen.dashboard.chef.DATA_BAG_PATH', 'badpath')
+    def test_missing_node_data_bag(self):
+        """Should raise RepoError when there is no node data bag"""
+        self.assertRaises(chef.RepoError, chef._load_extended_node_data)
+
+    def test_missing_node_data_bag(self):
+        """Should raise RepoError when there is a JSON error"""
+        nodes = chef._load_data("nodes")
+        with patch.object(json, 'loads') as mock_method:
+            mock_method.side_effect = json.decoder.JSONDecodeError(
+                "JSON syntax error", "", 10)
+            self.assertRaises(chef.RepoError, chef._load_extended_node_data,
+                              nodes)
+
+    def test_incomplete_node_data_bag(self):
+        """Should raise RepoError when a node is missing its data bag item"""
+        nodes = chef._load_data("nodes")
+        nodes.append({'name': 'extra_node'})
+        self.assertRaises(chef.RepoError, chef._load_extended_node_data, nodes)
+
 
 class TestData(TestCase):
-    nodes = chef.load_extended_node_data()
+    nodes = chef.get_nodes_extended()
 
     def test_load_data_nodes(self):
         """Should return nodes when the given argument is 'nodes'"""
@@ -127,7 +147,8 @@ class TestData(TestCase):
 
 
 class TestGraph(TestCase):
-    nodes = chef.load_extended_node_data()
+    nodes = chef.get_nodes_extended()
+    roles = chef.get_roles()
     filepath = os.path.join(STATIC_ROOT, 'img', 'node_map.png')
 
     def setUp(self):
@@ -187,7 +208,7 @@ class TestGraph(TestCase):
     def test_generate_empty_graph(self):
         """Should generate an empty graph when no nodes are given"""
         data = chef.filter_nodes(self.nodes, 'badenv')
-        graphs.generate_node_map(data)
+        graphs.generate_node_map(data, self.roles)
         self.assertTrue(os.path.exists(self.filepath))
         size = os.path.getsize(self.filepath)
         self.assertTrue(os.path.getsize(self.filepath) < 100,
@@ -196,11 +217,11 @@ class TestGraph(TestCase):
     def test_generate_small_graph(self):
         """Should generate a graph when some nodes are given"""
         data = chef.filter_nodes(self.nodes, 'staging', None, 'guest')
-        graphs.generate_node_map(data)
+        graphs.generate_node_map(data, self.roles)
         self.assertTrue(os.path.exists(self.filepath))
         size = os.path.getsize(self.filepath)
-        min_size = 1500
-        max_size = 1800
+        min_size = 3000
+        max_size = 4000
         self.assertTrue(size > min_size and size < max_size,
                         "Size not between {0} and {1}: {2}".format(
                             min_size, max_size, size))
@@ -208,12 +229,12 @@ class TestGraph(TestCase):
     def test_generate_connected_graph(self):
         """Should generate a connected graph when connected nodes are given"""
         data = chef.filter_nodes(self.nodes, 'production')
-        graphs.generate_node_map(data)
+        graphs.generate_node_map(data, self.roles)
         self.assertTrue(os.path.exists(self.filepath))
         size = os.path.getsize(self.filepath)
         # Graph size with connections
-        min_size = 10000
-        max_size = 13000
+        min_size = 21000
+        max_size = 23000
         self.assertTrue(size > min_size and size < max_size,
                         "Size not between {0} and {1}: {2}".format(
                             min_size, max_size, size))

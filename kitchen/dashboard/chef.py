@@ -84,9 +84,8 @@ def _load_data(data_type):
     return data
 
 
-def load_extended_node_data():
+def _load_extended_node_data(nodes):
     """Loads JSON node files from node databag, which has merged attributes"""
-    nodes = _load_data("nodes")
     data = []
     for node in nodes:
         # Read corresponding data bag item for each node
@@ -103,12 +102,6 @@ def load_extended_node_data():
                 error = 'LittleChef found the following error in'
                 error += ' "{0}":\n {1}'.format(filepath, str(e))
                 raise RepoError(error)
-    if len(data) != len(nodes):
-        error = "The node data bag doesn't have the same number of nodes as "
-        error += "there are node files: {0} => {1}".format(
-            len(data), len(nodes))
-        log.error(error)
-        raise RepoError(error)
     return data
 
 
@@ -143,7 +136,7 @@ def filter_nodes(nodes, env='', roles='', virt_roles=''):
 
 def get_nodes_extended():
     """Returns node data from the automatic 'node' data_bag"""
-    return load_extended_node_data()
+    return _load_extended_node_data(_load_data("nodes"))
 
 
 def get_nodes():
@@ -154,3 +147,13 @@ def get_nodes():
 def get_roles():
     """Returns roles present in the repository's 'roles' directory"""
     return _load_data("roles")
+
+
+def get_role_groups(roles):
+    """Compiles a set of role prefixes"""
+    groups = set()
+    for role in roles:
+        split = role['name'].split('_')
+        if split[0] != REPO['EXCLUDE_ROLE_PREFIX']:
+            groups.add(split[0])
+    return sorted(groups)

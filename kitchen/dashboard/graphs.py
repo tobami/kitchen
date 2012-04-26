@@ -3,6 +3,12 @@ import os
 
 import pydot
 from kitchen.settings import STATIC_ROOT, REPO
+from kitchen.dashboard.chef import get_roles, get_role_groups
+
+
+COLORS = [
+    "#FCD975", "#9ACEEB", "/blues5/1", "#97CE8A",
+]
 
 
 def _build_links(nodes):
@@ -41,29 +47,53 @@ def _build_links(nodes):
     return linked_nodes
 
 
-def generate_node_map(nodes):
+def generate_node_map(nodes, roles):
     """Generates a graphviz node map"""
     graph = pydot.Dot(graph_type='digraph')
+    clusters = {}
     graph_nodes = {}
+
+    role_colors = {}
+    color_index = 0
+    for role in get_role_groups(roles):
+        clusters[role] = pydot.Cluster(
+            role, label=role, color=COLORS[color_index], fontsize="12")
+        graph.add_subgraph(clusters[role])
+        role_colors[role] = COLORS[color_index]
+        color_index += 1
+        if color_index >= len(COLORS):
+            color_index = 0
+
     # Create nodes
     for node in nodes:
         label = node['name'] + "\n" + "\n".join(
             [role for role in node['role'] \
                 if not role.startswith(REPO['EXCLUDE_ROLE_PREFIX'])])
+        color = "lightyellow"
+        role_prefix = None
+        try:
+            role_prefix = node['role'][0].split("_")[0]
+            color = role_colors[role_prefix]
+        except IndexError:
+            pass
         node_el = pydot.Node(label,
                              shape="box",
                              style="filled",
-                             fillcolor="lightyellow",
-                             fontsize="8")
+                             fillcolor=color,
+                             fontsize="9")
         graph_nodes[node['name']] = node_el
-        graph.add_node(node_el)
+        if role:
+            clusters[role].add_node(node_el)
+        else:
+            graph.add_node(node_el)
     links = _build_links(nodes)
     for node in links:
         for client in links[node].get('client_nodes', []):
             edge = pydot.Edge(
                 graph_nodes[client[0]],
                 graph_nodes[node],
-                fontsize="7",
+                fontsize="8",
+                arrowsize=.6,
             )
             edge.set_label(client[1])
             graph.add_edge(edge)
@@ -73,6 +103,7 @@ def generate_node_map(nodes):
                 graph_nodes[client[0]],
                 fontsize="7",
                 style="dashed",
+                arrowsize=.6,
             )
             edge.set_label(client[1])
             graph.add_edge(edge)
