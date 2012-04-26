@@ -84,8 +84,8 @@ def generate_node_map(nodes, roles):
                              fillcolor=color,
                              fontsize="9")
         graph_nodes[node['name']] = node_el
-        if role:
-            clusters[role].add_node(node_el)
+        if role_prefix:
+            clusters[role_prefix].add_node(node_el)
         else:
             graph.add_node(node_el)
     links = _build_links(nodes)
