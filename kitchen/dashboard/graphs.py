@@ -75,6 +75,8 @@ def generate_node_map(nodes, roles):
             role_prefix = node['role'][0].split("_")[0]
             if role_prefix == REPO['EXCLUDE_ROLE_PREFIX']:
                 role_prefix = node['role'][1].split("_")[0]
+                if role_prefix == REPO['EXCLUDE_ROLE_PREFIX']:
+                    role_prefix = None
             color = role_colors[role_prefix]
         except (IndexError, KeyError):
             pass
