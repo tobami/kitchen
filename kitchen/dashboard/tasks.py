@@ -48,3 +48,5 @@ class SyncRepo(PeriodicTask):
         if p.returncode != 0:
             log.error("{0} returned {1}: {2}".format(
                       " ".join(cmd), p.returncode, stderr))
+        else:
+            chef.build_node_data_bag()
