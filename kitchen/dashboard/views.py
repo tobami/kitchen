@@ -6,7 +6,7 @@ from django.template import RequestContext
 from kitchen.dashboard.chef import (get_nodes_extended, get_roles,
     get_role_groups, get_environments, filter_nodes, RepoError)
 from kitchen.dashboard import graphs
-from kitchen.settings import REPO, SHOW_VIRT_VIEW
+from kitchen.settings import REPO, SHOW_VIRT_VIEW, SHOW_HOST_NAMES
 
 
 def _get_data(env, roles, virt):
@@ -62,7 +62,11 @@ def graph(request):
         data['nodes'] = []
         messages.add_message(request,
                              messages.INFO, "Please select an environment")
-    graphs.generate_node_map(data['nodes'], data.get('roles', []))
+    graphs.generate_node_map(
+        data['nodes'],
+        data.get('roles', []),
+        request.GET.get('show_hostnames', SHOW_HOST_NAMES)
+    )
     data['query_string'] = request.META['QUERY_STRING']
     return render_to_response('graph.html',
                               data, context_instance=RequestContext(request))

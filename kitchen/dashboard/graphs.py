@@ -3,7 +3,7 @@ import os
 
 import pydot
 from kitchen.settings import STATIC_ROOT, REPO, COLORS
-from kitchen.dashboard.chef import get_roles, get_role_groups
+from kitchen.dashboard.chef import get_role_groups
 
 
 def _build_links(nodes):
@@ -42,7 +42,7 @@ def _build_links(nodes):
     return linked_nodes
 
 
-def generate_node_map(nodes, roles):
+def generate_node_map(nodes, roles, show_hostnames=True):
     """Generates a graphviz node map"""
     graph = pydot.Dot(graph_type='digraph')
     clusters = {}
@@ -61,9 +61,10 @@ def generate_node_map(nodes, roles):
 
     # Create nodes
     for node in nodes:
-        label = node['name'] + "\n" + "\n".join(
-            [role for role in node['role'] \
-                if not role.startswith(REPO['EXCLUDE_ROLE_PREFIX'])])
+        label = "\n".join([role for role in node['role'] \
+                          if not role.startswith(REPO['EXCLUDE_ROLE_PREFIX'])])
+        if show_hostnames not in [False, None, "false"]:
+            label = node['name'] + "\n" + label
         color = "lightyellow"
         role_prefix = None
         try:
