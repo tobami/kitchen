@@ -2,13 +2,8 @@
 import os
 
 import pydot
-from kitchen.settings import STATIC_ROOT, REPO
+from kitchen.settings import STATIC_ROOT, REPO, COLORS
 from kitchen.dashboard.chef import get_roles, get_role_groups
-
-
-COLORS = [
-    "#FCD975", "#9ACEEB", "/blues5/1", "#97CE8A",
-]
 
 
 def _build_links(nodes):

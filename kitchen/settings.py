@@ -21,6 +21,9 @@ REPO = {
     'DEFAULT_ENV': 'production',
     'DEFAULT_VIRT': 'guest',
 }
+COLORS = [
+    "#FCD975", "#9ACEEB", "/blues5/1", "#97CE8A", "#FFA764", "#FBC6FF"
+]
 SHOW_VIRT_VIEW = True
 
 LOG_FILE = '/tmp/kitchen.log'
