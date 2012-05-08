@@ -27,7 +27,7 @@ COLORS = [
 SHOW_VIRT_VIEW = True
 
 LOG_FILE = '/tmp/kitchen.log'
-##
+###################
 
 ADMINS = ()
 
@@ -90,7 +90,6 @@ INSTALLED_APPS = (
     "djcelery",
     "djkombu",
     "kitchen.dashboard",
-    "kitchen.dashboard.templatetags",
     'django_nose',
 )
 
