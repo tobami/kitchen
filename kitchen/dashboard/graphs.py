@@ -63,7 +63,7 @@ def generate_node_map(nodes, roles, show_hostnames=True):
     for node in nodes:
         label = "\n".join([role for role in node['role'] \
                           if not role.startswith(REPO['EXCLUDE_ROLE_PREFIX'])])
-        if show_hostnames not in [False, None, "false"]:
+        if show_hostnames:
             label = node['name'] + "\n" + label
         color = "lightyellow"
         role_prefix = None

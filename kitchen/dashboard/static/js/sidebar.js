@@ -1,3 +1,7 @@
+$(document).ready(function() {
+    setupClickHandlers();
+});
+
 function setupClickHandlers() {
     /**
      * Assign click handlers to all sidebar entries.
@@ -8,12 +12,12 @@ function setupClickHandlers() {
         if (active_buttons.index(this) > -1) {
             active_buttons = active_buttons.not(this);
         } else {
-            //active_buttons.add(this);
+            // active_buttons.add(this);
             active_buttons = $.fn.add.call(active_buttons, this);
         }
         var changed_environment = false;
-        var changed_virt_environment = false;
-        // add already selected buttons to the params
+        var changed_virt = false;
+        // Add already selected buttons to the params
         for (var i=0; i < active_buttons.length; i++) {
             var datatype = active_buttons[i].dataset['type'];
             var dataname = active_buttons[i].dataset['name'];
@@ -27,8 +31,8 @@ function setupClickHandlers() {
             } else if (datatype === 'virt') {
                 if (active_buttons[i] === this) {
                     parameters[datatype] = dataname;
-                    changed_virt_environment = true;
-                } else if (!changed_virt_environment) {
+                    changed_virt = true;
+                } else if (!changed_virt) {
                     parameters[datatype] = dataname;
                 }
             } else {
@@ -42,9 +46,8 @@ function setupClickHandlers() {
 
         // If there are no env or virt selections set parameter to an empty string
         // to prevent server-side defaults from setting them
-        var datatypes = ['env', 'roles'];
+        var datatypes = ['env', 'roles', 'options'];
         if ( show_virt ) { datatypes.push('virt'); }
-        console.log(datatypes);
         for (var datatype in datatypes) {
             if (!(datatypes[datatype] in parameters)) {
                 parameters[datatypes[datatype]] = "";

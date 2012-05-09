@@ -1,12 +1,21 @@
 {% extends "base.html" %}
 
+{% block extranav %}
+<li class="nav-header">
+    Options
+</li>
+<li {% if show_hostnames %} class="active" {% endif %}>
+    <a href="#" data-type="options" data-name="show_hostnames" class="sidebar_link">Show Hostnames</a>
+</li>
+{% endblock %}
+
 {% block bodycontent %}
 {% if msg %}{{ msg }}{% else %}<img src="/static/img/node_map.png">{% endif %}
 {% endblock %}
 
 {% block topnav %}
 <ul class="nav">
-  <li><a href="/?{{query_string}}">List</a></li>
+  <li><a href="/?{{ query_string }}">List</a></li>
   <li class="active"><a href="/graph">Graph</a></li>
 </ul>
 {% endblock %}

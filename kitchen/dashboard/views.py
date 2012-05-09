@@ -62,10 +62,17 @@ def graph(request):
         data['nodes'] = []
         messages.add_message(request,
                              messages.INFO, "Please select an environment")
+    options = request.GET.get('options', '').split(",")
+    if not options:
+        # Set defaults
+        options = []
+        if SHOW_HOST_NAMES:
+            options.append("show_hostnames")
+    data['show_hostnames'] = 'show_hostnames' in options
     graphs.generate_node_map(
         data['nodes'],
         data.get('roles', []),
-        request.GET.get('show_hostnames', SHOW_HOST_NAMES)
+        data['show_hostnames']
     )
     data['query_string'] = request.META['QUERY_STRING']
     return render_to_response('graph.html',

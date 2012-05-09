@@ -19,7 +19,7 @@
         {% block extrahead %}{% endblock %}
         <title>{% block title %}Kitchen{% endblock %}</title>
     </head>
-    <body onload="setupClickHandlers();">
+    <body>
         {% block bodyhead %}
         <div class="navbar navbar-fixed-top">
           <div class="navbar-inner">
@@ -55,7 +55,7 @@
                         </li>
                         {% for env in environments %}
                         <li {% if env.name == filter_env %} class="active" {% endif %}>
-                            <a href="#" data-type="env" data-name="{{env.name}}" class="sidebar_link">{{env.name}} <span class="badge badge-warning">{{env.count}}</span></a>
+                            <a href="#" data-type="env" data-name="{{env.name}}" class="sidebar_link">{{env.name}} <span class="badge badge-warning">{{env.counts}}</span></a>
                         </li>
                         {% endfor %}
                         <li class="nav-header">
@@ -75,6 +75,7 @@
                             <a href="#" data-type="virt" data-name="{{virt_role}}" class="sidebar_link">{{ virt_role }}</a>
                         </li>
                         {% endfor %}{% endif %}
+                        {% block extranav %}{% endblock %}
                     </ul>
                 </div>
                 <div class="span10">
