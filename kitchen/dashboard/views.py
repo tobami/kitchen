@@ -62,12 +62,12 @@ def graph(request):
         data['nodes'] = []
         messages.add_message(request,
                              messages.INFO, "Please select an environment")
-    options = request.GET.get('options', '').split(",")
-    if not options:
+    options = request.GET.get('options')
+    if options is None:
         # Set defaults
-        options = []
+        options = ''
         if SHOW_HOST_NAMES:
-            options.append("show_hostnames")
+            options += 'show_hostnames,'
     data['show_hostnames'] = 'show_hostnames' in options
     graphs.generate_node_map(
         data['nodes'],

@@ -60,13 +60,9 @@ def generate_node_map(nodes, roles, show_hostnames=True):
             color_index = 0
 
     # Create nodes
+    node_labels = {}  # Only used when show_hostnames = False
     for node in nodes:
-        label = "\n".join([role for role in node['role'] \
-                          if not role.startswith(REPO['EXCLUDE_ROLE_PREFIX'])])
-        if show_hostnames:
-            label = node['name'] + "\n" + label
         color = "lightyellow"
-        role_prefix = None
         try:
             role_prefix = node['role'][0].split("_")[0]
             if role_prefix == REPO['EXCLUDE_ROLE_PREFIX']:
@@ -76,7 +72,26 @@ def generate_node_map(nodes, roles, show_hostnames=True):
                     role_prefix = None
             color = role_colors[role_prefix]
         except (IndexError, KeyError):
-            pass
+            role_prefix = None
+        label = "\n".join([role for role in node['role'] \
+                          if not role.startswith(REPO['EXCLUDE_ROLE_PREFIX'])])
+        if show_hostnames:
+            label = node['name'] + "\n" + label
+        else:
+            if not label:
+                label = "norole"
+            if label in node_labels:
+                if node_labels[label] == 1:
+                    if role_prefix:
+                        first_node = clusters[role_prefix].get_node(label)[0]
+                    else:
+                        first_node = graph.get_node(label)[0]
+                    first_node.set_name(label + " (1)")
+                node_labels[label] += 1
+                label += " ({0})".format(node_labels[label])
+            else:
+                node_labels[label] = 1
+
         node_el = pydot.Node(label,
                              shape="box",
                              style="filled",
