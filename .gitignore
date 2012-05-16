@@ -2,4 +2,5 @@
 *.sql
 celerybeat-schedule
 node_map.png
+node_map.svg
 kitchen/repo/

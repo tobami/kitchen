@@ -149,7 +149,7 @@ class TestData(TestCase):
 class TestGraph(TestCase):
     nodes = chef.get_nodes_extended()
     roles = chef.get_roles()
-    filepath = os.path.join(STATIC_ROOT, 'img', 'node_map.png')
+    filepath = os.path.join(STATIC_ROOT, 'img', 'node_map.svg')
 
     def setUp(self):
         if os.path.exists(self.filepath):
@@ -211,8 +211,9 @@ class TestGraph(TestCase):
         graphs.generate_node_map(data, self.roles)
         self.assertTrue(os.path.exists(self.filepath))
         size = os.path.getsize(self.filepath)
-        self.assertTrue(os.path.getsize(self.filepath) < 100,
-                        "Size greater than 1000: {0}".format(size))
+        max_size = 650
+        self.assertTrue(size < max_size,
+                        "Size greater than {0}: {1}".format(max_size, size))
 
     def test_generate_small_graph(self):
         """Should generate a graph when some nodes are given"""
@@ -220,8 +221,10 @@ class TestGraph(TestCase):
         graphs.generate_node_map(data, self.roles)
         self.assertTrue(os.path.exists(self.filepath))
         size = os.path.getsize(self.filepath)
-        min_size = 3000
-        max_size = 4000
+        #min_size = 3000  # png
+        #max_size = 4000  # png
+        min_size = 1000  # svg
+        max_size = 1500  # svg
         self.assertTrue(size > min_size and size < max_size,
                         "Size not between {0} and {1}: {2}".format(
                             min_size, max_size, size))
@@ -233,15 +236,17 @@ class TestGraph(TestCase):
         self.assertTrue(os.path.exists(self.filepath))
         size = os.path.getsize(self.filepath)
         # Graph size with connections
-        min_size = 20000
-        max_size = 23000
+        #min_size = 20000  # png
+        #max_size = 23000  # png
+        min_size = 6000  # svg
+        max_size = 7000  # svg
         self.assertTrue(size > min_size and size < max_size,
                         "Size not between {0} and {1}: {2}".format(
                             min_size, max_size, size))
 
 
 class TestViews(TestCase):
-    filepath = os.path.join(STATIC_ROOT, 'img', 'node_map.png')
+    filepath = os.path.join(STATIC_ROOT, 'img', 'node_map.svg')
 
     def test_list(self):
         """Should display the default node list when no params are given"""
@@ -301,8 +306,9 @@ class TestViews(TestCase):
 
         self.assertTrue(os.path.exists(self.filepath))
         size = os.path.getsize(self.filepath)
-        self.assertTrue(os.path.getsize(self.filepath) < 100,
-                        "Size greater than 1000: {0}".format(size))
+        max_size = 650
+        self.assertTrue(size < max_size,
+                        "Size greater than {0}: {1}".format(max_size, size))
 
     @patch('kitchen.dashboard.chef.KITCHEN_DIR', '/badrepopath/')
     def test_graph_no_nodes(self):
