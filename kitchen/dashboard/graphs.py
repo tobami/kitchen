@@ -1,9 +1,14 @@
 """Facility to render node graphs using pydot"""
 import os
+import logging
 
 import pydot
+from logbook import Logger
+
 from kitchen.settings import STATIC_ROOT, REPO, COLORS
 from kitchen.dashboard.chef import get_role_groups
+
+log = Logger(__name__)
 
 
 def _build_links(nodes):
@@ -128,6 +133,7 @@ def generate_node_map(nodes, roles, show_hostnames=True):
     try:
         graph.write_svg(filename)
     except pydot.InvocationException as e:
+        log.error("pydot error: {0}".format(str(e)))
         return False, str(e)
     else:
         return True, filename

@@ -2,11 +2,14 @@
 from django.contrib import messages
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from logbook import Logger
 
 from kitchen.dashboard.chef import (get_nodes_extended, get_roles,
     get_role_groups, get_environments, filter_nodes, RepoError)
 from kitchen.dashboard import graphs
 from kitchen.settings import REPO, SHOW_VIRT_VIEW, SHOW_HOST_NAMES
+
+log = Logger(__name__)
 
 
 def _get_data(env, roles, virt):
@@ -35,6 +38,7 @@ def main(request):
                          request.GET.get('roles', ''),
                          request.GET.get('virt', REPO['DEFAULT_VIRT']))
     except RepoError as e:
+        log.error(str(e))
         messages.add_message(request, messages.ERROR, str(e))
     else:
         if not len(data['nodes']):

@@ -3,14 +3,11 @@ import os
 import simplejson as json
 
 from littlechef import runner, lib, chef
-from logbook import Logger, MonitoringFileHandler
+from logbook import Logger
 
 from kitchen.settings import DEBUG, REPO, REPO_BASE_PATH, LOG_FILE
 
-
-file_log_handler = MonitoringFileHandler(LOG_FILE, bubble=DEBUG)
-file_log_handler.push_application()
-log = Logger('kitchen.lib')
+log = Logger(__name__)
 
 KITCHEN_DIR = os.path.join(
     REPO_BASE_PATH, REPO['NAME'], REPO['KITCHEN_SUBDIR'])
