@@ -325,6 +325,7 @@ class TestViews(TestCase):
     def test_graph_graphviz_error(self):
         """Should display an error message when there is a GraphViz error"""
         error_msg = "GraphVizs executables not found"
+
         def mock_factory():
             def mock_method(a, b, c):
                 return False, error_msg

@@ -1,5 +1,5 @@
 """Dashboard app views"""
-from django.contrib import messages
+from django.contrib.messages import add_message, ERROR, INFO
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from logbook import Logger
@@ -39,11 +39,11 @@ def main(request):
                          request.GET.get('virt', REPO['DEFAULT_VIRT']))
     except RepoError as e:
         log.error(str(e))
-        messages.add_message(request, messages.ERROR, str(e))
+        add_message(request, ERROR, str(e))
     else:
         if not len(data['nodes']):
-            messages.add_message(request, messages.INFO,
-                "There are no nodes that fit the supplied criteria.")
+            add_message(request, INFO,
+                        "There are no nodes that fit the supplied criteria.")
     data['show_virt'] = SHOW_VIRT_VIEW
     data['query_string'] = request.META['QUERY_STRING']
     return render_to_response('main.html',
@@ -60,12 +60,11 @@ def graph(request):
     try:
         data = _get_data(env_filter, request.GET.get('roles', ''), 'guest')
     except RepoError as e:
-        messages.add_message(request, messages.ERROR, str(e))
+        add_message(request, ERROR, str(e))
 
     if not env_filter:
         data['nodes'] = []
-        messages.add_message(request,
-                             messages.INFO, "Please select an environment")
+        add_message(request, INFO, "Please select an environment")
     options = request.GET.get('options')
     if options is None:
         # Set defaults
@@ -79,8 +78,7 @@ def graph(request):
         data['show_hostnames']
     )
     if not success:
-        messages.add_message(request,
-                             messages.ERROR, msg)
+        add_message(request, ERROR, msg)
     data['query_string'] = request.META['QUERY_STRING']
     return render_to_response('graph.html',
                               data, context_instance=RequestContext(request))

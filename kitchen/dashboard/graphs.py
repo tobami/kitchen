@@ -1,6 +1,5 @@
 """Facility to render node graphs using pydot"""
 import os
-import logging
 
 import pydot
 from logbook import Logger

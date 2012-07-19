@@ -5,7 +5,7 @@ import simplejson as json
 from littlechef import runner, lib, chef
 from logbook import Logger
 
-from kitchen.settings import DEBUG, REPO, REPO_BASE_PATH, LOG_FILE
+from kitchen.settings import DEBUG, REPO, REPO_BASE_PATH
 
 log = Logger(__name__)
 

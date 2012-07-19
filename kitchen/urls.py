@@ -1,3 +1,4 @@
+"""Root URL routing"""
 from django.conf.urls.defaults import patterns
 from django.conf.urls.static import static
 
