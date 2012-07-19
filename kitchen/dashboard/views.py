@@ -69,11 +69,14 @@ def graph(request):
         if SHOW_HOST_NAMES:
             options += 'show_hostnames,'
     data['show_hostnames'] = 'show_hostnames' in options
-    graphs.generate_node_map(
+    success, msg = graphs.generate_node_map(
         data['nodes'],
         data.get('roles', []),
         data['show_hostnames']
     )
+    if not success:
+        messages.add_message(request,
+                             messages.ERROR, msg)
     data['query_string'] = request.META['QUERY_STRING']
     return render_to_response('graph.html',
                               data, context_instance=RequestContext(request))

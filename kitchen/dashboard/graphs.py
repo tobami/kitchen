@@ -124,4 +124,10 @@ def generate_node_map(nodes, roles, show_hostnames=True):
             edge.set_label(client[1])
             graph.add_edge(edge)
     # Generate graph
-    graph.write_svg(os.path.join(STATIC_ROOT, 'img', 'node_map.svg'))
+    filename = os.path.join(STATIC_ROOT, 'img', 'node_map.svg')
+    try:
+        graph.write_svg(filename)
+    except pydot.InvocationException as e:
+        return False, str(e)
+    else:
+        return True, filename

@@ -248,6 +248,10 @@ class TestGraph(TestCase):
 class TestViews(TestCase):
     filepath = os.path.join(STATIC_ROOT, 'img', 'node_map.svg')
 
+    def setUp(self):
+        if os.path.exists(self.filepath):
+            os.remove(self.filepath)
+
     def test_list(self):
         """Should display the default node list when no params are given"""
         resp = self.client.get("/")
@@ -317,6 +321,20 @@ class TestViews(TestCase):
         self.assertEqual(resp.status_code, 200)
         expected = "Repo dir doesn&#39;t exist at &#39;/badrepopath/&#39;"
         self.assertTrue(expected in resp.content)
+
+    def test_graph_graphviz_error(self):
+        """Should display an error message when there is a GraphViz error"""
+        error_msg = "GraphVizs executables not found"
+        def mock_factory():
+            def mock_method(a, b, c):
+                return False, error_msg
+            return mock_method
+        with patch.object(graphs, 'generate_node_map', new_callable=mock_factory):
+            resp = self.client.get("/graph/")
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue(error_msg in resp.content,
+                        "Did not find expected string '{0}'".format(error_msg))
+        self.assertFalse(os.path.exists(self.filepath))
 
 
 class TestAPI(TestCase):
