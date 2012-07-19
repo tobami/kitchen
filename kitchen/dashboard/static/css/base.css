@@ -27,3 +27,18 @@ body {
 .node_env {
     width: 17em;
 }
+
+p.notfound {
+    padding: 3px 15px;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 18px;
+    color: #999;
+    text-align: center;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+}
+
+p.notfound img {
+    margin-right: 1em;
+}

@@ -11,6 +11,7 @@ urlpatterns = patterns('',
     (r'^graph/$', 'kitchen.dashboard.views.graph'),
     (r'^api/nodes', api.get_nodes),
     (r'^api/roles', api.get_roles),
+    (r'^404', 'django.views.generic.simple.direct_to_template', {'template': '404.html'}),
 )
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
