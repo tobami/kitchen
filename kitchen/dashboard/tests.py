@@ -308,11 +308,7 @@ class TestViews(TestCase):
         self.assertTrue("Environment" in resp.content)
         self.assertTrue("Please select an environment" in resp.content)
 
-        self.assertTrue(os.path.exists(self.filepath))
-        size = os.path.getsize(self.filepath)
-        max_size = 650
-        self.assertTrue(size < max_size,
-                        "Size greater than {0}: {1}".format(max_size, size))
+        self.assertFalse(os.path.exists(self.filepath))
 
     @patch('kitchen.dashboard.chef.KITCHEN_DIR', '/badrepopath/')
     def test_graph_no_nodes(self):

@@ -50,35 +50,39 @@ def main(request):
                               data, context_instance=RequestContext(request))
 
 
-def graph(request):
-    """Graph view where users can visualize graphs of their nodes
-    generated using Graphviz open source graph visualization library
-
-    """
-    data = {'nodes': []}
-    env_filter = request.GET.get('env', REPO['DEFAULT_ENV'])
-    try:
-        data = _get_data(env_filter, request.GET.get('roles', ''), 'guest')
-    except RepoError as e:
-        add_message(request, ERROR, str(e))
-
-    if not env_filter:
-        data['nodes'] = []
-        add_message(request, INFO, "Please select an environment")
-    options = request.GET.get('options')
+def _set_options(options):
+    """Sets default options if none are given"""
     if options is None:
         # Set defaults
         options = ''
         if SHOW_HOST_NAMES:
             options += 'show_hostnames,'
+    return options
+
+
+def graph(request):
+    """Graph view where users can visualize graphs of their nodes
+    generated using Graphviz open source graph visualization library
+
+    """
+    options = _set_options(request.GET.get('options'))
+    data = {}
+    env_filter = request.GET.get('env', REPO['DEFAULT_ENV'])
+    if env_filter:
+        try:
+            data = _get_data(env_filter, request.GET.get('roles', ''), 'guest')
+        except RepoError as e:
+            add_message(request, ERROR, str(e))
+        else:
+            success, msg = graphs.generate_node_map(data['nodes'],
+                                                    data.get('roles', []),
+                                                    'show_hostnames' in options)
+            if not success:
+                add_message(request, ERROR, msg)
+    else:
+        add_message(request, INFO, "Please select an environment")
+
     data['show_hostnames'] = 'show_hostnames' in options
-    success, msg = graphs.generate_node_map(
-        data['nodes'],
-        data.get('roles', []),
-        data['show_hostnames']
-    )
-    if not success:
-        add_message(request, ERROR, msg)
     data['query_string'] = request.META['QUERY_STRING']
     return render_to_response('graph.html',
                               data, context_instance=RequestContext(request))
