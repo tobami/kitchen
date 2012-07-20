@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load filters %}
+
+{% block topnav %}
+    <ul class="nav">
+        <li><a href="/?{{query_string}}">List</a></li>
+        <li class="active"><a href="/virt/">Virt</a></li>
+        <li><a href="/graph/?{{query_string}}">Graph</a></li>
+    </ul>
+{% endblock %}
+
+{% block bodycontent %}
+    {% if nodes %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="node_name">Name</th>
+                    <th class="node_ip">IP Address</th>
+                    <th class="node_env">Environment</th>
+                    <th class="node_role">Role</th>
+                </tr>
+            </thead>
+            {% for host in nodes %}
+                <tr>
+                    <td class="node_name">
+                        {{ host.name }}
+                    </td>
+                    <td class="node_ip">
+                        {{ host.ipaddress }}
+                    </td>
+                    <td class="node_env">
+                        {{ host.chef_environment }}
+                    </td>
+                    <td class="node_role">
+                        {% for entry in host.role %}{% if not entry|is_environment_role %}{{ entry }}{% if not forloop.last %}, {% endif %}{% endif %}{% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                <table class="table">
+                {% for node in host.virtualization.vms %}
+                    <tr>
+                        <td class="node_name">
+                            {{ node.fqdn }}
+                        </td>
+                        <td>
+                            {{ node.RAM }} MB
+                        </td>
+                        <td>
+                            {{ node.cpus }} CPUs
+                        </td>
+                        <td class="node_role">
+                            {% for entry in node.role %}{% if not entry|is_environment_role %}{{ entry }}{% if not forloop.last %}, {% endif %}{% endif %}{% endfor %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </table>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+{% endblock %}

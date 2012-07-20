@@ -102,6 +102,17 @@ def _load_extended_node_data(nodes):
     return data
 
 
+def group_nodes_by_host(nodes):
+    """Returns a list of hosts with their virtual machines"""
+    hosts = filter_nodes(nodes, virt_roles='host')
+    for host in hosts:
+        for vm in host['virtualization'].get('vms', []):
+            for node in nodes:
+                if node['fqdn'] == vm['fqdn']:
+                    vm.update(node)
+    return hosts
+
+
 def filter_nodes(nodes, env='', roles='', virt_roles=''):
     """Returns nodes which fulfill env, roles and virt_roles criteria"""
     retval = []
