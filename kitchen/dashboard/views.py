@@ -43,7 +43,7 @@ def _show_repo_sync_date(request):
         sync_date = os.path.getmtime(date_file)
         sync_str = "Last synchronization time on {0}".format(
             datetime.fromtimestamp(sync_date).strftime("%d. %B %Y - %H:%M"))
-        if (time.time() - sync_date) > REPO['SYNC_SCHEDULE'] * 3:
+        if (time.time() - sync_date) > REPO['SYNC_SCHEDULE'] * 2.5:
             add_message(request, WARNING,
                         sync_str + " (more than thrice the sync period)")
         else:
