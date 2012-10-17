@@ -49,7 +49,10 @@ def _show_repo_sync_date(request):
         else:
             add_message(request, INFO, sync_str)
     else:
-        add_message(request, ERROR, "There is not a last synchronization time")
+        add_message(
+            request, ERROR,
+            "Could not find a record of the last synchronization time!"
+        )
 
 
 def _set_options(options):
