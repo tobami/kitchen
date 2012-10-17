@@ -40,18 +40,17 @@ def _show_repo_sync_date(request):
     """Shows the sync date, which will be the modified date of a file"""
     try:
         sync_date = os.stat(os.path.join(STATIC_ROOT, 'syncdate')).st_mtime
-        sync_str = "Last synchronization time on {0}".format(
-            datetime.fromtimestamp(sync_date).strftime("%d. %B %Y - %H:%M"))
-        if (time.time() - sync_date) > REPO['SYNC_SCHEDULE'] * 2.5:
+        sync_lim = REPO['SYNC_SCHEDULE'] * 2.5
+        if (time.time() - sync_date) > sync_lim:
             add_message(request, WARNING,
-                        sync_str + " (more than thrice the sync period)")
+                        "The repo is more than {0} minutes out"
+                        " of sync".format(int(sync_lim / 60)))
         else:
-            add_message(request, INFO, sync_str)
+            add_message(request, INFO, "Last sync on {0}".format(
+                datetime.fromtimestamp(sync_date).strftime("%d %b %Y - %H:%M")))
     except OSError:
-        add_message(
-            request, ERROR,
-            "Could not find a record of the last synchronization time!"
-        )
+        add_message(request, ERROR, "There have been errors while "
+                                    "syncing the repo")
 
 
 def _set_options(options):
