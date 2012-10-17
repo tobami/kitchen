@@ -1,9 +1,8 @@
 """Dashboard app views"""
 import os
 import time
-from datetime import datetime
 
-from django.contrib.messages import add_message, ERROR, INFO, WARNING
+from django.contrib.messages import add_message, ERROR, WARNING
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from logbook import Logger
@@ -13,7 +12,8 @@ from kitchen.dashboard.chef import (get_nodes_extended, get_roles,
                                     filter_nodes, group_nodes_by_host,
                                     RepoError)
 from kitchen.dashboard import graphs
-from kitchen.settings import REPO, SHOW_VIRT_VIEW, SHOW_HOST_NAMES, SYNCDATE_FILE
+from kitchen.settings import (REPO, SHOW_VIRT_VIEW, SHOW_HOST_NAMES,
+                              SYNCDATE_FILE)
 
 log = Logger(__name__)
 
@@ -39,16 +39,16 @@ def _get_data(env, roles, virt):
 def _show_repo_sync_date(request):
     """Shows the sync date, which will be the modified date of a file"""
     try:
-        sync_age = time.time() - os.stat(SYNCDATE_FILE).st_mtime
+        sync_age = (time.time() - os.stat(SYNCDATE_FILE).st_mtime) / 60
     except OSError:
         add_message(request, ERROR, "There have been errors while "
                                     "syncing the repo")
     else:
-        sync_lim = REPO['SYNC_SCHEDULE'] * 2.5
+        sync_lim = REPO['SYNC_PERIOD'] * 2.5
         if sync_age > sync_lim:
             add_message(request, WARNING,
                         "The repo is {0} minutes old, it is getting "
-                        "out of sync".format(int(sync_age / 60)))
+                        "out of sync".format(int(sync_age)))
 
 
 def _set_options(options):

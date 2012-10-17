@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 
 class SyncRepo(PeriodicTask):
     """A Periodic Task that syncs the git kitchen repository"""
-    run_every = timedelta(seconds=REPO['SYNC_SCHEDULE'])
+    run_every = timedelta(minutes=REPO['SYNC_PERIOD'])
     REPO_ROOT = os.path.join(REPO_BASE_PATH, REPO['NAME'])
 
     def run(self, **kwargs):
