@@ -54,5 +54,6 @@ class SyncRepo(PeriodicTask):
 
     def _set_repo_sync_date(self):
         """Sets the modified date of a file, which will be the sync date"""
-        f = open(os.path.join(STATIC_ROOT, 'syncdate'), 'w')
-        f.close()
+        filename = os.path.join(STATIC_ROOT, 'syncdate')
+        with file(filename, 'a'):
+                os.utime(filename, None)
