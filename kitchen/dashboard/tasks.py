@@ -2,24 +2,30 @@
 import os
 from datetime import timedelta
 from subprocess import Popen, PIPE
-import logging
+from logbook import Logger, MonitoringFileHandler
 
-from celery.task import PeriodicTask
+import sys
+path = os.path.dirname(os.path.dirname(
+    os.path.abspath(os.path.dirname(__file__).replace('\\', '/'))))
+sys.path.append(path)
+os.environ['DJANGO_SETTINGS_MODULE'] = 'kitchen.settings'
 
-from kitchen.settings import REPO, REPO_BASE_PATH, SYNCDATE_FILE
+from kitchen.settings import (REPO, REPO_BASE_PATH, SYNCDATE_FILE, LOG_FILE,
+                              DEBUG)
 from kitchen.dashboard import chef
 
-log = logging.getLogger(__name__)
+file_log_handler = MonitoringFileHandler(LOG_FILE, bubble=DEBUG)
+file_log_handler.push_application()
+log = Logger("kitchen.sync")
 
 
-class SyncRepo(PeriodicTask):
+class SyncRepo():
     """A Periodic Task that syncs the git kitchen repository"""
-    run_every = timedelta(minutes=REPO['SYNC_PERIOD'])
     REPO_ROOT = os.path.join(REPO_BASE_PATH, REPO['NAME'])
 
-    def run(self, **kwargs):
+    def run(self):
         """Task execution"""
-        log.info("Synching repo")
+        log.debug("Synching repo")
         if os.path.exists(self.REPO_ROOT):
             self._update()
         else:
@@ -56,3 +62,8 @@ class SyncRepo(PeriodicTask):
         """Sets the modified date of a file, which will be the sync date"""
         with file(SYNCDATE_FILE, 'a'):
             os.utime(SYNCDATE_FILE, None)
+
+
+if __name__ == "__main__":
+    sr = SyncRepo()
+    sr.run()
