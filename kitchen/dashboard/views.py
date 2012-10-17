@@ -1,4 +1,8 @@
 """Dashboard app views"""
+import os
+import time
+from datetime import datetime
+
 from django.contrib.messages import add_message, ERROR, INFO, WARNING
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -9,7 +13,7 @@ from kitchen.dashboard.chef import (get_nodes_extended, get_roles,
                                     filter_nodes, group_nodes_by_host,
                                     RepoError)
 from kitchen.dashboard import graphs
-from kitchen.settings import REPO, SHOW_VIRT_VIEW, SHOW_HOST_NAMES
+from kitchen.settings import REPO, SHOW_VIRT_VIEW, SHOW_HOST_NAMES, SYNCDATE_FILE
 
 log = Logger(__name__)
 
@@ -26,10 +30,25 @@ def _get_data(env, roles, virt):
     # Get environments before we filter nodes
     data['environments'] = get_environments(nodes)
     if data['filter_env'] or data['filter_roles'] or data['filter_virt']:
-        nodes = filter_nodes(nodes,
-            data['filter_env'], data['filter_roles'], data['filter_virt'])
+        nodes = filter_nodes(nodes, data['filter_env'],
+                             data['filter_roles'], data['filter_virt'])
     data['nodes'] = nodes
     return data
+
+
+def _show_repo_sync_date(request):
+    """Shows the sync date, which will be the modified date of a file"""
+    try:
+        sync_age = time.time() - os.stat(SYNCDATE_FILE).st_mtime
+    except OSError:
+        add_message(request, ERROR, "There have been errors while "
+                                    "syncing the repo")
+    else:
+        sync_lim = REPO['SYNC_SCHEDULE'] * 2.5
+        if sync_age > sync_lim:
+            add_message(request, WARNING,
+                        "The repo is {0} minutes old, it is getting "
+                        "out of sync".format(int(sync_age / 60)))
 
 
 def _set_options(options):
@@ -49,6 +68,7 @@ def main(request):
         data = _get_data(request.GET.get('env', REPO['DEFAULT_ENV']),
                          request.GET.get('roles', ''),
                          request.GET.get('virt', REPO['DEFAULT_VIRT']))
+        _show_repo_sync_date(request)
     except RepoError as e:
         add_message(request, ERROR, str(e))
     if not len(data.get('nodes', [])):

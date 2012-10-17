@@ -28,6 +28,7 @@ SHOW_VIRT_VIEW = True
 SHOW_HOST_NAMES = True
 
 LOG_FILE = '/tmp/kitchen.log'
+SYNCDATE_FILE = '/tmp/kitchen-syncdate'
 ###################
 
 ADMINS = ()
@@ -56,7 +57,6 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 SECRET_KEY = 'i#5u!2+wpw+4&8tzom)&@-4p(h4jai7#)r5@^i=sl%_-8-2mb*'
@@ -64,7 +64,6 @@ SECRET_KEY = 'i#5u!2+wpw+4&8tzom)&@-4p(h4jai7#)r5@^i=sl%_-8-2mb*'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
