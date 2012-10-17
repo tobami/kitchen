@@ -39,18 +39,16 @@ def _get_data(env, roles, virt):
 def _show_repo_sync_date(request):
     """Shows the sync date, which will be the modified date of a file"""
     try:
-        sync_date = os.stat(SYNCDATE_FILE).st_mtime
-        sync_lim = REPO['SYNC_SCHEDULE'] * 2.5
-        if (time.time() - sync_date) > sync_lim:
-            add_message(request, WARNING,
-                        "The repo is more than {0} minutes out"
-                        " of sync".format(int(sync_lim / 60)))
-        else:
-            add_message(request, INFO, "Last sync on {0}".format(
-                datetime.fromtimestamp(sync_date).strftime("%d %b %Y - %H:%M")))
+        sync_age = time.time() - os.stat(SYNCDATE_FILE).st_mtime
     except OSError:
         add_message(request, ERROR, "There have been errors while "
                                     "syncing the repo")
+    else:
+        sync_lim = REPO['SYNC_SCHEDULE'] * 2.5
+        if sync_age > sync_lim:
+            add_message(request, WARNING,
+                        "The repo is {0} minutes old, it is getting "
+                        "out of sync".format(int(sync_age / 60)))
 
 
 def _set_options(options):
