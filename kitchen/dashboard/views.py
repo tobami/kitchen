@@ -38,9 +38,8 @@ def _get_data(env, roles, virt):
 
 def _show_repo_sync_date(request):
     """Shows the sync date, which will be the modified date of a file"""
-    date_file = os.path.join(STATIC_ROOT, 'syncdate')
-    if os.path.exists(date_file):
-        sync_date = os.path.getmtime(date_file)
+    try:
+        sync_date = os.stat(os.path.join(STATIC_ROOT, 'syncdate')).st_mtime
         sync_str = "Last synchronization time on {0}".format(
             datetime.fromtimestamp(sync_date).strftime("%d. %B %Y - %H:%M"))
         if (time.time() - sync_date) > REPO['SYNC_SCHEDULE'] * 2.5:
@@ -48,7 +47,7 @@ def _show_repo_sync_date(request):
                         sync_str + " (more than thrice the sync period)")
         else:
             add_message(request, INFO, sync_str)
-    else:
+    except OSError:
         add_message(
             request, ERROR,
             "Could not find a record of the last synchronization time!"
