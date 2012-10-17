@@ -15,7 +15,7 @@ REPO_BASE_PATH = os.path.join(BASE_PATH, "dashboard")
 REPO = {
     'NAME': "testrepo",
     'URL': "",
-    'SYNC_SCHEDULE': 60,  # seconds
+    'SYNC_PERIOD': 1,  # minutes
     'KITCHEN_SUBDIR': '',
     'EXCLUDE_ROLE_PREFIX': 'env',
     'DEFAULT_ENV': 'production',
