@@ -13,7 +13,7 @@ from kitchen.dashboard.chef import (get_nodes_extended, get_roles,
                                     filter_nodes, group_nodes_by_host,
                                     RepoError)
 from kitchen.dashboard import graphs
-from kitchen.settings import REPO, SHOW_VIRT_VIEW, SHOW_HOST_NAMES, STATIC_ROOT
+from kitchen.settings import REPO, SHOW_VIRT_VIEW, SHOW_HOST_NAMES, SYNCDATE_FILE
 
 log = Logger(__name__)
 
@@ -39,7 +39,7 @@ def _get_data(env, roles, virt):
 def _show_repo_sync_date(request):
     """Shows the sync date, which will be the modified date of a file"""
     try:
-        sync_date = os.stat(os.path.join(STATIC_ROOT, 'syncdate')).st_mtime
+        sync_date = os.stat(SYNCDATE_FILE).st_mtime
         sync_lim = REPO['SYNC_SCHEDULE'] * 2.5
         if (time.time() - sync_date) > sync_lim:
             add_message(request, WARNING,

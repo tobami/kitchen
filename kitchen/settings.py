@@ -28,6 +28,7 @@ SHOW_VIRT_VIEW = True
 SHOW_HOST_NAMES = True
 
 LOG_FILE = '/tmp/kitchen.log'
+SYNCDATE_FILE = '/tmp/kitchen/syncdate'
 ###################
 
 ADMINS = ()

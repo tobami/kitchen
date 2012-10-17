@@ -6,7 +6,7 @@ import logging
 
 from celery.task import PeriodicTask
 
-from kitchen.settings import REPO, REPO_BASE_PATH, STATIC_ROOT
+from kitchen.settings import REPO, REPO_BASE_PATH, SYNCDATE_FILE
 from kitchen.dashboard import chef
 
 log = logging.getLogger(__name__)
@@ -54,6 +54,5 @@ class SyncRepo(PeriodicTask):
 
     def _set_repo_sync_date(self):
         """Sets the modified date of a file, which will be the sync date"""
-        filename = os.path.join(STATIC_ROOT, 'syncdate')
-        with file(filename, 'a'):
-                os.utime(filename, None)
+        with file(SYNCDATE_FILE, 'a'):
+                os.utime(SYNCDATE_FILE, None)
