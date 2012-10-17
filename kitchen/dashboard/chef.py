@@ -5,7 +5,7 @@ import simplejson as json
 from littlechef import runner, lib, chef
 from logbook import Logger
 
-from kitchen.settings import DEBUG, REPO, REPO_BASE_PATH
+from kitchen.settings import REPO, REPO_BASE_PATH
 
 log = Logger(__name__)
 
@@ -125,7 +125,8 @@ def filter_nodes(nodes, env='', roles='', virt_roles=''):
         if env and node.get('chef_environment', 'none') != env:
             append = False
         if roles:
-            if not set.intersection(set(roles),
+            if not set.intersection(
+                    set(roles),
                     set([role.split("_")[0] for role in node['roles']])):
                 append = False
         if virt_roles:
