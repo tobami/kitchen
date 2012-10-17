@@ -20,11 +20,11 @@ log = Logger("kitchen.sync")
 
 
 class SyncRepo():
-    """A Periodic Task that syncs the git kitchen repository"""
+    """A Task that syncs the git kitchen repository"""
     REPO_ROOT = os.path.join(REPO_BASE_PATH, REPO['NAME'])
 
     def run(self):
-        """Task execution"""
+        """Syncs the git repository"""
         log.debug("Synching repo")
         if os.path.exists(self.REPO_ROOT):
             self._update()
