@@ -1,9 +1,6 @@
 """Django settings for the Kitchen project"""
 import os
 
-import djcelery
-djcelery.setup_loader()
-
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -15,7 +12,7 @@ REPO_BASE_PATH = os.path.join(BASE_PATH, "dashboard")
 REPO = {
     'NAME': "testrepo",
     'URL': "",
-    'SYNC_PERIOD': 1,  # minutes
+    'SYNC_PERIOD': 2,  # minutes
     'KITCHEN_SUBDIR': '',
     'EXCLUDE_ROLE_PREFIX': 'env',
     'DEFAULT_ENV': 'production',
@@ -38,12 +35,9 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'kitchen.sql',
+        'NAME': '/dev/null',
     }
 }
-
-# Celery broker url
-BROKER_URL = "django://"
 
 MEDIA_ROOT = ''
 MEDIA_URL = ''
@@ -87,8 +81,6 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    "djcelery",
-    "djkombu",
     "kitchen.dashboard",
     'django_nose',
 )

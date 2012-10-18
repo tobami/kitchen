@@ -1,6 +1,4 @@
 django>=1.4
-django-celery
-django-kombu
 logbook
 pydot
 littlechef>=1.2
