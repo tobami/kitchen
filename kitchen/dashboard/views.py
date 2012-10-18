@@ -46,9 +46,9 @@ def _show_repo_sync_date(request):
     else:
         sync_lim = REPO['SYNC_PERIOD'] * 2.5
         if sync_age > sync_lim:
-            add_message(request, WARNING,
-                        "The repo is {0} minutes old, it is getting "
-                        "out of sync".format(int(sync_age)))
+            add_message(request, WARNING, "The {0} repo is getting out of "
+                        "sync. Last pull was {1} minutes "
+                        "ago.".format(REPO['NAME'], int(sync_age)))
 
 
 def _set_options(options):
