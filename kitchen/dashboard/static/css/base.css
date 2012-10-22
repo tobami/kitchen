@@ -46,9 +46,16 @@ p.notfound img {
 table#nodes th { cursor: pointer; }
 
 div.dataTables_info {
-    float: left;
+    float: right;
 }
 
 div.dataTables_filter {
-    margin-left: 600px;
+    float: left;
+}
+
+input::-webkit-input-placeholder {
+    color:#cdc9c9;
+}
+input:-moz-placeholder {
+    color:#cdc9c9;
 }
