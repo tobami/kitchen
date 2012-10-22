@@ -342,6 +342,11 @@ class TestViews(TestCase):
 
 class TestAPI(TestCase):
 
+    def test_get_roles_not_allowed(self):
+        """Should return NOT ALLOWED when HTTP method is not GET"""
+        resp = self.client.post("/api/roles")
+        self.assertEqual(resp.status_code, 405)
+
     def test_get_roles(self):
         """Should return all available roles in JSON format"""
         resp = self.client.get("/api/roles")
@@ -354,6 +359,11 @@ class TestAPI(TestCase):
                             role['name'] + " is not an existing role name")
         self.assertEqual(data[0]['name'], 'dbserver')
         self.assertEqual(data[0]['run_list'], ['recipe[mysql::server]'])
+
+    def test_get_nodes_not_allowed(self):
+        """Should return NOT ALLOWED when HTTP method is not GET"""
+        resp = self.client.post("/api/nodes")
+        self.assertEqual(resp.status_code, 405)
 
     def test_get_nodes(self):
         """Should return all available nodes when no parameters are given"""
