@@ -52,3 +52,10 @@ div.dataTables_info {
 div.dataTables_filter {
     float: left;
 }
+
+input::-webkit-input-placeholder {
+    color:#cdc9c9;
+}
+input:-moz-placeholder {
+    color:#cdc9c9;
+}
