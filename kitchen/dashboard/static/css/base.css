@@ -44,3 +44,11 @@ p.notfound img {
 }
 
 table#nodes th { cursor: pointer; }
+
+div.dataTables_info {
+    float: left;
+}
+
+div.dataTables_filter {
+    margin-left: 600px;
+}

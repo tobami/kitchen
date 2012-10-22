@@ -41,8 +41,17 @@
     $(document).ready(function() {
         setupClickHandlers();
         $('#nodes').dataTable({
-            "bPaginate": false
+            "bPaginate": false,
+            "oLanguage": {
+                "sSearch": "",
+                "sInfo" : "Showing _TOTAL_ nodes",
+                "sInfoEmpty": "No nodes found",
+                "sInfoFiltered": " (filtering from _MAX_ total)",
+                "sZeroRecords": "No nodes to display"
+            },
+            "sDom": '<"top"if>rt<"bottom"lp><"clear">'
         });
+        $('#nodes_filter input').attr("placeholder", "Search nodes");
         $('#nodes_filter input:text').focus();
     });
 </script>
