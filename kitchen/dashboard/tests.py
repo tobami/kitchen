@@ -342,6 +342,11 @@ class TestViews(TestCase):
 
 class TestAPI(TestCase):
 
+    def test_get_roles_not_allowed(self):
+        """Should return NOT ALLOWED when HTTP method is not GET"""
+        resp = self.client.post("/api/roles")
+        self.assertEqual(resp.status_code, 405)
+
     def test_get_roles(self):
         """Should return all available roles in JSON format"""
         resp = self.client.get("/api/roles")
@@ -355,18 +360,48 @@ class TestAPI(TestCase):
         self.assertEqual(data[0]['name'], 'dbserver')
         self.assertEqual(data[0]['run_list'], ['recipe[mysql::server]'])
 
+    def test_get_nodes_not_allowed(self):
+        """Should return NOT ALLOWED when HTTP method is not GET"""
+        resp = self.client.post("/api/nodes")
+        self.assertEqual(resp.status_code, 405)
+
     def test_get_nodes(self):
-        """Should return all available nodes in JSON format"""
+        """Should return all available nodes when no parameters are given"""
         resp = self.client.get("/api/nodes")
         self.assertEqual(resp.status_code, 200)
         data = json.loads(resp.content)
         self.assertEqual(len(data), TOTAL_NODES)
-        self.assertTrue('role' not in data[0])
+        self.assertTrue('role' not in data[0])  # not extended
+
+    def test_get_nodes_env_filter(self):
+        """Should return filtered nodes when filter parameters are given"""
+        resp = self.client.get("/api/nodes/?env=staging")
+        self.assertEqual(resp.status_code, 200)
+        data = json.loads(resp.content)
+        self.assertEqual(len(data), 2)
+        expected_node = {
+            'chef_environment': 'staging', 'virtualization': {'role': 'guest'},
+            'run_list': ['role[webserver]'], 'name': 'testnode4'
+        }
+        self.assertEqual(data[0], expected_node)
 
     def test_get_nodes_extended(self):
-        """Should return all available nodes with extended info"""
+        """Should return all available nodes with extended info when extended=true
+        """
         resp = self.client.get("/api/nodes/?extended=true")
         self.assertEqual(resp.status_code, 200)
         data = json.loads(resp.content)
         self.assertEqual(len(data), TOTAL_NODES)
         self.assertTrue('role' in data[0])
+
+    def test_get_nodes_extended_env_filter(self):
+        """Should return filtered nodes when filter parameters are given"""
+        resp = self.client.get("/api/nodes/?env=staging&extended=true")
+        self.assertEqual(resp.status_code, 200)
+        data = json.loads(resp.content)
+        self.assertEqual(len(data), 2)
+        expected_node = {
+            'chef_environment': 'staging', 'virtualization': {'role': 'guest'}, 'run_list': ['role[webserver]'], 'name': 'testnode4'
+        }
+        self.assertEqual(data[0]['chef_environment'], 'staging')
+        self.assertEqual(data[0]['role'], ['webserver'])
