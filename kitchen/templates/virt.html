@@ -59,3 +59,11 @@
         </table>
     {% endif %}
 {% endblock %}
+
+{% block bodytail %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        setupClickHandlers();
+    });
+</script>
+{% endblock %}

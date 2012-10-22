@@ -18,5 +18,13 @@
 {% endblock %}
 
 {% block bodycontent %}
-{% if msg %}{{ msg }}{% else %}<img src="/static/img/node_map.svg">{% endif %}
+{% if not messages %}<img src="/static/img/node_map.svg">{% endif %}
+{% endblock %}
+
+{% block bodytail %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        setupClickHandlers();
+    });
+</script>
 {% endblock %}

@@ -1,7 +1,3 @@
-$(document).ready(function() {
-    setupClickHandlers();
-});
-
 function setupClickHandlers() {
     /**
      * Assign click handlers to all sidebar entries.

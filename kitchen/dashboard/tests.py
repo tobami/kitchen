@@ -29,12 +29,14 @@ class TestRepo(TestCase):
         """Should raise RepoError when the kitchen is incomplete"""
         self.assertRaises(chef.RepoError, chef._check_kitchen)
 
-    @patch('kitchen.dashboard.chef.DATA_BAG_PATH', 'badpath')
     def test_missing_node_data_bag(self):
         """Should raise RepoError when there is no node data bag"""
-        self.assertRaises(chef.RepoError, chef._load_extended_node_data)
+        nodes = chef._load_data("nodes")
+        with patch('kitchen.dashboard.chef.DATA_BAG_PATH', 'badpath'):
+            self.assertRaises(chef.RepoError, chef._load_extended_node_data,
+                              nodes)
 
-    def test_missing_node_data_bag(self):
+    def test_missing_node_data_json_error(self):
         """Should raise RepoError when there is a JSON error"""
         nodes = chef._load_data("nodes")
         with patch.object(json, 'loads') as mock_method:
@@ -313,7 +315,9 @@ class TestViews(TestCase):
         self.assertTrue("<title>Kitchen</title>" in resp.content)
         self.assertTrue("Environment" in resp.content)
         self.assertTrue("Please select an environment" in resp.content)
-
+        self.assertFalse('<img src="/static/img/node_map.svg">' in resp.content)
+        self.assertTrue("webserver" in resp.content)
+        self.assertTrue("staging" in resp.content)
         self.assertFalse(os.path.exists(self.filepath))
 
     @patch('kitchen.dashboard.chef.KITCHEN_DIR', '/badrepopath/')
@@ -386,7 +390,7 @@ class TestAPI(TestCase):
         self.assertEqual(data[0], expected_node)
 
     def test_get_nodes_extended(self):
-        """Should return all available nodes with extended info when extended=true
+        """Should return available nodes with extended info when extended=true
         """
         resp = self.client.get("/api/nodes/?extended=true")
         self.assertEqual(resp.status_code, 200)
@@ -400,8 +404,5 @@ class TestAPI(TestCase):
         self.assertEqual(resp.status_code, 200)
         data = json.loads(resp.content)
         self.assertEqual(len(data), 2)
-        expected_node = {
-            'chef_environment': 'staging', 'virtualization': {'role': 'guest'}, 'run_list': ['role[webserver]'], 'name': 'testnode4'
-        }
         self.assertEqual(data[0]['chef_environment'], 'staging')
         self.assertEqual(data[0]['role'], ['webserver'])

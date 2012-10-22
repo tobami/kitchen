@@ -1,8 +1,13 @@
 {% extends "base.html" %}
+
+{% block extrahead %}
+    <script type="text/javascript" src="/static/js/jquery.dataTables.min.js"></script>
+{% endblock %}
+
 {% load filters %}
 {% block bodycontent %}
     {% if nodes %}
-        <table class="table">
+        <table id="nodes" class="table">
             <thead>
                 <tr>
                     <th class="node_name">Name</th>
@@ -29,4 +34,16 @@
             {% endfor %}
         </table>
     {% endif %}
+{% endblock %}
+
+{% block bodytail %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        setupClickHandlers();
+        $('#nodes').dataTable({
+            "bPaginate": false
+        });
+        $('#nodes_filter input:text').focus();
+    });
+</script>
 {% endblock %}

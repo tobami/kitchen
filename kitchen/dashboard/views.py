@@ -107,19 +107,19 @@ def graph(request):
     options = _set_options(request.GET.get('options'))
     data = {}
     env_filter = request.GET.get('env', REPO['DEFAULT_ENV'])
-    if env_filter:
-        try:
-            data = _get_data(env_filter, request.GET.get('roles', ''), 'guest')
-        except RepoError as e:
-            add_message(request, ERROR, str(e))
-        else:
+    try:
+        data = _get_data(env_filter, request.GET.get('roles', ''), 'guest')
+    except RepoError as e:
+        add_message(request, ERROR, str(e))
+    else:
+        if env_filter:
             success, msg = graphs.generate_node_map(data['nodes'],
                                                     data.get('roles', []),
                                                     'show_hostnames' in options)
             if not success:
                 add_message(request, ERROR, msg)
-    else:
-        add_message(request, WARNING, "Please select an environment")
+        else:
+            add_message(request, WARNING, "Please select an environment")
 
     data['show_hostnames'] = 'show_hostnames' in options
     data['query_string'] = request.META['QUERY_STRING']

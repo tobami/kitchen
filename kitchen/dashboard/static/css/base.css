@@ -42,3 +42,5 @@ p.notfound {
 p.notfound img {
     margin-right: 1em;
 }
+
+table#nodes th { cursor: pointer; }
