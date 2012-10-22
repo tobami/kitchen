@@ -22,4 +22,5 @@ def get_nodes(request):
         nodes = chef.get_nodes_extended()
     else:
         nodes = chef.get_nodes()
+    nodes = chef.filter_nodes(nodes, request.GET.get('env'))
     return HttpResponse(json.dumps(nodes), content_type="application/json")
