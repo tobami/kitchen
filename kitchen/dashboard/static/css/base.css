@@ -46,9 +46,9 @@ p.notfound img {
 table#nodes th { cursor: pointer; }
 
 div.dataTables_info {
-    float: left;
+    float: right;
 }
 
 div.dataTables_filter {
-    margin-left: 600px;
+    float: left;
 }
