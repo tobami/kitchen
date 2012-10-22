@@ -286,7 +286,7 @@ class TestViews(TestCase):
         """Should display proper nodes when a role is given"""
         resp = self.client.get("/?env=&roles=dbserver&virt=")
         self.assertEqual(resp.status_code, 200)
-        self.assertTrue("testnode3.mydomain.com" in resp.content)
+        self.assertTrue("testnode3" in resp.content)
         self.assertTrue("testnode5" in resp.content)
         self.assertTrue("testnode1" not in resp.content)
         self.assertTrue("testnode2" not in resp.content)
