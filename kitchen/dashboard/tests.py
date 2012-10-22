@@ -313,7 +313,9 @@ class TestViews(TestCase):
         self.assertTrue("<title>Kitchen</title>" in resp.content)
         self.assertTrue("Environment" in resp.content)
         self.assertTrue("Please select an environment" in resp.content)
-
+        self.assertFalse('<img src="/static/img/node_map.svg">' in resp.content)
+        self.assertTrue("webserver" in resp.content)
+        self.assertTrue("staging" in resp.content)
         self.assertFalse(os.path.exists(self.filepath))
 
     @patch('kitchen.dashboard.chef.KITCHEN_DIR', '/badrepopath/')
@@ -401,7 +403,8 @@ class TestAPI(TestCase):
         data = json.loads(resp.content)
         self.assertEqual(len(data), 2)
         expected_node = {
-            'chef_environment': 'staging', 'virtualization': {'role': 'guest'}, 'run_list': ['role[webserver]'], 'name': 'testnode4'
+            'chef_environment': 'staging', 'virtualization': {'role': 'guest'},
+            'run_list': ['role[webserver]'], 'name': 'testnode4'
         }
         self.assertEqual(data[0]['chef_environment'], 'staging')
         self.assertEqual(data[0]['role'], ['webserver'])
