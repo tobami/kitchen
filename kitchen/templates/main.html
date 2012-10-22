@@ -40,10 +40,10 @@
 <script type="text/javascript">
     $(document).ready(function() {
         setupClickHandlers();
+        $('#nodes').dataTable({
+            "bPaginate": false
+        });
+        $('#nodes_filter input:text').focus();
     });
-    $('#nodes').dataTable({
-        "bPaginate": false
-    });
-    $('#nodes_filter input:text').focus();
 </script>
 {% endblock %}
