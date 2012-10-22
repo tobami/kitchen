@@ -24,7 +24,8 @@ body {
 }
 
 .node_name, .node_ip,
-.node_env {
+.node_env, .node_role,
+.node_recipe {
     width: 17em;
 }
 
