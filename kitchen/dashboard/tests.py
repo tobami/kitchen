@@ -6,7 +6,8 @@ from django.test import TestCase
 from mock import patch
 
 from kitchen.dashboard import chef, graphs
-from kitchen.settings import STATIC_ROOT
+from kitchen.dashboard.templatetags import filters
+from kitchen.settings import STATIC_ROOT, REPO
 
 # We need to always regenerate the node data bag in case there where changes
 chef.build_node_data_bag()
@@ -428,3 +429,53 @@ class TestAPI(TestCase):
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]['chef_environment'], 'staging')
         self.assertEqual(data[0]['role'], ['webserver'])
+
+
+class TestTags(TestCase):
+    run_list = [
+        "role[dbserver]", "recipe[haproxy]", "role[webserver]",
+        "role[worker]", "recipe[apache2]", "role[loadbalancer]",
+        "recipe[mysql::server]"
+    ]
+
+    def test_role_filter_with_valid_runlist(self):
+        """Should return a role list when a valid run list is given"""
+        role_list = filters.get_role_list(self.run_list)
+        expected_roles = ['dbserver', 'webserver', 'worker', 'loadbalancer']
+        self.assertEqual(len(role_list), len(expected_roles))
+        for role in role_list:
+            self.assertTrue(role in expected_roles)
+            expected_roles.remove(role)
+        self.assertEqual(len(expected_roles), 0)
+
+    def test_role_filter_with_runlist_and_exclude_node_prefix(self):
+        """Should return a filtered role list when a run list with exclude node prefix is given"""
+        role_to_filter = REPO['EXCLUDE_ROLE_PREFIX'] + "_filterthisrole"
+        run_list_with_excluded = self.run_list + [role_to_filter]
+        role_list = filters.get_role_list(run_list_with_excluded)
+        expected_roles = ['dbserver', 'webserver', 'worker', 'loadbalancer']
+        self.assertEqual(len(role_list), len(expected_roles))
+        for role in role_list:
+            self.assertTrue(role in expected_roles)
+            expected_roles.remove(role)
+        self.assertEqual(len(expected_roles), 0)
+
+    def test_role_filter_with_wrong_runlist(self):
+        """Should return an empty role list when an invalid run list is given"""
+        role_list = filters.get_role_list(None)
+        self.assertEqual(role_list, [])
+
+    def test_recipe_filter_with_valid_runlist(self):
+        """Should return a recipe list when a valid run list is given"""
+        recipe_list = filters.get_recipe_list(self.run_list)
+        expected_recipes = ['haproxy', 'apache2', 'mysql::server']
+        self.assertEqual(len(recipe_list), len(expected_recipes))
+        for recipe in recipe_list:
+            self.assertTrue(recipe in expected_recipes)
+            expected_recipes.remove(recipe)
+        self.assertEqual(len(expected_recipes), 0)
+
+    def test_recipe_filter_with_wrong_runlist(self):
+        """Should return an empty recipe list when an invalid run list is given"""
+        recipe_list = filters.get_recipe_list(None)
+        self.assertEqual(recipe_list, [])
