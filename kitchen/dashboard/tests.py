@@ -83,8 +83,8 @@ class TestData(TestCase):
         data = chef.get_environments(self.nodes)
         self.assertEqual(len(data), 3)
         expected = [{'counts': 1, 'name': 'none'},
-                    {'counts': 5, 'name': 'production'},
-                    {'counts': 2, 'name': 'staging'}]
+                    {'counts': 6, 'name': 'production'},
+                    {'counts': 1, 'name': 'staging'}]
         self.assertEqual(data, expected)
 
     def test_filter_nodes_all(self):
@@ -95,10 +95,10 @@ class TestData(TestCase):
     def test_filter_nodes_env(self):
         """Should filter nodes belonging to a given environment"""
         data = chef.filter_nodes(self.nodes, 'production')
-        self.assertEqual(len(data), 5)
+        self.assertEqual(len(data), 6)
 
         data = chef.filter_nodes(self.nodes, 'staging')
-        self.assertEqual(len(data), 2)
+        self.assertEqual(len(data), 1)
 
         data = chef.filter_nodes(self.nodes, 'non_existing_env')
         self.assertEqual(len(data), 0)
@@ -141,6 +141,9 @@ class TestData(TestCase):
                                  roles='loadbalancer,webserver',
                                  virt_roles='guest')
         self.assertEqual(len(data), 3)
+        self.assertEqual(data[0]['name'], "testnode1")
+        self.assertEqual(data[1]['name'], "testnode2")
+        self.assertEqual(data[2]['name'], "testnode7")
 
         data = chef.filter_nodes(self.nodes, env='staging', roles='webserver',
                                  virt_roles='guest')
@@ -176,6 +179,11 @@ class TestGraph(TestCase):
                     ('testnode2', 'mysql'), ('testnode7', 'mysql')
                 ]
             },
+            'testnode5': {
+                'client_nodes': [
+                    ('testnode2', 'mysql'), ('testnode7', 'mysql')
+                ]
+            },
             'testnode7': {'client_nodes': [('testnode1', 'apache2')]}
         }
         self.assertEqual(links, expected)
@@ -183,10 +191,14 @@ class TestGraph(TestCase):
     def test_build_links_needs_nodes(self):
         """Should generate links when nodes have needs_nodes set"""
         data = chef.filter_nodes(
-            self.nodes, 'production', 'worker,dbserver')
+            self.nodes, 'production', 'dbserver,worker')
         links = graphs._build_links(data)
         expected = {
-            'testnode8': {'needs_nodes': [('testnode3.mydomain.com', 'mysql')]}
+            'testnode8': {
+                'needs_nodes': [
+                    ('testnode3.mydomain.com', 'mysql'), ('testnode5', 'mysql')
+                ]
+            }
         }
         self.assertEqual(links, expected)
 
@@ -202,8 +214,17 @@ class TestGraph(TestCase):
                     ('testnode2', 'mysql'), ('testnode7', 'mysql')
                 ]
             },
+            'testnode5': {
+                'client_nodes': [
+                    ('testnode2', 'mysql'), ('testnode7', 'mysql')
+                ]
+            },
             'testnode7': {'client_nodes': [('testnode1', 'apache2')]},
-            'testnode8': {'needs_nodes': [('testnode3.mydomain.com', 'mysql')]}
+            'testnode8': {
+                'needs_nodes': [
+                    ('testnode3.mydomain.com', 'mysql'), ('testnode5', 'mysql')
+                ]
+            }
         }
         self.assertEqual(links, expected)
 
@@ -240,8 +261,8 @@ class TestGraph(TestCase):
         # Graph size with connections
         #min_size = 20000  # png
         #max_size = 23000  # png
-        min_size = 6000  # svg
-        max_size = 7000  # svg
+        min_size = 8000  # svg
+        max_size = 9000  # svg
         self.assertTrue(size > min_size and size < max_size,
                         "Size not between {0} and {1}: {2}".format(
                             min_size, max_size, size))
@@ -271,10 +292,10 @@ class TestViews(TestCase):
         resp = self.client.get("/?env=staging&virt=")
         self.assertEqual(resp.status_code, 200)
         self.assertTrue("testnode4" in resp.content)
-        self.assertTrue("testnode5" in resp.content)
-        self.assertTrue("testnode1" not in resp.content)
-        self.assertTrue("testnode2" not in resp.content)
-        self.assertTrue("testnode6" not in resp.content)
+        self.assertFalse("testnode5" in resp.content)
+        self.assertFalse("testnode1" in resp.content)
+        self.assertFalse("testnode2" in resp.content)
+        self.assertFalse("testnode6" in resp.content)
         # Should not display any nodes
         resp = self.client.get("/?env=testing")
         self.assertEqual(resp.status_code, 200)
@@ -382,7 +403,7 @@ class TestAPI(TestCase):
         resp = self.client.get("/api/nodes/?env=staging")
         self.assertEqual(resp.status_code, 200)
         data = json.loads(resp.content)
-        self.assertEqual(len(data), 2)
+        self.assertEqual(len(data), 1)
         expected_node = {
             'chef_environment': 'staging', 'ipaddress': '4.4.4.4',
             'virtualization': {'role': 'guest'},
@@ -404,6 +425,6 @@ class TestAPI(TestCase):
         resp = self.client.get("/api/nodes/?env=staging&extended=true")
         self.assertEqual(resp.status_code, 200)
         data = json.loads(resp.content)
-        self.assertEqual(len(data), 2)
+        self.assertEqual(len(data), 1)
         self.assertEqual(data[0]['chef_environment'], 'staging')
         self.assertEqual(data[0]['role'], ['webserver'])
