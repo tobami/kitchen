@@ -60,3 +60,8 @@ input::-webkit-input-placeholder {
 input:-moz-placeholder {
     color:#cdc9c9;
 }
+
+.expanded_node table{
+    float: left;
+    margin-right: 50px;
+}
