@@ -142,8 +142,8 @@ class TestData(TestCase):
                                  virt_roles='guest')
         self.assertEqual(len(data), 3)
 
-        data = chef.filter_nodes(self.nodes,
-            env='staging', roles='webserver', virt_roles='guest')
+        data = chef.filter_nodes(self.nodes, env='staging', roles='webserver',
+                                 virt_roles='guest')
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]['name'], "testnode4")
 
@@ -384,7 +384,8 @@ class TestAPI(TestCase):
         data = json.loads(resp.content)
         self.assertEqual(len(data), 2)
         expected_node = {
-            'chef_environment': 'staging', 'virtualization': {'role': 'guest'},
+            'chef_environment': 'staging', 'ipaddress': '4.4.4.4',
+            'virtualization': {'role': 'guest'},
             'run_list': ['role[webserver]'], 'name': 'testnode4'
         }
         self.assertEqual(data[0], expected_node)
