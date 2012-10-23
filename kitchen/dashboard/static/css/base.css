@@ -34,10 +34,6 @@ body {
     width: 17em;
 }
 
-.node_row {
-    background-color: #eee9e9;
-}
-
 p.notfound {
     padding: 3px 15px;
     font-size: 18px;
@@ -70,3 +66,9 @@ input:-moz-placeholder {
     color:#cdc9c9;
 }
 
+#host_row{
+    background-color: #eee9e9;
+    border-bottom: 1px solid #A19B9E;
+    border-top: 1px solid #A19B9E;
+    cursor: pointer;
+}
