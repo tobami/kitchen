@@ -5,6 +5,7 @@
         "client_roles": ["loadbalancer"]
     },
     "run_list": [
-        "role[webserver]"
+        "role[webserver]",
+        "recipe[apache2]"
     ]
 }
