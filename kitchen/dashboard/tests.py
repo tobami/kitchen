@@ -1,6 +1,7 @@
 """Tests for the kitchen.dashboard app"""
 import os
 import simplejson as json
+from copy import deepcopy
 
 from django.test import TestCase
 from mock import patch
@@ -150,6 +151,33 @@ class TestData(TestCase):
                                  virt_roles='guest')
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]['name'], "testnode4")
+
+    def test_group_by_hosts_without_filter_by_role(self):
+        """Should group guests by hosts without given a role filter"""
+        data = chef.group_nodes_by_host(deepcopy(self.nodes), roles='')
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]['name'], 'testnode5')
+        vms = data[0]['virtualization']['vms']
+        expected_vms = ['testnode7', 'testnode8']
+        self.assertEqual(len(vms), len(expected_vms))
+        for vm in vms:
+            fqdn = vm['fqdn']
+            self.assertTrue(fqdn in expected_vms)
+            expected_vms.remove(fqdn)
+
+    def test_group_by_hosts_with_filter_by_role(self):
+        """Should group guests by hosts without given a role filter"""
+        data = chef.group_nodes_by_host(deepcopy(self.nodes),
+                                        roles='webserver')
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]['name'], 'testnode5')
+        vms = data[0]['virtualization']['vms']
+        expected_vms = ['testnode7']
+        self.assertEqual(len(vms), len(expected_vms))
+        for vm in vms:
+            fqdn = vm['fqdn']
+            self.assertTrue(fqdn in expected_vms)
+            expected_vms.remove(fqdn)
 
 
 class TestGraph(TestCase):
