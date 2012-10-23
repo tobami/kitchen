@@ -26,4 +26,4 @@ def get_role_list(run_list):
 @register.filter(name='get_recipe_list')
 def get_recipe_list(run_list):
     """Returns the recipe sublist from the given run_list"""
-    return littlechef.lib.get_recipes_in_node({'run_list': run_list} or [])
+    return littlechef.lib.get_recipes_in_node({'run_list': run_list or []})
