@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% load filters %}
 
+{% block extrahead %}
+    <script type="text/javascript" src="/static/js/jquery.dataTables.min.js"></script>
+{% endblock %}
+
 {% block topnav %}
     <ul class="nav">
         <li><a href="/?{{query_string}}">List</a></li>
@@ -11,51 +15,56 @@
 
 {% block bodycontent %}
     {% if nodes %}
-        <table class="table">
+        <table id="nodes" class="table">
             <thead>
                 <tr>
                     <th class="node_name">Name</th>
                     <th class="node_ip">IP Address</th>
                     <th class="node_env">Environment</th>
                     <th class="node_role">Role</th>
+                    <th class="node_recipe">Recipe</th>
                 </tr>
             </thead>
-            {% for host in nodes %}
-                <tr>
+            <tbody>
+            {% for node in nodes %}
+                <tr class="node_row">
                     <td class="node_name">
-                        {{ host.hostname }}
+                        {{ node.hostname }}
                     </td>
                     <td class="node_ip">
-                        {{ host.ipaddress }}
+                        {{ node.ipaddress }}
                     </td>
                     <td class="node_env">
-                        {{ host.chef_environment }}
+                        {{ node.chef_environment }}
                     </td>
                     <td class="node_role">
-                        {% for entry in host.role %}{% if not entry|is_environment_role %}{{ entry }}{% if not forloop.last %}, {% endif %}{% endif %}{% endfor %}
+                        {% for entry in node.role %}{% if not entry|is_environment_role %}{{ entry }}{% if not forloop.last %}, {% endif %}{% endif %}{% endfor %}
+                    </td>
+                    <td class="node_recipe">
+                        {% for entry in node.recipe %}{{ entry }}{% if not forloop.last %}, {% endif %}{% endfor %}
                     </td>
                 </tr>
-                <tr>
-                <table class="table">
-                {% for node in host.virtualization.vms %}
+                {% for vm in node.virtualization.vms %}
                     <tr>
-                        <td class="node_name">
-                            {{ node.fqdn }}
+                        <td class="vm_fqdn">
+                            {{ vm.fqdn }}
                         </td>
-                        <td>
-                            {{ node.RAM }} MB
+                        <td class="vm_ram">
+                            {{ vm.RAM }} MB
                         </td>
-                        <td>
-                            {{ node.cpus }} CPUs
+                        <td class="vm_cpus">
+                            {{ vm.cpus }} CPUs
                         </td>
-                        <td class="node_role">
-                            {% for entry in node.role %}{% if not entry|is_environment_role %}{{ entry }}{% if not forloop.last %}, {% endif %}{% endif %}{% endfor %}
+                        <td  class="vm_role">
+                            {% for entry in vm.role %}{% if not entry|is_environment_role %}{{ entry }}{% if not forloop.last %}, {% endif %}{% endif %}{% endfor %}
+                        </td>
+                        <td class="vm_recipe">
+                            {% for entry in vm.recipe %}{{ entry }}{% if not forloop.last %}, {% endif %}{% endfor %}
                         </td>
                     </tr>
                 {% endfor %}
-                </table>
-                </tr>
             {% endfor %}
+            </tbody>
         </table>
     {% endif %}
 {% endblock %}
@@ -64,6 +73,14 @@
 <script type="text/javascript">
     $(document).ready(function() {
         setupClickHandlers();
+        $('#nodes').dataTable({
+            "bPaginate": false,
+            "oLanguage": {
+                "sInfo" : "Showing _TOTAL_ nodes",
+                "sInfoEmpty": "No nodes found",
+            },
+            "sDom": '<"top"i>rt<"bottom"lp><"clear">'
+        });
     });
 </script>
 {% endblock %}
