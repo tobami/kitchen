@@ -32,7 +32,10 @@
                         {{ host.chef_environment }}
                     </td>
                     <td class="node_role">
-                        {% for entry in host.role %}{% if not entry|is_environment_role %}{{ entry }}{% if not forloop.last %}, {% endif %}{% endif %}{% endfor %}
+                        {% for entry in host.run_list|get_role_list %}
+                            {{ entry }}
+                            {% if not forloop.last %}, {% endif %}
+                        {% endfor %}
                     </td>
                 </tr>
                 <tr>
@@ -49,7 +52,10 @@
                             {{ node.cpus }} CPUs
                         </td>
                         <td class="node_role">
-                            {% for entry in node.role %}{% if not entry|is_environment_role %}{{ entry }}{% if not forloop.last %}, {% endif %}{% endif %}{% endfor %}
+                            {% for entry in node.run_list|get_role_list %}
+                                {{ entry }}
+                                {% if not forloop.last %}, {% endif %}
+                            {% endfor %}
                         </td>
                     </tr>
                 {% endfor %}

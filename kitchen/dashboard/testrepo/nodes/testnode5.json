@@ -1,5 +1,6 @@
 {
-    "chef_environment": "staging",
+    "chef_environment": "production",
+    "ipaddress": "5.5.5.5",
     "virtualization": {
         "role": "host",
         "system": "xen",
@@ -17,6 +18,7 @@
         ]
     },
     "run_list": [
-        "role[dbserver]"
+        "role[dbserver]",
+        "recipe[mysql::server]"
     ]
 }
