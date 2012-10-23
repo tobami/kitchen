@@ -102,15 +102,29 @@ def _load_extended_node_data(nodes):
     return data
 
 
-def group_nodes_by_host(nodes):
+def group_nodes_by_host(nodes, roles=''):
     """Returns a list of hosts with their virtual machines"""
     hosts = filter_nodes(nodes, virt_roles='host')
+    guests = filter_nodes(nodes, roles=roles, virt_roles='guest')
+    if roles:
+        roles = roles.split(',')
+    filtered_hosts = []
     for host in hosts:
+        vms = host['virtualization'].get('vms', [])[:]  # Shallow copy
         for vm in host['virtualization'].get('vms', []):
-            for node in nodes:
-                if node['fqdn'] == vm['fqdn']:
-                    vm.update(node)
-    return hosts
+            has_role = False
+            for guest in guests:
+                if guest['fqdn'] == vm['fqdn']:
+                    vm.update(guest)  # Set guest attributes in the vm
+                    has_role = True
+                    break
+            if not has_role:
+                vms.remove(vm)  # Filter the vm (won't be shown)
+        host['virtualization']['vms'] = vms
+        if len(vms):
+            # Show only a host if it has 1 or more vms
+            filtered_hosts.append(host)
+    return filtered_hosts
 
 
 def filter_nodes(nodes, env='', roles='', virt_roles=''):
