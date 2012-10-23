@@ -48,9 +48,47 @@
 
 {% block bodytail %}
 <script type="text/javascript">
+    /* Node details*/
+    function fnFormatNodeDetails (oTable, nTr) {
+        var aData = oTable.fnGetData(nTr);
+        var node = undefined;
+        for(var i=0;i<nodes.length;i++) {
+            if (nodes[i].hostname == aData[0]) {
+                node = nodes[i];
+            }
+        }
+        var sOut = '<div class="expanded_node">';
+        if (node.virtualization) {
+            sOut += '<table class="table-bordered"><caption>Virtualization</caption>';
+            if (node.virtualization.role) {
+                sOut += '<tr><th>Role</th><td>'+node.virtualization.role+'</td></tr>';
+            }
+            if (node.virtualization.system) {
+                sOut += '<tr><th>System</th><td>'+node.virtualization.system+'</td></tr>';
+            }
+            sOut += '</table>';
+            if (node.virtualization.vms) {
+                sOut += '<table class="table-bordered"><caption>Virtual machines</caption>';
+                sOut += '<thead><tr><th>Name</th><th>Ram</th><th>CPUs</th></tr></thead>';
+                for(var i=0;i<node.virtualization.vms.length;i++) {
+                    sOut += '<tr>';
+                    sOut += '<td>'+node.virtualization.vms[i].fqdn+'</td>';
+                    sOut += '<td>'+node.virtualization.vms[i].RAM+'</td>';
+                    sOut += '<td>'+node.virtualization.vms[i].cpus+'</td>';
+                    sOut += '</tr>';
+                }
+                sOut += '</table>'
+            }
+        }
+        sOut += '</div>'
+        return sOut;
+    }
+
     $(document).ready(function() {
+        nodes = {{nodes|safe}};
         setupClickHandlers();
-        $('#nodes').dataTable({
+        console.log(nodes);
+        var oTable = $('#nodes').dataTable({
             "bPaginate": false,
             "oLanguage": {
                 "sSearch": "",
@@ -63,6 +101,17 @@
         });
         $('#nodes_filter input').attr("placeholder", "Search nodes");
         $('#nodes_filter input:text').focus();
+
+        /* Event listener for opening and closing details */
+        $('#nodes tbody td').live('click', function () {
+            var nTr = $(this).parents('tr')[0];
+            if (oTable.fnIsOpen(nTr)) {
+                oTable.fnClose(nTr);
+            }
+            else {
+                oTable.fnOpen(nTr, fnFormatNodeDetails(oTable, nTr), 'details');
+            }
+        } );
     });
 </script>
 {% endblock %}
