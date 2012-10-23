@@ -1,5 +1,6 @@
 {
     "chef_environment": "production",
+    "ipaddress": "7.7.7.7",
     "run_list": [
         "role[webserver]"
     ]
