@@ -32,7 +32,7 @@
                         {% for entry in node.role %}{% if not entry|is_environment_role %}{{ entry }}{% if not forloop.last %}, {% endif %}{% endif %}{% endfor %}
                     </td>
                     <td class="node_recipe">
-                        {% for entry in node.recipes %}{{ entry }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                        {% for entry in node.recipe %}{{ entry }}{% if not forloop.last %}, {% endif %}{% endfor %}
                     </td>
 
                 </tr>
