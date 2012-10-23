@@ -14,6 +14,7 @@
                     <th class="node_ip">IP Address</th>
                     <th class="node_env">Environment</th>
                     <th class="node_role">Role</th>
+                    <th class="node_recipe">Recipe</th>
                 </tr>
             </thead>
             {% for node in nodes %}
@@ -28,7 +29,16 @@
                         {{ node.chef_environment }}
                     </td>
                     <td class="node_role">
-                        {% for entry in node.role %}{% if not entry|is_environment_role %}{{ entry }}{% if not forloop.last %}, {% endif %}{% endif %}{% endfor %}
+                        {% for entry in node.run_list|get_role_list %}
+                            {{ entry }}
+                            {% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td class="node_recipe">
+                        {% for entry in node.run_list|get_recipe_list %}
+                            {{entry}}
+                            {% if not forloop.last %}, {% endif %}
+                        {% endfor %}
                     </td>
                 </tr>
             {% endfor %}

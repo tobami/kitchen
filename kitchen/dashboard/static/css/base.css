@@ -24,8 +24,9 @@ body {
 }
 
 .node_name, .node_ip,
-.node_env {
-    width: 17em;
+.node_env, .node_role,
+.node_recipe {
+    width: 16em;
 }
 
 .vm_fqdn, .vm_ram,

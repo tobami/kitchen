@@ -38,10 +38,16 @@
                         {{ node.chef_environment }}
                     </td>
                     <td class="node_role">
-                        {% for entry in node.role %}{% if not entry|is_environment_role %}{{ entry }}{% if not forloop.last %}, {% endif %}{% endif %}{% endfor %}
+                        {% for entry in node.run_list|get_role_list %}
+                            {{ entry }}
+                            {% if not forloop.last %}, {% endif %}
+                        {% endfor %}
                     </td>
                     <td class="node_recipe">
-                        {% for entry in node.recipe %}{{ entry }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                        {% for entry in node.run_list|get_recipe_list %}
+                            {{ entry }}
+                            {% if not forloop.last %}, {% endif %}
+                        {% endfor %}
                     </td>
                 </tr>
                 {% for vm in node.virtualization.vms %}
@@ -56,10 +62,16 @@
                             {{ vm.cpus }} CPUs
                         </td>
                         <td  class="vm_role">
-                            {% for entry in vm.role %}{% if not entry|is_environment_role %}{{ entry }}{% if not forloop.last %}, {% endif %}{% endif %}{% endfor %}
+                            {% for entry in vm.run_list|get_role_list %}
+                                {{ entry }}
+                                {% if not forloop.last %}, {% endif %}
+                            {% endfor %}
                         </td>
                         <td class="vm_recipe">
-                            {% for entry in vm.recipe %}{{ entry }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                            {% for entry in vm.run_list|get_recipe_list %}
+                                {{ entry }}
+                                {% if not forloop.last %}, {% endif %}
+                            {% endfor %}
                         </td>
                     </tr>
                 {% endfor %}

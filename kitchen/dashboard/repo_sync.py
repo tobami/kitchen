@@ -39,7 +39,7 @@ class SyncRepo():
         log.info("Updating repo")
         stdout, stderr = p.communicate()
         if p.returncode != 0:
-            log.error("git pull returned {0}: {0}".format(
+            log.error("git pull returned {0}: {1}".format(
                       p.returncode, stderr))
         else:
             chef.build_node_data_bag()
