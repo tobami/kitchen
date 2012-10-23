@@ -28,6 +28,15 @@ body {
     width: 17em;
 }
 
+.vm_fqdn, .vm_ram,
+.vm_cpus, .vm_role {
+    width: 17em;
+}
+
+.node_row {
+    background-color: #eee9e9;
+}
+
 p.notfound {
     padding: 3px 15px;
     font-size: 18px;
@@ -59,3 +68,4 @@ input::-webkit-input-placeholder {
 input:-moz-placeholder {
     color:#cdc9c9;
 }
+
