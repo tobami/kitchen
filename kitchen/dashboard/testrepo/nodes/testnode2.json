@@ -1,5 +1,6 @@
 {
     "chef_environment": "production",
+    "ipaddress": "2.2.2.2",
     "apache2": {
         "client_roles": ["loadbalancer"]
     },

@@ -1,1 +1,1 @@
-{"domain": "", "name": "testnode1", "roles": ["loadbalancer"], "recipes": ["haproxy"], "chef_environment": "production", "hostname": "testnode1", "fqdn": "testnode1", "role": ["loadbalancer"], "run_list": ["role[loadbalancer]"], "id": "testnode1"}
+{"domain": "", "name": "testnode1", "roles": ["loadbalancer"], "recipes": ["haproxy"], "chef_environment": "production", "hostname": "testnode1", "fqdn": "testnode1", "role": ["loadbalancer"], "run_list": ["role[loadbalancer]"], "ipaddress": "1.1.1.1", "id": "testnode1"}

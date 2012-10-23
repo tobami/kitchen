@@ -1,5 +1,6 @@
 {
     "chef_environment": "staging",
+    "ipaddress": "4.4.4.4",
     "virtualization": {"role": "guest"},
     "run_list": [
         "role[webserver]"

@@ -1,5 +1,6 @@
 {
     "chef_environment": "staging",
+    "ipaddress": "5.5.5.5",
     "virtualization": {
         "role": "host",
         "system": "xen",
