@@ -110,8 +110,8 @@ def group_nodes_by_host(nodes, roles=''):
         roles = roles.split(',')
     filtered_hosts = []
     for host in hosts:
-        vms = host['virtualization'].get('vms', [])[:]  # Shallow copy
-        for vm in host['virtualization'].get('vms', []):
+        vms = host['virtualization'].get('guests', [])[:]  # Shallow copy
+        for vm in host['virtualization'].get('guests', []):
             has_role = False
             for guest in guests:
                 if guest['fqdn'] == vm['fqdn']:
@@ -120,7 +120,7 @@ def group_nodes_by_host(nodes, roles=''):
                     break
             if not has_role:
                 vms.remove(vm)  # Filter the vm (won't be shown)
-        host['virtualization']['vms'] = vms
+        host['virtualization']['guests'] = vms
         if len(vms):
             # Show only a host if it has 1 or more vms
             filtered_hosts.append(host)
