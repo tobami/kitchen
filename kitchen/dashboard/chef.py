@@ -166,11 +166,6 @@ def filter_nodes(nodes, env='', roles='', virt_roles=''):
     return retval
 
 
-def get_nodes_extended():
-    """Returns node data from the automatic 'node' data_bag"""
-    return _load_extended_node_data(_load_data("nodes"))
-
-
 def get_node(name):
     """Returns the given node"""
     node = _load_data("node", name)
@@ -183,6 +178,13 @@ def get_node(name):
 def get_nodes():
     """Returns nodes present in the repository's 'nodes' directory"""
     return _load_data("nodes")
+
+
+def get_nodes_extended(nodes=None):
+    """Returns node data from the automatic 'node' data_bag"""
+    if nodes is None:
+        nodes = _load_data("nodes")
+    return _load_extended_node_data(nodes)
 
 
 def get_roles():

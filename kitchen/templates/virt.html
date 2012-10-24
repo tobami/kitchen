@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block bodycontent %}
-    {% if nodes %}
+    {% if nodes_extended %}
         <table id="nodes" class="table">
             <thead>
                 <tr>
@@ -29,7 +29,7 @@
                 </tr>
             </thead>
             <tbody>
-            {% for node in nodes %}
+            {% for node in nodes_extended %}
                 <tr id="host_row">
                     <td>{{ node.name }}</td>
                     <td>{{ node.name }}</td>

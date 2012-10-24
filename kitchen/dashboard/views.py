@@ -1,13 +1,14 @@
 """Dashboard app views"""
 import os
 import time
+import json
 
 from django.contrib.messages import add_message, ERROR, WARNING
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from logbook import Logger
 
-from kitchen.dashboard.chef import (get_nodes_extended, get_roles,
+from kitchen.dashboard.chef import (get_nodes, get_nodes_extended, get_roles,
                                     get_role_groups, get_environments,
                                     filter_nodes, group_nodes_by_host,
                                     get_nodes, RepoError)
@@ -22,17 +23,19 @@ def _get_data(env, roles, virt):
     """Returns processed repository data, filtering nodes based on given args
     """
     data = {'filter_env': env, 'filter_roles': roles, 'filter_virt': virt}
-    nodes = get_nodes_extended()
     data['roles'] = get_roles()
     roles_groups = get_role_groups(data['roles'])
     data['roles_groups'] = roles_groups
     data['virt_roles'] = ['host', 'guest']
     # Get environments before we filter nodes
-    data['environments'] = get_environments(nodes)
+    data['nodes'] = get_nodes()
+    data['nodes_extended'] = get_nodes_extended(data['nodes'])
+    data['environments'] = get_environments(data['nodes_extended'])
     if data['filter_env'] or data['filter_roles'] or data['filter_virt']:
-        nodes = filter_nodes(nodes, data['filter_env'],
-                             data['filter_roles'], data['filter_virt'])
-    data['nodes'] = nodes
+        data['nodes_extended'] = filter_nodes(data['nodes_extended'],
+                                              data['filter_env'],
+                                              data['filter_roles'],
+                                              data['filter_virt'])
     return data
 
 
@@ -69,12 +72,13 @@ def main(request):
                          request.GET.get('roles', ''),
                          request.GET.get('virt', REPO['DEFAULT_VIRT']))
         _show_repo_sync_date(request)
-        data['nodes_simple'] = get_nodes()
+        data['nodes'] = json.dumps(data['nodes'])
     except RepoError as e:
         add_message(request, ERROR, str(e))
-    if not len(data.get('nodes', [])):
-        add_message(request, WARNING,
-                    "There are no nodes that fit the supplied criteria.")
+    else:
+        if not data['nodes_extended']:
+            add_message(request, WARNING,
+                        "There are no nodes that fit the supplied criteria.")
     data['show_virt'] = SHOW_VIRT_VIEW
     data['query_string'] = request.META['QUERY_STRING']
     return render_to_response('main.html',
@@ -92,10 +96,10 @@ def virt(request):
     except RepoError as e:
         add_message(request, ERROR, str(e))
     else:
-        data['nodes'] = group_nodes_by_host(data['nodes'],
-                                            roles=roles)
+        data['nodes_extended'] = group_nodes_by_host(data['nodes_extended'],
+                                                     roles=roles)
         data['filter_roles'] = roles
-        if not len(data.get('nodes', [])):
+        if not data['nodes_extended']:
             add_message(request, WARNING,
                         "There are no nodes that fit the supplied criteria.")
     data['query_string'] = request.META['QUERY_STRING']
@@ -117,7 +121,7 @@ def graph(request):
         add_message(request, ERROR, str(e))
     else:
         if env_filter:
-            success, msg = graphs.generate_node_map(data['nodes'],
+            success, msg = graphs.generate_node_map(data['nodes_extended'],
                                                     data.get('roles', []),
                                                     'show_hostnames' in options)
             if not success:
