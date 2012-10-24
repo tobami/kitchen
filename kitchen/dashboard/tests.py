@@ -458,8 +458,20 @@ class TestAPI(TestCase):
         self.assertEqual(data[0]['chef_environment'], 'staging')
         self.assertEqual(data[0]['role'], ['webserver'])
 
+    def test_get_node(self):
+        """Should return a node hash when node name is found"""
+        resp = self.client.get("/api/nodes/testnode6")
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(json.loads(resp.content),
+                         {'name': 'testnode6', 'run_list': ['role[webserver]']})
 
-class TestTags(TestCase):
+    def test_get_node_not_found(self):
+        """Should return NOT FOUND when node name does not exist"""
+        resp = self.client.get("/api/nodes/node_does_not_exist")
+        self.assertEqual(resp.status_code, 404)
+
+
+class TestTemplateTags(TestCase):
     run_list = [
         "role[dbserver]", "recipe[haproxy]", "role[webserver]",
         "role[worker]", "recipe[apache2]", "role[loadbalancer]",

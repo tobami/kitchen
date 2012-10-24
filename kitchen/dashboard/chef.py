@@ -32,7 +32,7 @@ def _check_kitchen():
         missing_str = lambda m: ' and '.join(', '.join(m).rsplit(', ', 1))
         raise RepoError("Couldn't find {0}. ".format(missing_str(missing)))
     elif not os.path.exists(DATA_BAG_PATH):
-        raise RepoError("Node data bag has not yet been built")
+        raise RepoError("The 'node' data bag has not yet been built")
     else:
         return True
 
@@ -160,6 +160,13 @@ def filter_nodes(nodes, env='', roles='', virt_roles=''):
 def get_nodes_extended():
     """Returns node data from the automatic 'node' data_bag"""
     return _load_extended_node_data(_load_data("nodes"))
+
+
+def get_node(name):
+    """Returns the given node"""
+    node = lib.get_node(name)
+    if node == {'run_list': []}:
+        return None
 
 
 def get_nodes():
