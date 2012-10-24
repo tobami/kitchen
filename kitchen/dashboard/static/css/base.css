@@ -25,8 +25,14 @@ body {
 
 .node_name, .node_ip,
 .node_env, .node_role,
-.node_recipe {
+.node_recipe, .node_grouper {
     width: 16em;
+}
+
+.vm_fqdn, .vm_ram,
+.vm_cpus, .vm_role,
+.vm_grouper {
+    width: 17em;
 }
 
 p.notfound {
@@ -59,4 +65,16 @@ input::-webkit-input-placeholder {
 }
 input:-moz-placeholder {
     color:#cdc9c9;
+}
+
+#host_grouper{
+    background-color: #cdc9c9;
+    border-bottom: 1px solid #A19B9E;
+    border-top: 1px solid #A19B9E;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#host_row{
+    background-color:#eee9e9;
 }

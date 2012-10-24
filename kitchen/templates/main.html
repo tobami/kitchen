@@ -36,8 +36,8 @@
                     </td>
                     <td class="node_recipe">
                         {% for entry in node.run_list|get_recipe_list %}
-                                {{entry}}
-                                {% if not forloop.last %}, {% endif %}
+                            {{entry}}
+                            {% if not forloop.last %}, {% endif %}
                         {% endfor %}
                     </td>
                 </tr>
