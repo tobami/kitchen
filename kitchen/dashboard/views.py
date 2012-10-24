@@ -85,13 +85,16 @@ def virt(request):
     """Displays a view where the nodes are grouped by physical host"""
     data = {}
     try:
+        roles = request.GET.get('roles', '')
         data = _get_data(request.GET.get('env', REPO['DEFAULT_ENV']),
-                         request.GET.get('roles', ''),
+                         '',
                          request.GET.get('virt', None))
     except RepoError as e:
         add_message(request, ERROR, str(e))
     else:
-        data['nodes'] = group_nodes_by_host(data['nodes'])
+        data['nodes'] = group_nodes_by_host(data['nodes'],
+                                            roles=roles)
+        data['filter_roles'] = roles
         if not len(data.get('nodes', [])):
             add_message(request, WARNING,
                         "There are no nodes that fit the supplied criteria.")
