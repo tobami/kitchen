@@ -1,19 +1,33 @@
 {
     "chef_environment": "production",
     "ipaddress": "5.5.5.5",
+    "memory": {
+        "total": "8043000kB"
+    },
+    "cpu": {
+        "total": "6"
+    },
     "virtualization": {
         "role": "host",
         "system": "xen",
-        "vms": [
+        "guests": [
             {
-                "RAM": "2043",
+                "memory": {
+                    "total": "2043000kB"
+                },
                 "fqdn": "testnode7",
-                "cpus": "2"
+                "cpu": {
+                    "total": "2"
+                }
             },
             {
-                "RAM": "6000",
+                "memory": {
+                    "total": "6000000kB"
+                },
                 "fqdn": "testnode8",
-                "cpus": "4"
+                "cpu": {
+                    "total": "4"
+                }
             }
         ]
     },
