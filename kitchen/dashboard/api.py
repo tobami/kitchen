@@ -11,8 +11,8 @@ from kitchen.dashboard import chef
 @require_http_methods(["GET"])
 def get_roles(request):
     """Returns all nodes in the repo"""
-    roles = chef.get_roles()
-    return HttpResponse(json.dumps(roles), content_type="application/json")
+    data = chef.get_roles()
+    return HttpResponse(json.dumps(data), content_type="application/json")
 
 
 @require_http_methods(["GET"])
