@@ -19,15 +19,9 @@
             </thead>
             {% for node in nodes %}
                 <tr>
-                    <td>
-                        {{ node.hostname }}
-                    </td>
-                    <td>
-                        {{ node.ipaddress }}
-                    </td>
-                    <td>
-                        {{ node.chef_environment }}
-                    </td>
+                    <td>{{ node.hostname }}</td>
+                    <td>{{ node.ipaddress }}</td>
+                    <td>{{ node.chef_environment }}</td>
                     <td>
                         {% for entry in node.run_list|get_role_list %}
                             {{ entry }}

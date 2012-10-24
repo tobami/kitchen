@@ -69,6 +69,7 @@ def main(request):
                          request.GET.get('roles', ''),
                          request.GET.get('virt', REPO['DEFAULT_VIRT']))
         _show_repo_sync_date(request)
+        data['nodes_simple'] = get_nodes()
     except RepoError as e:
         add_message(request, ERROR, str(e))
     if not len(data.get('nodes', [])):
@@ -76,7 +77,6 @@ def main(request):
                     "There are no nodes that fit the supplied criteria.")
     data['show_virt'] = SHOW_VIRT_VIEW
     data['query_string'] = request.META['QUERY_STRING']
-    data['nodes_simple'] = get_nodes()
     return render_to_response('main.html',
                               data, context_instance=RequestContext(request))
 

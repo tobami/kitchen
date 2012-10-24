@@ -320,15 +320,15 @@ class TestViews(TestCase):
         """Should display proper nodes when an environment is given"""
         resp = self.client.get("/?env=staging&virt=")
         self.assertEqual(resp.status_code, 200)
-        self.assertTrue("testnode4" in resp.content)
-        self.assertFalse("testnode5" in resp.content)
-        self.assertFalse("testnode1" in resp.content)
-        self.assertFalse("testnode2" in resp.content)
-        self.assertFalse("testnode6" in resp.content)
+        self.assertTrue("<td>testnode4</td>" in resp.content)
+        self.assertFalse("<td>testnode5</td>" in resp.content)
+        self.assertFalse("<td>testnode1</td>" in resp.content)
+        self.assertFalse("<td>testnode2</td>" in resp.content)
+        self.assertFalse("<td>testnode6</td>" in resp.content)
         # Should not display any nodes
         resp = self.client.get("/?env=testing")
         self.assertEqual(resp.status_code, 200)
-        nodes = ["testnode" + str(i) for i in range(1, 7)]
+        nodes = ["<td>testnode{0}</td>".format(str(i) for i in range(1, 7))]
         for node in nodes:
             self.assertTrue(node not in resp.content, node)
 
@@ -336,12 +336,12 @@ class TestViews(TestCase):
         """Should display proper nodes when a role is given"""
         resp = self.client.get("/?env=&roles=dbserver&virt=")
         self.assertEqual(resp.status_code, 200)
-        self.assertTrue("testnode3" in resp.content)
-        self.assertTrue("testnode5" in resp.content)
-        self.assertTrue("testnode1" not in resp.content)
-        self.assertTrue("testnode2" not in resp.content)
-        self.assertTrue("testnode4" not in resp.content)
-        self.assertTrue("testnode6" not in resp.content)
+        self.assertTrue("<td>testnode3</td>" in resp.content)
+        self.assertTrue("<td>testnode5</td>" in resp.content)
+        self.assertTrue("<td>testnode1</td>" not in resp.content)
+        self.assertTrue("<td>testnode2</td>" not in resp.content)
+        self.assertTrue("<td>testnode4</td>" not in resp.content)
+        self.assertTrue("<td>testnode6</td>" not in resp.content)
 
     @patch('kitchen.dashboard.chef.KITCHEN_DIR', '/badrepopath/')
     def test_list_no_repo(self):
