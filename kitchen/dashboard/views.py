@@ -10,7 +10,7 @@ from logbook import Logger
 from kitchen.dashboard.chef import (get_nodes_extended, get_roles,
                                     get_role_groups, get_environments,
                                     filter_nodes, group_nodes_by_host,
-                                    RepoError)
+                                    get_nodes, RepoError)
 from kitchen.dashboard import graphs
 from kitchen.settings import (REPO, SHOW_VIRT_VIEW, SHOW_HOST_NAMES,
                               SYNCDATE_FILE)
@@ -76,6 +76,7 @@ def main(request):
                     "There are no nodes that fit the supplied criteria.")
     data['show_virt'] = SHOW_VIRT_VIEW
     data['query_string'] = request.META['QUERY_STRING']
+    data['nodes_simple'] = get_nodes()
     return render_to_response('main.html',
                               data, context_instance=RequestContext(request))
 
