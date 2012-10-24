@@ -78,8 +78,6 @@ def _data_loader(data_type, name=None):
         log.error(e)
     finally:
         os.chdir(current_dir)
-        if data is None:
-            print data_type, name
         return data
 
 
