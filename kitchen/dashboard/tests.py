@@ -55,8 +55,6 @@ class TestRepo(TestCase):
 
 
 class TestData(TestCase):
-    nodes = chef.get_nodes_extended()
-
     def test_load_data_nodes(self):
         """Should return nodes when the given argument is 'nodes'"""
         data = chef._load_data('nodes')
@@ -77,12 +75,11 @@ class TestData(TestCase):
 
     def test_load_data_unsupported(self):
         """Should return an empty dict when an invalid arg is given"""
-        data = chef._load_data('rolezzzz')
-        self.assertEqual(len(data), 0)
+        self.assertEqual(chef._load_data('rolezzzz'), None)
 
     def test_get_environments(self):
         """Should return a list of all chef_environment values found"""
-        data = chef.get_environments(self.nodes)
+        data = chef.get_environments(chef.get_nodes_extended())
         self.assertEqual(len(data), 3)
         expected = [{'counts': 1, 'name': 'none'},
                     {'counts': 6, 'name': 'production'},
@@ -91,35 +88,35 @@ class TestData(TestCase):
 
     def test_filter_nodes_all(self):
         """Should return all nodes when empty filters are are given"""
-        data = chef.filter_nodes(self.nodes, '', '')
+        data = chef.filter_nodes(chef.get_nodes_extended(), '', '')
         self.assertEqual(len(data), TOTAL_NODES)
 
     def test_filter_nodes_env(self):
         """Should filter nodes belonging to a given environment"""
-        data = chef.filter_nodes(self.nodes, 'production')
+        data = chef.filter_nodes(chef.get_nodes_extended(), 'production')
         self.assertEqual(len(data), 6)
 
-        data = chef.filter_nodes(self.nodes, 'staging')
+        data = chef.filter_nodes(chef.get_nodes_extended(), 'staging')
         self.assertEqual(len(data), 1)
 
-        data = chef.filter_nodes(self.nodes, 'non_existing_env')
+        data = chef.filter_nodes(chef.get_nodes_extended(), 'non_existing_env')
         self.assertEqual(len(data), 0)
 
     def test_filter_nodes_roles(self):
         """Should filter nodes acording to their virt value"""
-        data = chef.filter_nodes(self.nodes, roles='dbserver')
+        data = chef.filter_nodes(chef.get_nodes_extended(), roles='dbserver')
         self.assertEqual(len(data), 2)
         self.assertEqual(data[0]['name'], "testnode3.mydomain.com")
 
-        data = chef.filter_nodes(self.nodes, roles='loadbalancer')
+        data = chef.filter_nodes(chef.get_nodes_extended(), roles='loadbalancer')
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]['name'], "testnode1")
 
-        data = chef.filter_nodes(self.nodes, roles='webserver')
+        data = chef.filter_nodes(chef.get_nodes_extended(), roles='webserver')
         self.assertEqual(len(data), 4)
         self.assertEqual(data[0]['name'], "testnode2")
 
-        data = chef.filter_nodes(self.nodes, roles='webserver,dbserver')
+        data = chef.filter_nodes(chef.get_nodes_extended(), roles='webserver,dbserver')
         self.assertEqual(len(data), 6)
         self.assertEqual(data[1]['name'], "testnode3.mydomain.com")
 
@@ -127,18 +124,18 @@ class TestData(TestCase):
         """Should filter nodes acording to their virt value"""
         total_guests = 7
         total_hosts = 1
-        data = chef.filter_nodes(self.nodes, virt_roles='guest')
+        data = chef.filter_nodes(chef.get_nodes_extended(), virt_roles='guest')
         self.assertEqual(len(data), total_guests)
 
-        data = chef.filter_nodes(self.nodes, virt_roles='host')
+        data = chef.filter_nodes(chef.get_nodes_extended(), virt_roles='host')
         self.assertEqual(len(data), total_hosts)
 
-        data = chef.filter_nodes(self.nodes, virt_roles='host,guest')
+        data = chef.filter_nodes(chef.get_nodes_extended(), virt_roles='host,guest')
         self.assertEqual(len(data), TOTAL_NODES)
 
     def test_filter_nodes_combined(self):
         """Should filter nodes acording to their virt value"""
-        data = chef.filter_nodes(self.nodes,
+        data = chef.filter_nodes(chef.get_nodes_extended(),
                                  env='production',
                                  roles='loadbalancer,webserver',
                                  virt_roles='guest')
@@ -147,14 +144,14 @@ class TestData(TestCase):
         self.assertEqual(data[1]['name'], "testnode2")
         self.assertEqual(data[2]['name'], "testnode7")
 
-        data = chef.filter_nodes(self.nodes, env='staging', roles='webserver',
+        data = chef.filter_nodes(chef.get_nodes_extended(), env='staging', roles='webserver',
                                  virt_roles='guest')
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]['name'], "testnode4")
 
     def test_group_by_hosts_without_filter_by_role(self):
         """Should group guests by hosts without given a role filter"""
-        data = chef.group_nodes_by_host(deepcopy(self.nodes), roles='')
+        data = chef.group_nodes_by_host(chef.get_nodes_extended(), roles='')
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]['name'], 'testnode5')
         vms = data[0]['virtualization']['guests']
@@ -167,7 +164,7 @@ class TestData(TestCase):
 
     def test_group_by_hosts_with_filter_by_role(self):
         """Should group guests by hosts without given a role filter"""
-        data = chef.group_nodes_by_host(deepcopy(self.nodes),
+        data = chef.group_nodes_by_host(chef.get_nodes_extended(),
                                         roles='webserver')
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]['name'], 'testnode5')
@@ -458,8 +455,20 @@ class TestAPI(TestCase):
         self.assertEqual(data[0]['chef_environment'], 'staging')
         self.assertEqual(data[0]['role'], ['webserver'])
 
+    def test_get_node(self):
+        """Should return a node hash when node name is found"""
+        resp = self.client.get("/api/nodes/testnode6")
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(json.loads(resp.content),
+                         {'name': 'testnode6', 'run_list': ['role[webserver]']})
 
-class TestTags(TestCase):
+    def test_get_node_not_found(self):
+        """Should return NOT FOUND when node name does not exist"""
+        resp = self.client.get("/api/nodes/node_does_not_exist")
+        self.assertEqual(resp.status_code, 404)
+
+
+class TestTemplateTags(TestCase):
     run_list = [
         "role[dbserver]", "recipe[haproxy]", "role[webserver]",
         "role[worker]", "recipe[apache2]", "role[loadbalancer]",
