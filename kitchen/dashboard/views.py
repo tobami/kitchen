@@ -10,7 +10,7 @@ from logbook import Logger
 from kitchen.dashboard.chef import (get_nodes_extended, get_roles,
                                     get_role_groups, get_environments,
                                     filter_nodes, group_nodes_by_host,
-                                    RepoError)
+                                    get_nodes, RepoError)
 from kitchen.dashboard import graphs
 from kitchen.settings import (REPO, SHOW_VIRT_VIEW, SHOW_HOST_NAMES,
                               SYNCDATE_FILE)
@@ -69,6 +69,7 @@ def main(request):
                          request.GET.get('roles', ''),
                          request.GET.get('virt', REPO['DEFAULT_VIRT']))
         _show_repo_sync_date(request)
+        data['nodes_simple'] = get_nodes()
     except RepoError as e:
         add_message(request, ERROR, str(e))
     if not len(data.get('nodes', [])):

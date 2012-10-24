@@ -67,6 +67,13 @@ input:-moz-placeholder {
     color:#cdc9c9;
 }
 
+/*JSON highlighning */
+.string { color: green; }
+.number { color: darkorange; }
+.boolean { color: blue; }
+.null { color: magenta; }
+.key { color: red; }
+
 #host_grouper{
     background-color: #cdc9c9;
     border-bottom: 1px solid #A19B9E;

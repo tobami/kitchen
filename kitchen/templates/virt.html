@@ -29,18 +29,10 @@
             <tbody>
             {% for node in nodes %}
                 <tr id="host_row">
-                    <td>
-                        {{ node.name }}
-                    </td>
-                    <td>
-                        {{ node.name }}
-                    </td>
-                    <td>
-                        {{ node.ipaddress }}
-                    </td>
-                    <td>
-                        {{ node.chef_environment }}
-                    </td>
+                    <td>{{ node.name }}</td>
+                    <td>{{ node.name }}</td>
+                    <td>{{ node.ipaddress }}</td>
+                    <td>{{ node.chef_environment }}</td>
                     <td>
                         {% for entry in node.run_list|get_role_list %}
                             {{ entry }}
@@ -56,18 +48,10 @@
                 </tr>
                  {% for vm in node.virtualization.vms %}
                     <tr>
-                        <td>
-                            {{ node.name }}
-                        </td>
-                        <td>
-                            {{ vm.fqdn }}
-                        </td>
-                        <td>
-                            {{ vm.RAM }} MB
-                        </td>
-                        <td>
-                            {{ vm.cpus }} CPUs
-                        </td>
+                        <td>{{ node.name }}</td>
+                        <td>{{ vm.fqdn }}</td>
+                        <td>{{ vm.RAM }} MB</td>
+                        <td>{{ vm.cpus }} CPUs</td>
                         <td>
                             {% for entry in vm.run_list|get_role_list %}
                                 {{ entry }}

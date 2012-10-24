@@ -19,22 +19,16 @@
             </thead>
             {% for node in nodes %}
                 <tr>
-                    <td class="node_name">
-                        {{ node.hostname }}
-                    </td>
-                    <td class="node_ip">
-                        {{ node.ipaddress }}
-                    </td>
-                    <td class="node_env">
-                        {{ node.chef_environment }}
-                    </td>
-                    <td class="node_role">
+                    <td>{{ node.hostname }}</td>
+                    <td>{{ node.ipaddress }}</td>
+                    <td>{{ node.chef_environment }}</td>
+                    <td>
                         {% for entry in node.run_list|get_role_list %}
                             {{ entry }}
                             {% if not forloop.last %}, {% endif %}
                         {% endfor %}
                     </td>
-                    <td class="node_recipe">
+                    <td>
                         {% for entry in node.run_list|get_recipe_list %}
                             {{entry}}
                             {% if not forloop.last %}, {% endif %}
@@ -48,9 +42,46 @@
 
 {% block bodytail %}
 <script type="text/javascript">
+    /* Node details*/
+    function fnFormatNodeDetails (oTable, nTr) {
+        var aData = oTable.fnGetData(nTr);
+        var node = undefined;
+        for(var i=0;i<nodes.length;i++) {
+            if (nodes[i].name.substring(0, aData[0].length) == aData[0]) {
+                node = nodes[i];
+                break;
+            }
+        }
+        var sOut = '<pre>';
+        nodeJson = syntaxHighlight(JSON.stringify(node, undefined, 4));
+        sOut += nodeJson;
+        sOut += '</pre>';
+        return sOut;
+    }
+
+    function syntaxHighlight(json) {
+        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+            var cls = 'number';
+            if (/^"/.test(match)) {
+                if (/:$/.test(match)) {
+                    cls = 'key';
+                } else {
+                    cls = 'string';
+                }
+            } else if (/true|false/.test(match)) {
+                cls = 'boolean';
+            } else if (/null/.test(match)) {
+                cls = 'null';
+            }
+            return '<span class="' + cls + '">' + match + '</span>';
+        });
+    }
+
     $(document).ready(function() {
+        nodes = {{nodes_simple|safe}};
         setupClickHandlers();
-        $('#nodes').dataTable({
+        var oTable = $('#nodes').dataTable({
             "bPaginate": false,
             "oLanguage": {
                 "sSearch": "",
@@ -63,6 +94,17 @@
         });
         $('#nodes_filter input').attr("placeholder", "Search nodes");
         $('#nodes_filter input:text').focus();
+
+        /* Event listener for opening and closing details */
+        $('#nodes tbody td').live('click', function () {
+            var nTr = $(this).parents('tr')[0];
+            if (oTable.fnIsOpen(nTr)) {
+                oTable.fnClose(nTr);
+            }
+            else {
+                oTable.fnOpen(nTr, fnFormatNodeDetails(oTable, nTr), 'details');
+            }
+        } );
     });
 </script>
 {% endblock %}
