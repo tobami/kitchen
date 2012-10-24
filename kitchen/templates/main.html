@@ -19,22 +19,22 @@
             </thead>
             {% for node in nodes %}
                 <tr>
-                    <td class="node_name">
+                    <td>
                         {{ node.hostname }}
                     </td>
-                    <td class="node_ip">
+                    <td>
                         {{ node.ipaddress }}
                     </td>
-                    <td class="node_env">
+                    <td>
                         {{ node.chef_environment }}
                     </td>
-                    <td class="node_role">
+                    <td>
                         {% for entry in node.run_list|get_role_list %}
                             {{ entry }}
                             {% if not forloop.last %}, {% endif %}
                         {% endfor %}
                     </td>
-                    <td class="node_recipe">
+                    <td>
                         {% for entry in node.run_list|get_recipe_list %}
                                 {{entry}}
                                 {% if not forloop.last %}, {% endif %}
@@ -53,41 +53,40 @@
         var aData = oTable.fnGetData(nTr);
         var node = undefined;
         for(var i=0;i<nodes.length;i++) {
-            if (nodes[i].hostname == aData[0]) {
+            if (nodes[i].name.substring(0, aData[0].length) == aData[0]) {
                 node = nodes[i];
+                break;
             }
         }
-        var sOut = '<div class="expanded_node">';
-        if (node.virtualization) {
-            sOut += '<table class="table-bordered"><caption>Virtualization</caption>';
-            if (node.virtualization.role) {
-                sOut += '<tr><th>Role</th><td>'+node.virtualization.role+'</td></tr>';
-            }
-            if (node.virtualization.system) {
-                sOut += '<tr><th>System</th><td>'+node.virtualization.system+'</td></tr>';
-            }
-            sOut += '</table>';
-            if (node.virtualization.vms) {
-                sOut += '<table class="table-bordered"><caption>Virtual machines</caption>';
-                sOut += '<thead><tr><th>Name</th><th>Ram</th><th>CPUs</th></tr></thead>';
-                for(var i=0;i<node.virtualization.vms.length;i++) {
-                    sOut += '<tr>';
-                    sOut += '<td>'+node.virtualization.vms[i].fqdn+'</td>';
-                    sOut += '<td>'+node.virtualization.vms[i].RAM+'</td>';
-                    sOut += '<td>'+node.virtualization.vms[i].cpus+'</td>';
-                    sOut += '</tr>';
-                }
-                sOut += '</table>'
-            }
-        }
-        sOut += '</div>'
+        var sOut = '<pre>';
+        nodeJson = syntaxHighlight(JSON.stringify(node, undefined, 4));
+        sOut += nodeJson;
+        sOut += '</pre>';
         return sOut;
     }
 
+    function syntaxHighlight(json) {
+        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+            var cls = 'number';
+            if (/^"/.test(match)) {
+                if (/:$/.test(match)) {
+                    cls = 'key';
+                } else {
+                    cls = 'string';
+                }
+            } else if (/true|false/.test(match)) {
+                cls = 'boolean';
+            } else if (/null/.test(match)) {
+                cls = 'null';
+            }
+            return '<span class="' + cls + '">' + match + '</span>';
+        });
+    }
+
     $(document).ready(function() {
-        nodes = {{nodes|safe}};
+        nodes = {{nodes_simple|safe}};
         setupClickHandlers();
-        console.log(nodes);
         var oTable = $('#nodes').dataTable({
             "bPaginate": false,
             "oLanguage": {

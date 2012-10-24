@@ -61,7 +61,9 @@ input:-moz-placeholder {
     color:#cdc9c9;
 }
 
-.expanded_node table{
-    float: left;
-    margin-right: 50px;
-}
+/*JSON highlighning */
+.string { color: green; }
+.number { color: darkorange; }
+.boolean { color: blue; }
+.null { color: magenta; }
+.key { color: red; }
