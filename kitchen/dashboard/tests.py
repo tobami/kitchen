@@ -157,7 +157,7 @@ class TestData(TestCase):
         data = chef.group_nodes_by_host(deepcopy(self.nodes), roles='')
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]['name'], 'testnode5')
-        vms = data[0]['virtualization']['vms']
+        vms = data[0]['virtualization']['guests']
         expected_vms = ['testnode7', 'testnode8']
         self.assertEqual(len(vms), len(expected_vms))
         for vm in vms:
@@ -171,7 +171,7 @@ class TestData(TestCase):
                                         roles='webserver')
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]['name'], 'testnode5')
-        vms = data[0]['virtualization']['vms']
+        vms = data[0]['virtualization']['guests']
         expected_vms = ['testnode7']
         self.assertEqual(len(vms), len(expected_vms))
         for vm in vms:
@@ -507,3 +507,17 @@ class TestTags(TestCase):
         """Should return an empty recipe list when an invalid run list is given"""
         recipe_list = filters.get_recipe_list(None)
         self.assertEqual(recipe_list, [])
+
+    def test_memory_GB_filter_with_valid_string(self):
+        """"""
+        memory = filters.get_memory_in_GB('7124000kB')
+        self.assertEqual(memory, '7 GB')
+        memory = filters.get_memory_in_GB('1024000kB')
+        self.assertEqual(memory, '1 GB')
+
+    def test_memory_GB_filter_with_invalid_string(self):
+        """"""
+        invalid_strings = ['java', '1024000KFC', 'itsover9000', '12', '1']
+        for string in invalid_strings:
+            memory = filters.get_memory_in_GB(string)
+            self.assertEqual(memory, '')
