@@ -63,22 +63,33 @@ def get_environments(nodes):
     return [{'name': env, 'counts': counts[env]} for env in sorted(envs)]
 
 
-def _load_data(data_type):
-    """Loads the kitchen's node files"""
-    _check_kitchen()
+def _data_loader(data_type, name=None):
+    """Loads data from LittleChef's kitchen"""
     current_dir = os.getcwd()
     os.chdir(KITCHEN_DIR)
-    data = []
-    if data_type not in ["nodes", "roles"]:
-        log.error("Unsupported data type '{0}'".format(data_type))
-        return data
+    data = None
     try:
-        data = getattr(lib, "get_" + data_type)()
+        func = getattr(lib, "get_" + data_type)
+        if name:
+            data = func(name)
+        else:
+            data = func()
     except SystemExit as e:
         log.error(e)
     finally:
         os.chdir(current_dir)
-    return data
+        if data is None:
+            print data_type, name
+        return data
+
+
+def _load_data(data_type, name=None):
+    """Loads the kitchen's node files"""
+    _check_kitchen()
+    if data_type not in ["node", "nodes", "roles"]:
+        log.error("Unsupported data type '{0}'".format(data_type))
+        return None
+    return _data_loader(data_type, name)
 
 
 def _load_extended_node_data(nodes):
@@ -164,9 +175,11 @@ def get_nodes_extended():
 
 def get_node(name):
     """Returns the given node"""
-    node = lib.get_node(name)
+    node = _load_data("node", name)
     if node == {'run_list': []}:
         return None
+    else:
+        return node
 
 
 def get_nodes():
