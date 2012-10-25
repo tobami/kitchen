@@ -21,7 +21,7 @@
                     <th class="node_name">Host</th>
                     <th class="node_name">Name</th>
                     <th class="node_ip">IP</th>
-                    <th class="node_ram">Ram</th>
+                    <th class="node_ram">RAM</th>
                     <th class="node_cpus">CPUs</th>
                     <th class="node_env">Environment</th>
                     <th class="node_role">Role</th>
@@ -36,10 +36,9 @@
                     <td>{{ node.name }}</td>
                     <td>{{ node.ipaddress }}</td>
                     <td>{{ node.memory.total|get_memory_in_GB }}</td>
-                    <td>{{ node.cpu.total }} CPUs</td>
+                    <td class="node_cpus">{{ node.cpu.total }}</td>
                     <td>{{ node.chef_environment }}</td>
-                    <td>{% for entry in node.run_list|get_role_list %}
-                            {{ entry }}
+                    <td>{% for entry in node.run_list|get_role_list %}{{ entry }}
                             {% if not forloop.last %}, {% endif %}
                         {% endfor %}
                     </td>
@@ -58,7 +57,7 @@
                         <td>{{ vm.fqdn }}</td>
                         <td>{{ node.ipaddress }}</td>
                         <td>{{ vm.memory.total|get_memory_in_GB }}</td>
-                        <td>{{ vm.cpu.total }} CPUs</td>
+                        <td class="node_cpus">{{ vm.cpu.total }}</td>
                         <td>{{ node.chef_environment }}</td>
                         <td>{% for entry in vm.run_list|get_role_list %}
                                 {{ entry }}
@@ -125,7 +124,7 @@
             "sDom": '<"top"if>rt<"bottom"lp><"clear">'
         });
 
-        $('#nodes_filter input').attr("placeholder", "Search nodes");
+        $('#nodes_filter input').attr("placeholder", "Search");
         $('#nodes_filter input:text').focus();
     });
 </script>
