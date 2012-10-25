@@ -46,9 +46,20 @@ table#nodes tr.guest td:first-child { padding-left: 2em; }
 
 table#nodes td.node_tags { padding: 4px !important; }
 
-th.node_ram, th.node_cpus { width: 4em !important; }
+th.node_ram, th.node_cpus { width: 5em !important; }
 
-td.node_cpus { text-align: right !important; padding-right: 2.5em !important;}
+td.node_cpus { text-align: right !important; padding-right: 3.2em !important;}
+
+#host_grouper {
+    background-color: #EEE9E9;
+    border-bottom: 1px solid #E1E1E8;
+    border-top: 1px solid #E1E1E8;
+    opacity: 0.6;
+}
+
+#host_row {
+    background-color: #F7F7F9;
+}
 
 div.dataTables_info {
     float: right;
@@ -71,14 +82,3 @@ input:-moz-placeholder {
 .boolean { color: blue; }
 .null { color: magenta; }
 .key { color: red; }
-
-#host_grouper {
-    background-color: #cdc9c9;
-    border-bottom: 1px solid #A19B9E;
-    border-top: 1px solid #A19B9E;
-    opacity: 0.8;
-}
-
-#host_row {
-    background-color:#eee9e9;
-}
