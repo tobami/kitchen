@@ -10,6 +10,7 @@
         <table id="nodes" class="table">
             <thead>
                 <tr>
+                    <th class="node_expand"></th>
                     <th class="node_name">Name</th>
                     <th class="node_ip">IP Address</th>
                     <th class="node_env">Environment</th>
@@ -20,6 +21,7 @@
             </thead>
             {% for node in nodes_extended %}
                 <tr>
+                    <td class="control"></td>
                     <td>{{ node.hostname }}</td>
                     <td>{{ node.ipaddress }}</td>
                     <td>{{ node.chef_environment }}</td>
@@ -92,14 +94,17 @@
         });
         $('#nodes_filter input').attr("placeholder", "Search");
         $('#nodes_filter input:text').focus();
+        $('#nodes td.control').html('<i class="icon-chevron-right"></i>');
 
         /* Event listener for opening and closing details */
-        $('#nodes tbody td').live('click', function () {
+        $('#nodes td.control').live('click', function () {
             var nTr = $(this).parents('tr')[0];
             if (oTable.fnIsOpen(nTr)) {
+                $(this).html('<i class="icon-chevron-right"></i>');
                 oTable.fnClose(nTr);
             }
             else {
+                $(this).html('<i class="icon-chevron-down"></i>');
                 oTable.fnOpen(nTr, fnFormatNodeDetails(oTable, nTr), 'details');
             }
         } );
