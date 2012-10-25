@@ -86,3 +86,14 @@ input:-moz-placeholder {
 .boolean { color: blue; }
 .null { color: magenta; }
 .key { color: red; }
+
+
+/* Bootstrap icons override*/
+
+.icon-chevron-right, .icon-chevron-down {
+  opacity: .25;
+}
+
+.icon-chevron-right:hover, .icon-chevron-down:hover {
+  opacity: .75;
+}
