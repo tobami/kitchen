@@ -6,7 +6,7 @@
 
 {% load filters %}
 {% block bodycontent %}
-    {% if nodes %}
+    {% if nodes_extended %}
         <table id="nodes" class="table">
             <thead>
                 <tr>
@@ -17,7 +17,7 @@
                     <th class="node_recipe">Recipe</th>
                 </tr>
             </thead>
-            {% for node in nodes %}
+            {% for node in nodes_extended %}
                 <tr>
                     <td>{{ node.hostname }}</td>
                     <td>{{ node.ipaddress }}</td>
@@ -79,7 +79,7 @@
     }
 
     $(document).ready(function() {
-        nodes = {{nodes_simple|safe}};
+        nodes = {{nodes|safe}};
         setupClickHandlers();
         var oTable = $('#nodes').dataTable({
             "bPaginate": false,
