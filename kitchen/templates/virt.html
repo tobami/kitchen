@@ -26,6 +26,7 @@
                     <th class="node_env">Environment</th>
                     <th class="node_role">Role</th>
                     <th class="node_recipe">Recipe</th>
+                    <th class="node_tags">tags</th>
                 </tr>
             </thead>
             <tbody>
@@ -49,6 +50,11 @@
                             {% if not forloop.last %}, {% endif %}
                         {% endfor %}
                     </td>
+                    <td>
+                        {% for entry in node.tags %}
+                            <a href="#" class="btn disabled">{{entry}}</a>
+                        {% endfor %}
+                    </td>
                 </tr>
                  {% for vm in node.virtualization.guests %}
                     <tr>
@@ -70,6 +76,11 @@
                                 {% if not forloop.last %}, {% endif %}
                             {% endfor %}
                         </td>
+                        <td>
+                        {% for entry in vm.tags %}
+                            <a href="#" class="btn disabled">{{entry}}</a>
+                        {% endfor %}
+                    </td>
                     </tr>
                 {% endfor %}
             {% endfor %}

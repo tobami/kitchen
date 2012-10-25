@@ -313,6 +313,12 @@ class TestViews(TestCase):
         for node in nodes:
             self.assertTrue(node in resp.content, node)
 
+    def test_list_tags(self):
+        """Should display tags when selected nodes have tags"""
+        resp = self.client.get("/")
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue(' disabled">WIP<' in resp.content)
+
     def test_list_env(self):
         """Should display proper nodes when an environment is given"""
         resp = self.client.get("/?env=staging&virt=")

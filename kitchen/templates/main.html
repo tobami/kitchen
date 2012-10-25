@@ -15,6 +15,7 @@
                     <th class="node_env">Environment</th>
                     <th class="node_role">Role</th>
                     <th class="node_recipe">Recipe</th>
+                    <th class="node_tags">tags</th>
                 </tr>
             </thead>
             {% for node in nodes_extended %}
@@ -32,6 +33,11 @@
                         {% for entry in node.run_list|get_recipe_list %}
                             {{entry}}
                             {% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for entry in node.tags %}
+                            <a href="#" class="btn disabled">{{entry}}</a>
                         {% endfor %}
                     </td>
                 </tr>
