@@ -317,7 +317,13 @@ class TestViews(TestCase):
         """Should display tags when selected nodes have tags"""
         resp = self.client.get("/")
         self.assertEqual(resp.status_code, 200)
-        self.assertTrue(' disabled">WIP<' in resp.content)
+        self.assertTrue('class="btn  disabled">ATest</a>' in resp.content)
+
+    def test_list_tags_class(self):
+        """Should display tags with css class when selected nodes have tags"""
+        resp = self.client.get("/")
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue('class="btn btn-danger disabled">WIP<' in resp.content)
 
     def test_list_env(self):
         """Should display proper nodes when an environment is given"""
@@ -536,3 +542,11 @@ class TestTemplateTags(TestCase):
         for string in invalid_strings:
             memory = filters.get_memory_in_GB(string)
             self.assertEqual(memory, '')
+
+    def test_get_tag_class(self):
+        """Should return a css class when tag has a defined class"""
+        self.assertEqual(filters.get_tag_class("WIP"), "btn-danger")
+
+    def test_get_tag_class_no_class(self):
+        """Should return an empty string when tag has no defined class"""
+        self.assertEqual(filters.get_tag_class("foo"), "")
