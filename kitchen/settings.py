@@ -24,7 +24,8 @@ COLORS = [
 ]
 
 TAG_CLASSES = {
-    "WIP": "btn-danger"
+    "WIP": "btn-danger",
+    "dummy": "btn-danger",
 }
 
 SHOW_VIRT_VIEW = True
@@ -51,8 +52,7 @@ STATIC_ROOT = os.path.join(BASE_PATH, 'dashboard', 'static')
 STATIC_URL = '/static/'
 
 # Additional locations of static files
-STATICFILES_DIRS = (
-)
+STATICFILES_DIRS = ()
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
