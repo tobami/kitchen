@@ -537,18 +537,22 @@ class TestTemplateTags(TestCase):
         self.assertEqual(recipe_list, [])
 
     def test_memory_GB_filter_with_valid_string(self):
-        """"""
+        """Should return memory in GB when given value is in kB"""
         memory = filters.get_memory_in_GB('7124000kB')
         self.assertEqual(memory, '7 GB')
         memory = filters.get_memory_in_GB('1024000kB')
         self.assertEqual(memory, '1 GB')
 
     def test_memory_GB_filter_with_invalid_string(self):
-        """"""
+        """Should return an empty string when an invalid value is given"""
         invalid_strings = ['java', '1024000KFC', 'itsover9000', '12', '1']
         for string in invalid_strings:
             memory = filters.get_memory_in_GB(string)
             self.assertEqual(memory, '')
+
+    def test_memory_GB_filter_with_empty_string(self):
+        """Should return an empty string when None is given"""
+        self.assertEqual(filters.get_memory_in_GB(None), '')
 
     def test_get_tag_class(self):
         """Should return a css class when tag has a defined class"""
