@@ -53,7 +53,7 @@
                     </td>
                 </tr>
                  {% for vm in node.virtualization.guests %}
-                    <tr>
+                    <tr class="guest">
                         <td>{{ node.name }}</td>
                         <td>{{ vm.fqdn }}</td>
                         <td>{{ node.ipaddress }}</td>

@@ -44,6 +44,8 @@ td.node_tags { padding: 4px !important; }
 
 table#nodes th { cursor: pointer; width: 11em; }
 
+table#nodes tr.guest td:first-child { padding-left: 2em; }
+
 div.dataTables_info {
     float: right;
 }

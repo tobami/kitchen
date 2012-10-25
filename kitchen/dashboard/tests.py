@@ -371,7 +371,8 @@ class TestViews(TestCase):
         """Should display tags with css class when selected nodes have tags"""
         resp = self.client.get("/virt/")
         self.assertEqual(resp.status_code, 200)
-        self.assertTrue('class="btn btn-custom btn-danger disabled">WIP<' in resp.content)
+        self.assertTrue(
+            'class="btn btn-custom btn-danger disabled">WIP<' in resp.content)
 
     def test_graph_no_env(self):
         """Should not generate a graph when no environment is selected"""
