@@ -77,6 +77,10 @@
     }
 
     $(document).ready(function() {
+        var search = "";
+        if (window.location.hash !== "") {
+          search = window.location.hash.substring(1);
+        }
         nodes = {{nodes|safe}};
         setupClickHandlers();
         var oTable = $('#nodes').dataTable({
@@ -87,6 +91,9 @@
                 "sInfoEmpty": "No nodes found",
                 "sInfoFiltered": " (filtering from _MAX_ total)",
                 "sZeroRecords": "No nodes to display"
+            },
+            "oSearch": {
+                "sSearch": search,
             },
             "sDom": '<"top"if>rt<"bottom"lp><"clear">'
         });
