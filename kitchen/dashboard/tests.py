@@ -362,10 +362,16 @@ class TestViews(TestCase):
         self.assertTrue(expected in resp.content)
 
     def test_virt(self):
-        """Should display nodes when everything is correct"""
+        """Should display nodes when repo is correct"""
         resp = self.client.get("/virt/")
         self.assertEqual(resp.status_code, 200)
         self.assertTrue("<title>Kitchen</title>" in resp.content)
+
+    def test_virt_tags(self):
+        """Should display tags with css class when selected nodes have tags"""
+        resp = self.client.get("/virt/")
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue('class="btn btn-danger disabled">WIP<' in resp.content)
 
     def test_graph_no_env(self):
         """Should not generate a graph when no environment is selected"""

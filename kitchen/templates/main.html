@@ -23,22 +23,15 @@
                     <td>{{ node.hostname }}</td>
                     <td>{{ node.ipaddress }}</td>
                     <td>{{ node.chef_environment }}</td>
-                    <td>
-                        {% for entry in node.run_list|get_role_list %}
+                    <td>{% for entry in node.run_list|get_role_list %}
                             {{ entry }}
-                            {% if not forloop.last %}, {% endif %}
-                        {% endfor %}
+                            {% if not forloop.last %}, {% endif %}{% endfor %}
                     </td>
-                    <td>
-                        {% for entry in node.run_list|get_recipe_list %}
-                            {{entry}}
-                            {% if not forloop.last %}, {% endif %}
-                        {% endfor %}
+                    <td>{% for entry in node.run_list|get_recipe_list %}{{entry}}
+                            {% if not forloop.last %}, {% endif %}{% endfor %}
                     </td>
-                    <td>
-                        {% for entry in node.tags %}
-                            <a href="#" class="btn {{entry|get_tag_class}} disabled">{{entry}}</a>
-                        {% endfor %}
+                    <td>{% for entry in node.tags %}
+                        <a href="#" class="btn {{entry|get_tag_class}} disabled">{{entry}}</a>{% endfor %}
                     </td>
                 </tr>
             {% endfor %}
