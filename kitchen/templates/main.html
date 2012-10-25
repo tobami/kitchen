@@ -15,6 +15,7 @@
                     <th class="node_env">Environment</th>
                     <th class="node_role">Role</th>
                     <th class="node_recipe">Recipe</th>
+                    <th>Tags</th>
                 </tr>
             </thead>
             {% for node in nodes_extended %}
@@ -22,17 +23,15 @@
                     <td>{{ node.hostname }}</td>
                     <td>{{ node.ipaddress }}</td>
                     <td>{{ node.chef_environment }}</td>
-                    <td>
-                        {% for entry in node.run_list|get_role_list %}
+                    <td>{% for entry in node.run_list|get_role_list %}
                             {{ entry }}
-                            {% if not forloop.last %}, {% endif %}
-                        {% endfor %}
+                            {% if not forloop.last %}, {% endif %}{% endfor %}
                     </td>
-                    <td>
-                        {% for entry in node.run_list|get_recipe_list %}
-                            {{entry}}
-                            {% if not forloop.last %}, {% endif %}
-                        {% endfor %}
+                    <td>{% for entry in node.run_list|get_recipe_list %}{{entry}}
+                            {% if not forloop.last %}, {% endif %}{% endfor %}
+                    </td>
+                    <td class="node_tags">{% for entry in node.tags %}
+                        <a href="#" class="btn btn-custom {{entry|get_tag_class}} disabled">{{entry}}</a>{% endfor %}
                     </td>
                 </tr>
             {% endfor %}

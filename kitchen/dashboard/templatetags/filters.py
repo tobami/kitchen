@@ -2,7 +2,7 @@
 from django import template
 import littlechef
 
-from kitchen.settings import REPO
+from kitchen.settings import REPO, TAG_CLASSES
 
 register = template.Library()
 
@@ -31,3 +31,9 @@ def get_memory_in_GB(memory_str):
         return '{0} GB'.format(int(memory_str[:-2]) / 1000000)
     except ValueError:
         return ''
+
+
+@register.filter(name='get_tag_class')
+def get_tag_class(tag):
+    """Returns a button class for the given tag"""
+    return TAG_CLASSES.get(tag, "")

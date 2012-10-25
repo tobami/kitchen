@@ -66,16 +66,16 @@ def _set_options(options):
 
 def main(request):
     """Default main view showing a list of nodes"""
+    _show_repo_sync_date(request)
     data = {}
     try:
         data = _get_data(request.GET.get('env', REPO['DEFAULT_ENV']),
                          request.GET.get('roles', ''),
                          request.GET.get('virt', REPO['DEFAULT_VIRT']))
-        _show_repo_sync_date(request)
-        data['nodes'] = json.dumps(data['nodes'])
     except RepoError as e:
         add_message(request, ERROR, str(e))
     else:
+        data['nodes'] = json.dumps(data['nodes'])
         if not data['nodes_extended']:
             add_message(request, WARNING,
                         "There are no nodes that fit the supplied criteria.")
@@ -87,9 +87,10 @@ def main(request):
 
 def virt(request):
     """Displays a view where the nodes are grouped by physical host"""
+    _show_repo_sync_date(request)
+    roles = request.GET.get('roles', '')
     data = {}
     try:
-        roles = request.GET.get('roles', '')
         data = _get_data(request.GET.get('env', REPO['DEFAULT_ENV']),
                          '',
                          request.GET.get('virt', None))
@@ -112,8 +113,9 @@ def graph(request):
     generated using Graphviz open source graph visualization library
 
     """
-    options = _set_options(request.GET.get('options'))
+    _show_repo_sync_date(request)
     data = {}
+    options = _set_options(request.GET.get('options'))
     env_filter = request.GET.get('env', REPO['DEFAULT_ENV'])
     try:
         data = _get_data(env_filter, request.GET.get('roles', ''), 'guest')

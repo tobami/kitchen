@@ -2,6 +2,7 @@
     "chef_environment": "production",
     "ipaddress": "7.7.7.7",
     "null_attr": null,
+    "tags": ["WIP","ATest"],
     "run_list": [
         "role[webserver]"
     ]

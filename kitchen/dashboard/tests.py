@@ -313,6 +313,18 @@ class TestViews(TestCase):
         for node in nodes:
             self.assertTrue(node in resp.content, node)
 
+    def test_list_tags(self):
+        """Should display tags when selected nodes have tags"""
+        resp = self.client.get("/")
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue('class="btn btn-custom  disabled">ATest</a>' in resp.content)
+
+    def test_list_tags_class(self):
+        """Should display tags with css class when selected nodes have tags"""
+        resp = self.client.get("/")
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue('class="btn btn-custom btn-danger disabled">WIP<' in resp.content)
+
     def test_list_env(self):
         """Should display proper nodes when an environment is given"""
         resp = self.client.get("/?env=staging&virt=")
@@ -350,10 +362,16 @@ class TestViews(TestCase):
         self.assertTrue(expected in resp.content)
 
     def test_virt(self):
-        """Should display nodes when everything is correct"""
+        """Should display nodes when repo is correct"""
         resp = self.client.get("/virt/")
         self.assertEqual(resp.status_code, 200)
         self.assertTrue("<title>Kitchen</title>" in resp.content)
+
+    def test_virt_tags(self):
+        """Should display tags with css class when selected nodes have tags"""
+        resp = self.client.get("/virt/")
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue('class="btn btn-custom btn-danger disabled">WIP<' in resp.content)
 
     def test_graph_no_env(self):
         """Should not generate a graph when no environment is selected"""
@@ -530,3 +548,11 @@ class TestTemplateTags(TestCase):
         for string in invalid_strings:
             memory = filters.get_memory_in_GB(string)
             self.assertEqual(memory, '')
+
+    def test_get_tag_class(self):
+        """Should return a css class when tag has a defined class"""
+        self.assertEqual(filters.get_tag_class("WIP"), "btn-danger")
+
+    def test_get_tag_class_no_class(self):
+        """Should return an empty string when tag has no defined class"""
+        self.assertEqual(filters.get_tag_class("foo"), "")

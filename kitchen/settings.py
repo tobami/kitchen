@@ -18,9 +18,15 @@ REPO = {
     'DEFAULT_ENV': 'production',
     'DEFAULT_VIRT': 'guest',
 }
+
 COLORS = [
     "#FCD975", "#9ACEEB", "/blues5/1", "#97CE8A", "#FFA764", "#FBC6FF"
 ]
+
+TAG_CLASSES = {
+    "WIP": "btn-danger"
+}
+
 SHOW_VIRT_VIEW = True
 SHOW_HOST_NAMES = True
 

@@ -19,21 +19,7 @@ body {
 .brand img {
     margin: -10px 12px;
 }
-.badge {
-    float: right;
-}
-
-.node_name, .node_ip,
-.node_env, .node_role,
-.node_recipe, .node_grouper {
-    width: 16em;
-}
-
-.vm_fqdn, .vm_ram,
-.vm_cpus, .vm_role,
-.vm_grouper {
-    width: 17em;
-}
+.badge { float: right; }
 
 p.notfound {
     padding: 3px 15px;
@@ -50,7 +36,13 @@ p.notfound img {
     margin-right: 1em;
 }
 
-table#nodes th { cursor: pointer; }
+.btn-custom {
+  padding: 3px 7px !important;
+}
+
+td.node_tags { padding: 4px !important; }
+
+table#nodes th { cursor: pointer; width: 11em; }
 
 div.dataTables_info {
     float: right;
