@@ -91,9 +91,7 @@ def virt(request):
     roles = request.GET.get('roles', '')
     data = {}
     try:
-        data = _get_data(request.GET.get('env', REPO['DEFAULT_ENV']),
-                         '',
-                         request.GET.get('virt', None))
+        data = _get_data(request.GET.get('env', REPO['DEFAULT_ENV']), '', None)
     except RepoError as e:
         add_message(request, ERROR, str(e))
     else:
