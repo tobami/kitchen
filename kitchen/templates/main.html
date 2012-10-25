@@ -100,6 +100,10 @@
         $('#nodes_filter input').attr("placeholder", "Search");
         $('#nodes_filter input:text').focus();
 
+        $.extend( $.fn.dataTableExt.oStdClasses, {
+            "sWrapper": "dataTables_wrapper form-inline"
+        });
+
         /* Event listener for opening and closing details */
         $('#nodes tbody td').live('click', function () {
             var nTr = $(this).parents('tr')[0];
