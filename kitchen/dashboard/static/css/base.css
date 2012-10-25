@@ -36,6 +36,12 @@ p.notfound img {
     margin-right: 1em;
 }
 
+.btn-custom {
+  padding: 3px 7px !important;
+}
+
+td.node_tags { padding: 4px !important; }
+
 table#nodes th { cursor: pointer; width: 11em; }
 
 div.dataTables_info {

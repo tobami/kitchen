@@ -26,7 +26,7 @@
                     <th class="node_env">Environment</th>
                     <th class="node_role">Role</th>
                     <th class="node_recipe">Recipe</th>
-                    <th class="node_tags">tags</th>
+                    <th>Tags</th>
                 </tr>
             </thead>
             <tbody>
@@ -70,8 +70,8 @@
                                 {% if not forloop.last %}, {% endif %}
                             {% endfor %}
                         </td>
-                        <td>{% for entry in vm.tags %}
-                            <a href="#" class="btn {{entry|get_tag_class}} disabled">{{entry}}</a>
+                        <td class="node_tags">{% for entry in vm.tags %}
+                            <a href="#" class="btn btn-custom {{entry|get_tag_class}} disabled">{{entry}}</a>
                         {% endfor %}
                     </td>
                     </tr>
