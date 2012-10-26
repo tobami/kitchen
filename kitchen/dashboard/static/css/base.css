@@ -48,7 +48,7 @@ table#nodes td.node_tags { padding: 4px !important; }
 
 table#nodes td.control { cursor: pointer; }
 
-th.node_expand { width: 1em !important; }
+th.node_expand { width: 1em !important; background: transparent !important;}
 
 th.node_ram, th.node_cpus { width: 5em !important; }
 
