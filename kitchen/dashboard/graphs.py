@@ -142,7 +142,7 @@ def generate_node_map(nodes, roles, show_hostnames=True):
         graph_thread.kill()
         timeout = int(timeout)
         log.error("pydot timeout: {0} seconds".format(timeout))
-        return False, ("Unable to draw graph, timeout exceded "
+        return False, ("Unable to draw graph, timeout exceeded "
                        "({0} seconds)").format(timeout)
     else:
         return result
@@ -181,7 +181,7 @@ class KitchenDot(pydot.Dot):
 
     """
     def __init__(self, *argsl, **argsd):
-        pydot.Dot.__init__(self, *argsl, **argsd)
+        super(KitchenDot, self).__init__(*argsl, **argsd)
         self.p = None
 
     def create(self, prog=None, format='ps'):
