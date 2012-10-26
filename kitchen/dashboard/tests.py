@@ -293,6 +293,17 @@ class TestGraph(TestCase):
                         "Size not between {0} and {1}: {2}".format(
                             min_size, max_size, size))
 
+    def test_graph_timeout(self):
+        """Should display an error message when GraphViz excess the timeout"""
+        error_msg = "Unable to draw graph, timeout exceeded"
+        data = chef.filter_nodes(self.nodes, 'production')
+
+        with patch('kitchen.dashboard.graphs.GraphThread.isAlive', return_value=True):
+            with patch('kitchen.dashboard.graphs.GraphThread.kill', return_value=True):
+                success, msg = graphs.generate_node_map(data, self.roles)
+        self.assertFalse(success)
+        self.assertTrue(error_msg in msg)
+
 
 class TestViews(TestCase):
     filepath = os.path.join(STATIC_ROOT, 'img', 'node_map.svg')

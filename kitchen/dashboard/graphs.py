@@ -142,7 +142,7 @@ def generate_node_map(nodes, roles, show_hostnames=True):
         graph_thread.kill()
         timeout = int(timeout)
         log.error("pydot timeout: {0} seconds".format(timeout))
-        return False, ("Unable to draw graph, timeout "
+        return False, ("Unable to draw graph, timeout exceded "
                        "({0} seconds)").format(timeout)
     else:
         return result
