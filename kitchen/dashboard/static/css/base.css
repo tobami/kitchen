@@ -6,12 +6,10 @@ body {
 .sidebar-nav {
     padding: 9px 0;
 }
-
 .sidebar_link {
     -moz-border-radius: 6px;
     border-radius: 6px;
 }
-
 .sidebar_link .badge {
     padding: 0px 7px;
 }
@@ -31,7 +29,6 @@ p.notfound {
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
     text-transform: uppercase;
 }
-
 p.notfound img {
     margin-right: 1em;
 }
@@ -41,17 +38,12 @@ p.notfound img {
 }
 
 table#nodes th { cursor: pointer; width: 11em; }
-
 table#nodes tr.guest td:first-child { padding-left: 2em; }
-
 table#nodes td.node_tags { padding: 4px !important; }
-
 table#nodes td.control { cursor: pointer; }
 
-th.node_expand { width: 1em !important; background: transparent !important;}
-
+th.node_expand { width: 1em !important; background: transparent !important; cursor: default !important;}
 th.node_ram, th.node_cpus { width: 5em !important; }
-
 td.node_cpus { text-align: right !important; padding-right: 3.2em !important;}
 
 #host_grouper {
@@ -60,7 +52,6 @@ td.node_cpus { text-align: right !important; padding-right: 3.2em !important;}
     border-top: 1px solid #E1E1E8;
     opacity: 0.6;
 }
-
 #host_row {
     background-color: #F7F7F9;
 }
@@ -68,17 +59,12 @@ td.node_cpus { text-align: right !important; padding-right: 3.2em !important;}
 div.dataTables_info {
     float: right;
 }
-
 div.dataTables_filter {
     float: left;
 }
 
-input::-webkit-input-placeholder {
-    color:#cdc9c9;
-}
-input:-moz-placeholder {
-    color:#cdc9c9;
-}
+input::-webkit-input-placeholder { color:#cdc9c9; }
+input:-moz-placeholder { color:#cdc9c9; }
 
 /*JSON highlighning */
 .string { color: green; }
@@ -96,7 +82,6 @@ table.table thead .sorting_asc_disabled,
 table.table thead .sorting_desc_disabled {
     cursor: pointer;
     *cursor: hand;
-    opacity: .9;
 } 
 table.table thead .sorting { background: url('../img/sort_both.png') no-repeat center right; }
 table.table thead .sorting_asc { background: url('../img/sort_asc.png') no-repeat center right; }
@@ -106,9 +91,5 @@ table.table thead .sorting_desc_disabled { background: url('../img/sort_desc_dis
 
 
 /* Bootstrap icons override*/
-.icon-chevron-right, .icon-chevron-down {
-  opacity: .25;
-}
-.icon-chevron-right:hover, .icon-chevron-down:hover {
-  opacity: .75;
-}
+.icon-chevron-right, .icon-chevron-down { opacity: .2; }
+.icon-chevron-right:hover, .icon-chevron-down:hover { opacity: .7; }
