@@ -24,7 +24,7 @@ COLORS = [
 ]
 
 TAG_CLASSES = {
-    "WIP": "btn-danger",
+    "WIP": "btn-warning",
     "dummy": "btn-danger",
 }
 

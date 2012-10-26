@@ -47,7 +47,7 @@
                         {% endfor %}
                     </td>
                     <td>{% for entry in node.tags %}
-                        <a href="#" class="btn {{entry|get_tag_class}} disabled">{{entry}}</a>{% endfor %}
+                        <a href="#" class="btn btn-custom {{entry|get_tag_class}} disabled">{{entry}}</a>{% endfor %}
                     </td>
                 </tr>
                  {% for vm in node.virtualization.guests %}
