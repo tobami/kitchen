@@ -11,7 +11,7 @@ from logbook import Logger
 from kitchen.dashboard.chef import (get_nodes, get_nodes_extended, get_roles,
                                     get_role_groups, get_environments,
                                     filter_nodes, group_nodes_by_host,
-                                    get_nodes, RepoError)
+                                    RepoError)
 from kitchen.dashboard import graphs
 from kitchen.settings import (REPO, SHOW_VIRT_VIEW, SHOW_HOST_NAMES,
                               SYNCDATE_FILE)
@@ -97,6 +97,7 @@ def virt(request):
     else:
         data['nodes_extended'] = group_nodes_by_host(data['nodes_extended'],
                                                      roles=roles)
+        data['nodes'] = json.dumps(data['nodes'])
         data['filter_roles'] = roles
         if not data['nodes_extended']:
             add_message(request, WARNING,
