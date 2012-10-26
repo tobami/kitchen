@@ -2,10 +2,10 @@
     "chef_environment": "production",
     "ipaddress": "5.5.5.5",
     "memory": {
-        "total": "8043000kB"
+        "total": "12043000kB"
     },
     "cpu": {
-        "total": "6"
+        "total": "8"
     },
     "virtualization": {
         "role": "host",
