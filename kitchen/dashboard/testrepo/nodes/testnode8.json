@@ -3,5 +3,6 @@
     "ipaddress": "8.8.8.8",
     "run_list": [
         "role[worker]"
-    ]
+    ],
+    "tags": ["dummy"]
 }
