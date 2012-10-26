@@ -3,6 +3,7 @@
 
 {% block extrahead %}
     <script type="text/javascript" src="/static/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="/static/js/kitchen.js"></script>
 {% endblock %}
 
 {% block topnav %}
@@ -18,6 +19,7 @@
         <table id="nodes" class="table">
             <thead>
                 <tr>
+                    <th class="node_expand"></th>
                     <th class="node_name">Host</th>
                     <th class="node_name">Name</th>
                     <th class="node_ip">IP</th>
@@ -32,6 +34,7 @@
             <tbody>
             {% for node in nodes_extended %}
                 <tr id="host_row">
+                    <td class="control"></td>
                     <td>{{ node.name }}</td>
                     <td>{{ node.hostname }}</td>
                     <td>{{ node.ipaddress }}</td>
@@ -52,6 +55,7 @@
                 </tr>
                  {% for vm in node.virtualization.guests %}
                     <tr class="guest">
+                        <td class="control"></td>
                         <td>{{ node.name }}</td>
                         <td>{{ vm.hostname }}</td>
                         <td>{{ vm.ipaddress }}</td>
@@ -81,52 +85,9 @@
 {% block bodytail %}
 <script type="text/javascript">
     $(document).ready(function() {
+        nodes = {{nodes|safe}};
         setupClickHandlers();
-        $('#nodes').dataTable({
-            "fnDrawCallback": function (oSettings) {
-                if (oSettings.aiDisplay.length == 0) {
-                    return;
-                }
-                var nTrs = $('#nodes tbody tr');
-                var iColspan = nTrs[0].getElementsByTagName('td').length;
-                var sLastGroup = "";
-                for (var i=0;i<nTrs.length;i++) {
-                    var iDisplayIndex = oSettings._iDisplayStart + i;
-                    var sGroup = oSettings.aoData[oSettings.aiDisplay[iDisplayIndex]]._aData[0];
-                    if (sGroup != sLastGroup) {
-                        var nGroup = document.createElement('tr');
-                        var nCell = document.createElement('td');
-                        nCell.colSpan = iColspan;
-                        nCell.id = "host_grouper";
-                        nCell.innerHTML = sGroup;
-                        nGroup.appendChild(nCell);
-                        nTrs[i].parentNode.insertBefore(nGroup, nTrs[i]);
-                        sLastGroup = sGroup;
-                    }
-                }
-            },
-            "bPaginate": false,
-            "oLanguage": {
-                "sSearch": "",
-                "sInfo" : "Showing _TOTAL_ nodes",
-                "sInfoEmpty": "No nodes found",
-                "sInfoFiltered": " (filtering from _MAX_ total)",
-                "sZeroRecords": "No nodes to display"
-            },
-            "aoColumnDefs": [
-                { "bVisible": false, "aTargets": [ 0 ] }
-            ],
-            "aaSortingFixed": [[ 0, 'asc' ]],
-            "aaSorting": [[ 1, 'asc' ]],
-            "sDom": '<"top"if>rt<"bottom"lp><"clear">'
-        });
-
-        $('#nodes_filter input').attr("placeholder", "Search");
-        $('#nodes_filter input:text').focus();
-
-        $.extend( $.fn.dataTableExt.oStdClasses, {
-            "sWrapper": "dataTables_wrapper form-inline"
-        });
+        drawNodeVirtTable(getSearchText());
     });
 </script>
 {% endblock %}
