@@ -133,6 +133,6 @@ def generate_node_map(nodes, roles, show_hostnames=True):
         graph.write_svg(filename)
     except pydot.InvocationException as e:
         log.error("pydot error: {0}".format(str(e)))
-        return False, str(e)
+        return False, "Unable to render the graph"
     else:
         return True, filename
