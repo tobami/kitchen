@@ -2,6 +2,7 @@
 
 {% block extrahead %}
     <script type="text/javascript" src="/static/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="/static/js/kitchen.js"></script>
 {% endblock %}
 
 {% load filters %}
@@ -42,83 +43,10 @@
 
 {% block bodytail %}
 <script type="text/javascript">
-    /* Node details*/
-    function fnFormatNodeDetails (oTable, nTr) {
-        var aData = oTable.fnGetData(nTr);
-        var node = undefined;
-        for(var i=0;i<nodes.length;i++) {
-            if (nodes[i].name.substring(0, aData[1].length) == aData[1]) {
-                node = nodes[i];
-                break;
-            }
-        }
-        var sOut = '<pre>';
-        nodeJson = syntaxHighlight(JSON.stringify(node, undefined, 4));
-        sOut += nodeJson;
-        sOut += '</pre>';
-        return sOut;
-    }
-
-    function syntaxHighlight(json) {
-        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-            var cls = 'number';
-            if (/^"/.test(match)) {
-                if (/:$/.test(match)) {
-                    cls = 'key';
-                } else {
-                    cls = 'string';
-                }
-            } else if (/true|false/.test(match)) {
-                cls = 'boolean';
-            } else if (/null/.test(match)) {
-                cls = 'null';
-            }
-            return '<span class="' + cls + '">' + match + '</span>';
-        });
-    }
-
     $(document).ready(function() {
-        var search = "";
-        if (window.location.hash !== "") {
-          search = window.location.hash.substring(1);
-        }
         nodes = {{nodes|safe}};
         setupClickHandlers();
-        var oTable = $('#nodes').dataTable({
-            "bPaginate": false,
-            "oLanguage": {
-                "sSearch": "",
-                "sInfo" : "Showing _TOTAL_ nodes",
-                "sInfoEmpty": "No nodes found",
-                "sInfoFiltered": " (filtering from _MAX_ total)",
-                "sZeroRecords": "No nodes to display"
-            },
-            "oSearch": {
-                "sSearch": search,
-            },
-            "sDom": '<"top"if>rt<"bottom"lp><"clear">'
-        });
-        $('#nodes_filter input').attr("placeholder", "Search");
-        $('#nodes_filter input:text').focus();
-        $('#nodes td.control').html('<i class="icon-chevron-right"></i>');
-
-        $.extend( $.fn.dataTableExt.oStdClasses, {
-            "sWrapper": "dataTables_wrapper form-inline"
-        });
-
-        /* Event listener for opening and closing details */
-        $('#nodes td.control').live('click', function () {
-            var nTr = $(this).parents('tr')[0];
-            if (oTable.fnIsOpen(nTr)) {
-                $(this).html('<i class="icon-chevron-right"></i>');
-                oTable.fnClose(nTr);
-            }
-            else {
-                $(this).html('<i class="icon-chevron-down"></i>');
-                oTable.fnOpen(nTr, fnFormatNodeDetails(oTable, nTr), 'details');
-            }
-        } );
+        drawNodeListTable(getSearchText());
     });
 </script>
 {% endblock %}
