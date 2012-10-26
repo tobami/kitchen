@@ -46,8 +46,8 @@
                         {{ entry }}{% if not forloop.last %},{% endif %}
                         {% endfor %}
                     </td>
-                    <td>{% for entry in node.tags %}
-                        <a href="#" class="btn {{entry|get_tag_class}} disabled">{{entry}}</a>{% endfor %}
+                    <td class="node_tags">{% for entry in node.tags %}
+                        <a href="#" class="btn btn-custom {{entry|get_tag_class}} disabled">{{entry}}</a>{% endfor %}
                     </td>
                 </tr>
                  {% for vm in node.virtualization.guests %}

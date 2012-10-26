@@ -46,6 +46,10 @@ table#nodes tr.guest td:first-child { padding-left: 2em; }
 
 table#nodes td.node_tags { padding: 4px !important; }
 
+table#nodes td.control { cursor: pointer; }
+
+th.node_expand { width: 1em !important; }
+
 th.node_ram, th.node_cpus { width: 5em !important; }
 
 td.node_cpus { text-align: right !important; padding-right: 3.2em !important;}
@@ -85,7 +89,6 @@ input:-moz-placeholder {
 
 
 /* Bootstrap DataTables sorting */
-
 table.table thead .sorting,
 table.table thead .sorting_asc,
 table.table thead .sorting_desc,
@@ -93,11 +96,18 @@ table.table thead .sorting_asc_disabled,
 table.table thead .sorting_desc_disabled {
     cursor: pointer;
     *cursor: hand;
-}
- 
+} 
 table.table thead .sorting { background: url('../img/sort_both.png') no-repeat center right; }
 table.table thead .sorting_asc { background: url('../img/sort_asc.png') no-repeat center right; }
-table.table thead .sorting_desc { background: url('../img/sort_desc.png') no-repeat center right; }
- 
+table.table thead .sorting_desc { background: url('../img/sort_desc.png') no-repeat center right; } 
 table.table thead .sorting_asc_disabled { background: url('../img/sort_asc_disabled.png') no-repeat center right; }
 table.table thead .sorting_desc_disabled { background: url('../img/sort_desc_disabled.png') no-repeat center right; }
+
+
+/* Bootstrap icons override*/
+.icon-chevron-right, .icon-chevron-down {
+  opacity: .25;
+}
+.icon-chevron-right:hover, .icon-chevron-down:hover {
+  opacity: .75;
+}
