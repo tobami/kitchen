@@ -133,7 +133,7 @@ def generate_node_map(nodes, roles, show_hostnames=True):
 
     # Generate graph
     filename = os.path.join(STATIC_ROOT, 'img', 'node_map.svg')
-    timeout = 10.0  # Timeout in float seconds
+    timeout = 10.0  # Seconds
     graph_thread = GraphThread(filename, graph)
     graph_thread.start()
     result = graph_thread.join(timeout)
