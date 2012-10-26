@@ -1,5 +1,8 @@
 """Facility to render node graphs using pydot"""
 import os
+import subprocess
+import tempfile
+import threading
 
 import pydot
 from logbook import Logger
@@ -48,7 +51,7 @@ def _build_links(nodes):
 
 def generate_node_map(nodes, roles, show_hostnames=True):
     """Generates a graphviz node map"""
-    graph = pydot.Dot(graph_type='digraph')
+    graph = KitchenDot(graph_type='digraph')
     clusters = {}
     graph_nodes = {}
 
@@ -77,7 +80,7 @@ def generate_node_map(nodes, roles, show_hostnames=True):
             color = role_colors[role_prefix]
         except (IndexError, KeyError):
             role_prefix = None
-        label = "\n".join([role for role in node['role'] \
+        label = "\n".join([role for role in node['role']
                           if not role.startswith(REPO['EXCLUDE_ROLE_PREFIX'])])
         if show_hostnames:
             label = node['name'] + "\n" + label
@@ -127,12 +130,150 @@ def generate_node_map(nodes, roles, show_hostnames=True):
             )
             edge.set_label(client[1])
             graph.add_edge(edge)
+
     # Generate graph
     filename = os.path.join(STATIC_ROOT, 'img', 'node_map.svg')
-    try:
-        graph.write_svg(filename)
-    except pydot.InvocationException as e:
-        log.error("pydot error: {0}".format(str(e)))
-        return False, str(e)
+    timeout = 10.0  # Timeout in float seconds
+    graph_thread = GraphThread(filename, graph)
+    graph_thread.start()
+    result = graph_thread.join(timeout)
+    if graph_thread.isAlive():
+        # Kill the pydot graphviz's subprocess
+        graph_thread.kill()
+        timeout = int(timeout)
+        log.error("pydot timeout: {0} seconds".format(timeout))
+        return False, ("Unable to draw graph, timeout "
+                       "({0} seconds)").format(timeout)
     else:
-        return True, filename
+        return result
+
+
+class GraphThread (threading.Thread):
+    """Thread for pydot graph generation. Wraphs the file creation"""
+
+    def __init__(self, filename, graph):
+        self.filename = filename
+        self.graph = graph
+        self._return = False, "Unable to draw graph, unexpected error"
+        threading.Thread.__init__(self)
+
+    def run(self):
+        try:
+            self.graph.write_svg(self.filename)
+        except pydot.InvocationException as e:
+            log.error("pydot error: {0}".format(str(e)))
+            self._return = False, "Unable to draw graph, {0}".format(e)
+        else:
+            self._return = True, self.filename
+
+    def join(self, timeout=None):
+        threading.Thread.join(self, timeout)
+        return self._return
+
+    def kill(self):
+        if self.graph.p:
+            self.graph.p.kill()
+
+
+class KitchenDot(pydot.Dot):
+    """Inherits from the pydot library Dot class, and makes the subprocess as
+    an attribute for being killed from outside
+
+    """
+    def __init__(self, *argsl, **argsd):
+        pydot.Dot.__init__(self, *argsl, **argsd)
+        self.p = None
+
+    def create(self, prog=None, format='ps'):
+        """Creates and returns a Postscript representation of the graph."""
+        if prog is None:
+            prog = self.prog
+
+        if isinstance(prog, (list, tuple)):
+            prog, args = prog[0], prog[1:]
+        else:
+            args = []
+
+        if self.progs is None:
+            self.progs = pydot.find_graphviz()
+            if self.progs is None:
+                raise pydot.InvocationException(
+                    'GraphViz\'s executables not found')
+
+        if not prog in self.progs:
+            raise pydot.InvocationException(
+                'GraphViz\'s executable "{0}" not found'.format(prog))
+
+        if (not os.path.exists(self.progs[prog])
+                or not os.path.isfile(self.progs[prog])):
+            raise pydot.InvocationException(
+                'GraphViz\'s executable "{0}" is not a file '
+                'or doesn\'t exist'.format(self.progs[prog]))
+
+        tmp_fd, tmp_name = tempfile.mkstemp()
+        os.close(tmp_fd)
+        self.write(tmp_name)
+        tmp_dir = os.path.dirname(tmp_name)
+
+        # For each of the image files...
+        for img in self.shape_files:
+            # Get its data
+            f = file(img, 'rb')
+            f_data = f.read()
+            f.close()
+
+            # Copy it under a file with the same name in the temp dir
+            f = file(os.path.join(tmp_dir, os.path.basename(img)), 'wb')
+            f.write(f_data)
+            f.close()
+
+        cmdline = [self.progs[prog], '-T' + format, tmp_name] + args
+
+        self.p = subprocess.Popen(
+            cmdline,
+            cwd=tmp_dir,
+            stderr=subprocess.PIPE, stdout=subprocess.PIPE
+        )
+
+        stderr = self.p.stderr
+        stdout = self.p.stdout
+
+        stdout_output = list()
+        while True:
+            data = stdout.read()
+            if not data:
+                break
+            stdout_output.append(data)
+        stdout.close()
+
+        stdout_output = ''.join(stdout_output)
+
+        if not stderr.closed:
+            stderr_output = list()
+            while True:
+                data = stderr.read()
+                if not data:
+                    break
+                stderr_output.append(data)
+            stderr.close()
+
+            if stderr_output:
+                stderr_output = ''.join(stderr_output)
+
+        status = self.p.wait()
+
+        if status != 0:
+            raise pydot.InvocationException(
+                'Program terminated with status: {0}. '
+                'stderr follows: {1}'.format(status, stderr_output))
+        elif stderr_output:
+            print stderr_output
+
+        #  For each of the image files...
+        for img in self.shape_files:
+            #  Remove it
+            os.unlink(os.path.join(tmp_dir, os.path.basename(img)))
+
+        os.unlink(tmp_name)
+
+        return stdout_output
