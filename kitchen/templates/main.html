@@ -103,6 +103,10 @@
         $('#nodes_filter input:text').focus();
         $('#nodes td.control').html('<i class="icon-chevron-right"></i>');
 
+        $.extend( $.fn.dataTableExt.oStdClasses, {
+            "sWrapper": "dataTables_wrapper form-inline"
+        });
+
         /* Event listener for opening and closing details */
         $('#nodes td.control').live('click', function () {
             var nTr = $(this).parents('tr')[0];

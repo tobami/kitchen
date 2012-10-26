@@ -123,6 +123,10 @@
 
         $('#nodes_filter input').attr("placeholder", "Search");
         $('#nodes_filter input:text').focus();
+
+        $.extend( $.fn.dataTableExt.oStdClasses, {
+            "sWrapper": "dataTables_wrapper form-inline"
+        });
     });
 </script>
 {% endblock %}
