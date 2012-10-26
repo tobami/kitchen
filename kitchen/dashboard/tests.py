@@ -294,7 +294,7 @@ class TestGraph(TestCase):
                             min_size, max_size, size))
 
     def test_graph_timeout(self):
-        """Should display an error message when GraphViz excess the timeout"""
+        """Should display an error message when GraphViz excesses the timeout"""
         error_msg = "Unable to draw graph, timeout exceeded"
         data = chef.filter_nodes(self.nodes, 'production')
 
