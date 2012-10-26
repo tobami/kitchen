@@ -44,7 +44,11 @@ table#nodes td.control { cursor: pointer; }
 
 th.node_expand { width: 1em !important; background: transparent !important; cursor: default !important;}
 th.node_ram, th.node_cpus { width: 5em !important; }
-td.node_cpus { text-align: right !important; padding-right: 3.2em !important;}
+td.node_ram, td.node_cpus {
+    text-align: right !important;
+    padding-right: 3.2em !important;
+    white-space: nowrap;
+}
 
 #host_grouper {
     background-color: #EEE9E9;

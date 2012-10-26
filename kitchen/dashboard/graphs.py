@@ -162,7 +162,7 @@ class GraphThread (threading.Thread):
             self.graph.write_svg(self.filename)
         except pydot.InvocationException as e:
             log.error("pydot error: {0}".format(str(e)))
-            self._return = False, "Unable to draw graph, {0}".format(e)
+            self._return = False, "Unable to render the graph"
         else:
             self._return = True, self.filename
 
