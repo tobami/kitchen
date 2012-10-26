@@ -125,6 +125,7 @@ def graph(request):
             success, msg = graphs.generate_node_map(data['nodes_extended'],
                                                     data.get('roles', []),
                                                     'show_hostnames' in options)
+            data['draw_graph'] = success
             if not success:
                 add_message(request, ERROR, msg)
         else:
