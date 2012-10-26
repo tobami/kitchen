@@ -25,6 +25,9 @@ function drawNodeListTable(searchText) {
         "oSearch": {
             "sSearch": searchText,
         },
+        "aoColumnDefs": [
+            /* Expander */ { "bSortable": false, "aTargets": [0] },
+        ],
         "sDom": '<"top"if>rt<"bottom"lp><"clear">'
     });
     setSearchBox();
