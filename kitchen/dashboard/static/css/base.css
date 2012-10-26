@@ -42,7 +42,13 @@ table#nodes tr.guest td:first-child { padding-left: 2em; }
 table#nodes td.node_tags { padding: 4px !important; }
 table#nodes td.control { cursor: pointer; }
 
-th.node_expand { width: 1em !important; background: transparent !important; cursor: default !important;}
+th.node_expand {
+    width: 1em !important;
+    background: transparent;
+    cursor: default;
+}
+th.node_ip { width: 6em; }
+th.node_env { width: 10em; }
 th.node_ram, th.node_cpus { width: 5em !important; }
 td.node_ram, td.node_cpus {
     text-align: right !important;
