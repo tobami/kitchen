@@ -96,6 +96,7 @@ table.table thead .sorting_asc_disabled,
 table.table thead .sorting_desc_disabled {
     cursor: pointer;
     *cursor: hand;
+    opacity: .9;
 } 
 table.table thead .sorting { background: url('../img/sort_both.png') no-repeat center right; }
 table.table thead .sorting_asc { background: url('../img/sort_asc.png') no-repeat center right; }
