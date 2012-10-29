@@ -1,12 +1,14 @@
 function getSearchText() {
     /*
-     * Gets the predefined search text from the current page url
+     * Gets the predefined search text from the &search page url parameter
      */
-    var searchText = "";
-    if (window.location.hash !== "") {
-      searchText = window.location.hash.substring(1);
+    searchText = window.location.search.split("&search=")[1];
+    if (searchText == undefined) {
+        return "";
+    } else {
+        searchText = searchText.split("&")[0]
+        return searchText;
     }
-    return searchText;
 }
 
 function drawNodeListTable(searchText) {
