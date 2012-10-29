@@ -47,7 +47,7 @@ th.node_expand {
     background: transparent;
     cursor: default;
 }
-th.node_ip { width: 7em; }
+th.node_ip { width: 8em; }
 th.node_env { width: 10em; }
 th.node_ram, th.node_cpus { width: 5em !important; }
 td.node_ram, td.node_cpus {
