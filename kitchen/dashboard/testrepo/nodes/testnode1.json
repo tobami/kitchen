@@ -1,6 +1,7 @@
 {
     "chef_environment": "production",
     "ipaddress": "1.1.1.1",
+    "tags": ["Node1"],
     "run_list": [
         "role[loadbalancer]",
         "recipe[haproxy]"
