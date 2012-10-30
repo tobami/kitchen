@@ -45,6 +45,29 @@ to configure an external repo and sync it. To resync a repo at any time you can 
 When deploying kitchen to a server a cron job should be added that runs the script
 periodically.
 
+# Tags
+
+Available buttons:
+
+* `btn-danger`
+* `btn-info`
+* `btn-inverse`
+* `btn-primary`
+* `btn-success`
+* `btn-warning`
+
+It is possible to link a button style to a specific tag name (or names, with the `*` character) in the settings file:
+
+```python
+TAG_CLASSES = {
+    "WIP": "btn-warning",
+    "dummy": "btn-danger",
+    "Node*": "btn-info"
+}
+```
+
+In that case, `Node*` will define `Node1`, `Node23`, `NodeSpecial3`... If the tag name is not specified in `TAG_CLASSES`, it will have assigned the default button style.
+
 # Graphs
 
 The graph view dynamically generates a graph of your repository, acording to the
