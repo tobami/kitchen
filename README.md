@@ -47,7 +47,9 @@ periodically.
 
 # Tags
 
-Available buttons:
+Kitchen provides Chef tag functionality, taking the tag list defined in [Chef's top-level tags attribute](http://wiki.opscode.com/display/chef/Recipes#Recipes-Tags) and showing them in the dashboard.
+
+It is possible to link a button style for each tag. These are the available button designs:
 
 * `btn-danger`
 * `btn-info`
