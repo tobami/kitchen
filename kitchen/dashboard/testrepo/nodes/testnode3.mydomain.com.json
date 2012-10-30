@@ -1,5 +1,6 @@
 {
     "chef_environment": "production",
+    "tags": ["NodeSpecial3"],
     "run_list": [
         "role[dbserver]"
     ]

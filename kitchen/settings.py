@@ -26,6 +26,7 @@ COLORS = [
 TAG_CLASSES = {
     "WIP": "btn-warning",
     "dummy": "btn-danger",
+    "Node*": "btn-info"
 }
 
 SHOW_VIRT_VIEW = True

@@ -36,4 +36,9 @@ def get_memory_in_GB(memory_str):
 @register.filter(name='get_tag_class')
 def get_tag_class(tag):
     """Returns a button class for the given tag"""
-    return TAG_CLASSES.get(tag, "")
+    btn_class = TAG_CLASSES.get(tag, "")
+    if btn_class == "":
+        for key in TAG_CLASSES:
+            if key.endswith("*") and tag.startswith(key[:-1]):
+                    return TAG_CLASSES[key]
+    return btn_class

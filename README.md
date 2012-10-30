@@ -45,6 +45,20 @@ to configure an external repo and sync it. To resync a repo at any time you can 
 When deploying kitchen to a server a cron job should be added that runs the script
 periodically.
 
+# Tags
+
+The tag column will show any string in the list defined by top-level [Chef "tags" attribute](http://wiki.opscode.com/display/chef/Recipes#Recipes-Tags).
+
+It is possible to assign different colors to the tag buttons by mapping tag names to css styles:
+```python
+TAG_CLASSES = {
+    "WIP": "btn-warning",
+    "dummy": "btn-danger",
+    "Node*": "btn-info"
+}
+```
+Available [bootstrap CSS styles](http://twitter.github.com/bootstrap/base-css.html#buttons): `btn-danger`, `btn-info`, `btn-inverse`, `btn-primary`, `btn-success` and `btn-warning`
+
 # Graphs
 
 The graph view dynamically generates a graph of your repository, acording to the

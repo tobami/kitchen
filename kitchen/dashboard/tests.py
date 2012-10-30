@@ -104,19 +104,23 @@ class TestData(TestCase):
 
     def test_filter_nodes_roles(self):
         """Should filter nodes acording to their virt value"""
-        data = chef.filter_nodes(chef.get_nodes_extended(), roles='dbserver')
+        data = chef.filter_nodes(chef.get_nodes_extended(),
+                                 roles='dbserver')
         self.assertEqual(len(data), 2)
         self.assertEqual(data[0]['name'], "testnode3.mydomain.com")
 
-        data = chef.filter_nodes(chef.get_nodes_extended(), roles='loadbalancer')
+        data = chef.filter_nodes(chef.get_nodes_extended(),
+                                 roles='loadbalancer')
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]['name'], "testnode1")
 
-        data = chef.filter_nodes(chef.get_nodes_extended(), roles='webserver')
+        data = chef.filter_nodes(chef.get_nodes_extended(),
+                                 roles='webserver')
         self.assertEqual(len(data), 4)
         self.assertEqual(data[0]['name'], "testnode2")
 
-        data = chef.filter_nodes(chef.get_nodes_extended(), roles='webserver,dbserver')
+        data = chef.filter_nodes(chef.get_nodes_extended(),
+                                 roles='webserver,dbserver')
         self.assertEqual(len(data), 6)
         self.assertEqual(data[1]['name'], "testnode3.mydomain.com")
 
@@ -130,7 +134,8 @@ class TestData(TestCase):
         data = chef.filter_nodes(chef.get_nodes_extended(), virt_roles='host')
         self.assertEqual(len(data), total_hosts)
 
-        data = chef.filter_nodes(chef.get_nodes_extended(), virt_roles='host,guest')
+        data = chef.filter_nodes(chef.get_nodes_extended(),
+                                 virt_roles='host,guest')
         self.assertEqual(len(data), TOTAL_NODES)
 
     def test_filter_nodes_combined(self):
@@ -144,8 +149,8 @@ class TestData(TestCase):
         self.assertEqual(data[1]['name'], "testnode2")
         self.assertEqual(data[2]['name'], "testnode7")
 
-        data = chef.filter_nodes(chef.get_nodes_extended(), env='staging', roles='webserver',
-                                 virt_roles='guest')
+        data = chef.filter_nodes(chef.get_nodes_extended(), env='staging',
+                                 roles='webserver', virt_roles='guest')
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]['name'], "testnode4")
 
@@ -298,8 +303,10 @@ class TestGraph(TestCase):
         error_msg = "Unable to draw graph, timeout exceeded"
         data = chef.filter_nodes(self.nodes, 'production')
 
-        with patch('kitchen.dashboard.graphs.GraphThread.isAlive', return_value=True):
-            with patch('kitchen.dashboard.graphs.GraphThread.kill', return_value=True):
+        with patch('kitchen.dashboard.graphs.GraphThread.isAlive',
+                   return_value=True):
+            with patch('kitchen.dashboard.graphs.GraphThread.kill',
+                       return_value=True):
                 success, msg = graphs.generate_node_map(data, self.roles)
         self.assertFalse(success)
         self.assertTrue(error_msg in msg)
@@ -417,7 +424,8 @@ class TestViews(TestCase):
             def mock_method(a, b, c):
                 return False, error_msg
             return mock_method
-        with patch.object(graphs, 'generate_node_map', new_callable=mock_factory):
+        with patch.object(graphs, 'generate_node_map',
+                          new_callable=mock_factory):
             resp = self.client.get("/graph/")
         self.assertEqual(resp.status_code, 200)
         self.assertTrue(error_msg in resp.content,
@@ -572,7 +580,14 @@ class TestTemplateTags(TestCase):
     def test_get_tag_class(self):
         """Should return a css class when tag has a defined class"""
         self.assertEqual(filters.get_tag_class("WIP"), "btn-warning")
+        self.assertEqual(filters.get_tag_class("dummy"), "btn-danger")
+        specific_tags = ["Node", "Node1", "NodeSpecial3", "Node*", "Node_"]
+        for specific_tag in specific_tags:
+            self.assertEqual(filters.get_tag_class(specific_tag), "btn-info")
 
     def test_get_tag_class_no_class(self):
         """Should return an empty string when tag has no defined class"""
-        self.assertEqual(filters.get_tag_class("foo"), "")
+        undefined_tags = ["foo", "Nod", "DUMMY", "Dummy", "wip", "WiP",
+                          "node", "NoDe", "", "12", "", "_-_"]
+        for undefined_tag in undefined_tags:
+            self.assertEqual(filters.get_tag_class(undefined_tag), "")
