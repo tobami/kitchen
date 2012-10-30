@@ -39,7 +39,6 @@ def get_tag_class(tag):
     btn_class = TAG_CLASSES.get(tag, "")
     if btn_class == "":
         for key in TAG_CLASSES:
-            if key.endswith("*"):
-                if tag.startswith(key.rstrip("*")):
+            if key.endswith("*") and tag.startswith(key[:-1]):
                     return TAG_CLASSES[key]
     return btn_class
