@@ -1,3 +1,25 @@
+function getDefaultDataTableConfig() {
+    return {
+        "bPaginate": false,
+        "oLanguage": {
+            "sSearch": "",
+            "sInfo" : "Showing _TOTAL_ nodes",
+            "sInfoEmpty": "No nodes found",
+            "sInfoFiltered": " (filtering from _MAX_ total)",
+            "sZeroRecords": "No nodes to display"
+        },
+        "oSearch": {
+            "sSearch": getSearchText(),
+        },
+        "aoColumnDefs": [
+            /* Expander */ { "bSortable": false, "aTargets": [0] },
+            /* Fqdn */ { "bVisible": false, "aTargets": [1] }
+        ],
+        "sDom": '<"top"if>rt<"bottom"lp><"clear">'
+    }
+}
+
+
 function getSearchText() {
     /*
      * Gets the predefined search text from the &search page url parameter
@@ -18,76 +40,45 @@ function drawNodeListTable(searchText) {
     /*
      * Creates a list of nodes DataTable
      */
-    oTable = $('#nodes').dataTable({
-        "bPaginate": false,
-        "oLanguage": {
-            "sSearch": "",
-            "sInfo" : "Showing _TOTAL_ nodes",
-            "sInfoEmpty": "No nodes found",
-            "sInfoFiltered": " (filtering from _MAX_ total)",
-            "sZeroRecords": "No nodes to display"
-        },
-        "oSearch": {
-            "sSearch": searchText,
-        },
-        "aoColumnDefs": [
-            /* Expander */ { "bSortable": false, "aTargets": [0] },
-        ],
-        "sDom": '<"top"if>rt<"bottom"lp><"clear">'
-    });
+    oTable = $('#nodes').dataTable(getDefaultDataTableConfig());
     setSearchBox();
-    setExtendedRows(oTable, 1);
+    setExtendedRows(oTable);
 }
 
 function drawNodeVirtTable(searchText) {
     /*
      * Creates the guests DataTable, grouped by hosts
      */
-    oTable = $('#nodes').dataTable({
-        "fnDrawCallback": function (oSettings) {
-            if (oSettings.aiDisplay.length == 0) {
-                return;
+    // Extend the default DataTable config
+    dataTableConfig = getDefaultDataTableConfig();
+    dataTableConfig['aoColumnDefs'].push({ "bVisible": false, "aTargets": [2] });  // Grouper column
+    dataTableConfig['aaSortingFixed'] = [[ 2, 'asc' ]];
+    dataTableConfig['aaSorting'] = [[ 3, 'asc' ]];
+    dataTableConfig['fnDrawCallback'] = function (oSettings) {
+        if (oSettings.aiDisplay.length == 0) {
+            return;
+        }
+        var nTrs = $('#nodes tbody tr');
+        var iColspan = nTrs[0].getElementsByTagName('td').length;
+        var sLastGroup = "";
+        for (var i=0;i<nTrs.length;i++) {
+            var iDisplayIndex = oSettings._iDisplayStart + i;
+            var sGroup = oSettings.aoData[oSettings.aiDisplay[iDisplayIndex]]._aData[2];
+            if (sGroup != sLastGroup) {
+                var nGroup = document.createElement('tr');
+                var nCell = document.createElement('td');
+                nCell.colSpan = iColspan;
+                nCell.id = "host_grouper";
+                nCell.innerHTML = sGroup;
+                nGroup.appendChild(nCell);
+                nTrs[i].parentNode.insertBefore(nGroup, nTrs[i]);
+                sLastGroup = sGroup;
             }
-            var nTrs = $('#nodes tbody tr');
-            var iColspan = nTrs[0].getElementsByTagName('td').length;
-            var sLastGroup = "";
-            for (var i=0;i<nTrs.length;i++) {
-                var iDisplayIndex = oSettings._iDisplayStart + i;
-                var sGroup = oSettings.aoData[oSettings.aiDisplay[iDisplayIndex]]._aData[1];
-                if (sGroup != sLastGroup) {
-                    var nGroup = document.createElement('tr');
-                    var nCell = document.createElement('td');
-                    nCell.colSpan = iColspan;
-                    nCell.id = "host_grouper";
-                    nCell.innerHTML = sGroup;
-                    nGroup.appendChild(nCell);
-                    nTrs[i].parentNode.insertBefore(nGroup, nTrs[i]);
-                    sLastGroup = sGroup;
-                }
-            }
-        },
-        "bPaginate": false,
-        "oLanguage": {
-            "sSearch": "",
-            "sInfo" : "Showing _TOTAL_ nodes",
-            "sInfoEmpty": "No nodes found",
-            "sInfoFiltered": " (filtering from _MAX_ total)",
-            "sZeroRecords": "No nodes to display"
-        },
-        "oSearch": {
-            "sSearch": searchText,
-        },
-        "aoColumnDefs": [
-            /* Expander */ { "bSortable": false, "aTargets": [0] },
-            /* Grouper */ { "bVisible": false, "aTargets": [1] }
-        ],
-        "aaSortingFixed": [[ 1, 'asc' ]],
-        "aaSorting": [[ 2, 'asc' ]],
-        "sDom": '<"top"if>rt<"bottom"lp><"clear">'
-    });
-
+        }
+    };
+    oTable = $('#nodes').dataTable(dataTableConfig);
     setSearchBox();
-    setExtendedRows(oTable, 2);
+    setExtendedRows(oTable);
 }
 
 function setSearchBox() {
@@ -98,7 +89,7 @@ function setSearchBox() {
     $('#nodes_filter input:text').focus();
 }
 
-function setExtendedRows(oTable, nodeNamePosition) {
+function setExtendedRows(oTable) {
     /*
      * Sets an event listener for opening and closing details
      */
@@ -111,19 +102,20 @@ function setExtendedRows(oTable, nodeNamePosition) {
         }
         else {
             $(this).html('<i class="icon-chevron-down"></i>');
-            oTable.fnOpen(nTr, fnFormatNodeDetails(oTable, nTr, nodeNamePosition), 'details');
+            oTable.fnOpen(nTr, fnFormatNodeDetails(oTable, nTr), 'details');
         }
     } );
 }
 
-function fnFormatNodeDetails (oTable, nTr, nodeNamePosition) {
+function fnFormatNodeDetails (oTable, nTr) {
     /* 
-     * Establishes the content of the extended row 
+     * Establishes the content of the extended row.
+     * The node key in DataTables will always be placed in the index 1 column.
      */
     var aData = oTable.fnGetData(nTr);
     var node = undefined;
     for(var i=0;i<nodes.length;i++) {
-        if (nodes[i].name.substring(0, aData[nodeNamePosition].length) == aData[nodeNamePosition]) {
+        if (nodes[i].name.substring(0, aData[1].length) == aData[1]) {
             node = nodes[i];
             break;
         }
