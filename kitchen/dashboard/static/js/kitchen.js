@@ -71,7 +71,6 @@ function drawNodeVirtTable(searchText) {
             }
         }
     };
-    console.log(dataTableConfig);
     oTable = $('#nodes').dataTable(dataTableConfig);
     setSearchBox();
     setExtendedRows(oTable);
