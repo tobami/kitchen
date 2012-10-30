@@ -43,10 +43,22 @@ function setupClickHandlers() {
         // If there are no env or virt selections set parameter to an empty string
         // to prevent server-side defaults from setting them
         var datatypes = ['env', 'roles', 'options'];
-        if ( show_virt ) { datatypes.push('virt'); }
+        if (show_virt) {
+            datatypes.push('virt');
+        }
         for (var datatype in datatypes) {
             if (!(datatypes[datatype] in parameters)) {
                 parameters[datatypes[datatype]] = "";
+            }
+        }
+
+        // Set search parameter
+        searchText = $('div.dataTables_filter input').val();
+        if (searchText != undefined) {
+            parameters['search'] = searchText;
+        } else {
+            if (window.location.pathname != '/graph/') {
+                parameters['search'] = getSearchText();
             }
         }
 
