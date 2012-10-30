@@ -27,11 +27,12 @@ function drawNodeListTable(searchText) {
         },
         "aoColumnDefs": [
             /* Expander */ { "bSortable": false, "aTargets": [0] },
+            /* Fqdn */ { "bVisible": false, "aTargets": [1] }
         ],
         "sDom": '<"top"if>rt<"bottom"lp><"clear">'
     });
     setSearchBox();
-    setExtendedRows(oTable, 1);
+    setExtendedRows(oTable);
 }
 
 function drawNodeVirtTable(searchText) {
@@ -48,7 +49,7 @@ function drawNodeVirtTable(searchText) {
             var sLastGroup = "";
             for (var i=0;i<nTrs.length;i++) {
                 var iDisplayIndex = oSettings._iDisplayStart + i;
-                var sGroup = oSettings.aoData[oSettings.aiDisplay[iDisplayIndex]]._aData[1];
+                var sGroup = oSettings.aoData[oSettings.aiDisplay[iDisplayIndex]]._aData[2];
                 if (sGroup != sLastGroup) {
                     var nGroup = document.createElement('tr');
                     var nCell = document.createElement('td');
@@ -74,15 +75,16 @@ function drawNodeVirtTable(searchText) {
         },
         "aoColumnDefs": [
             /* Expander */ { "bSortable": false, "aTargets": [0] },
-            /* Grouper */ { "bVisible": false, "aTargets": [1] }
+            /* Fqdn */ { "bVisible": false, "aTargets": [1] },
+            /* Grouper */ { "bVisible": false, "aTargets": [2] }
         ],
-        "aaSortingFixed": [[ 1, 'asc' ]],
-        "aaSorting": [[ 2, 'asc' ]],
+        "aaSortingFixed": [[ 2, 'asc' ]],
+        "aaSorting": [[ 3, 'asc' ]],
         "sDom": '<"top"if>rt<"bottom"lp><"clear">'
     });
 
     setSearchBox();
-    setExtendedRows(oTable, 2);
+    setExtendedRows(oTable);
 }
 
 function setSearchBox() {
@@ -93,7 +95,7 @@ function setSearchBox() {
     $('#nodes_filter input:text').focus();
 }
 
-function setExtendedRows(oTable, nodeNamePosition) {
+function setExtendedRows(oTable) {
     /*
      * Sets an event listener for opening and closing details
      */
@@ -106,19 +108,20 @@ function setExtendedRows(oTable, nodeNamePosition) {
         }
         else {
             $(this).html('<i class="icon-chevron-down"></i>');
-            oTable.fnOpen(nTr, fnFormatNodeDetails(oTable, nTr, nodeNamePosition), 'details');
+            oTable.fnOpen(nTr, fnFormatNodeDetails(oTable, nTr), 'details');
         }
     } );
 }
 
-function fnFormatNodeDetails (oTable, nTr, nodeNamePosition) {
+function fnFormatNodeDetails (oTable, nTr) {
     /* 
-     * Establishes the content of the extended row 
+     * Establishes the content of the extended row.
+     * The node key in DataTables will always be placed in the index 1 column.
      */
     var aData = oTable.fnGetData(nTr);
     var node = undefined;
     for(var i=0;i<nodes.length;i++) {
-        if (nodes[i].name.substring(0, aData[nodeNamePosition].length) == aData[nodeNamePosition]) {
+        if (nodes[i].name.substring(0, aData[1].length) == aData[1]) {
             node = nodes[i];
             break;
         }
