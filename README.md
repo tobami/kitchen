@@ -47,19 +47,9 @@ periodically.
 
 # Tags
 
-Kitchen provides Chef tag functionality, taking the tag list defined in [Chef's top-level tags attribute](http://wiki.opscode.com/display/chef/Recipes#Recipes-Tags) and showing them in the dashboard.
+The tag column will show any string in the list defined by top-level [Chef "tags" attribute](http://wiki.opscode.com/display/chef/Recipes#Recipes-Tags).
 
-It is possible to link a button style for each tag. These are the available button designs:
-
-* `btn-danger`
-* `btn-info`
-* `btn-inverse`
-* `btn-primary`
-* `btn-success`
-* `btn-warning`
-
-It is possible to link a button style to a specific tag name (or names, with the `*` character) in the settings file:
-
+It is possible to assign different colors to the tag buttons by mapping tag names to css styles:
 ```python
 TAG_CLASSES = {
     "WIP": "btn-warning",
@@ -67,8 +57,7 @@ TAG_CLASSES = {
     "Node*": "btn-info"
 }
 ```
-
-In that case, `Node*` will define `Node1`, `Node23`, `NodeSpecial3`... If the tag name is not specified in `TAG_CLASSES`, it will have assigned the default button style.
+Available [bootstrap CSS styles](http://twitter.github.com/bootstrap/base-css.html#buttons): `btn-danger`, `btn-info`, `btn-inverse`, `btn-primary`, `btn-success` and `btn-warning`
 
 # Graphs
 
