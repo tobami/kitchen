@@ -12,6 +12,7 @@
             <thead>
                 <tr>
                     <th class="node_expand"></th>
+                    <th class="node_id"></th>
                     <th class="node_name">Name</th>
                     <th class="node_ip">IP Address</th>
                     <th class="node_env">Environment</th>
@@ -23,6 +24,7 @@
             {% for node in nodes_extended %}
                 <tr>
                     <td class="control"></td>
+                    <td>{{ node.name }}</td>
                     <td>{{ node.hostname }}</td>
                     <td>{{ node.ipaddress }}</td>
                     <td>{{ node.chef_environment }}</td>
