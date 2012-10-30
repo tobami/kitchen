@@ -117,7 +117,7 @@ def group_nodes_by_host(nodes, roles=''):
     guests = filter_nodes(nodes, roles=roles, virt_roles='guest')
     if roles:
         roles = roles.split(',')
-    grouped_hosts = []
+    filtered_hosts = []
     for host in hosts:
         vms = host['virtualization'].get('guests', [])[:]  # Shallow copy
         for vm in host['virtualization'].get('guests', []):
@@ -130,9 +130,11 @@ def group_nodes_by_host(nodes, roles=''):
             if not has_role:
                 vms.remove(vm)  # Filter the vm (won't be shown)
         host['virtualization']['guests'] = vms
-        # Append all the hosts even if they have an empty vms
-        grouped_hosts.append(host)
-    return grouped_hosts
+        if not roles or vms:
+            # Show all hosts if there is not a role given
+            # Show only a host if it has 1 or more vms when a role is given
+            filtered_hosts.append(host)
+    return filtered_hosts
 
 
 def filter_nodes(nodes, env='', roles='', virt_roles=''):
