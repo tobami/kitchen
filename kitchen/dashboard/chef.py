@@ -130,8 +130,9 @@ def group_nodes_by_host(nodes, roles=''):
             if not has_role:
                 vms.remove(vm)  # Filter the vm (won't be shown)
         host['virtualization']['guests'] = vms
-        if len(vms):
-            # Show only a host if it has 1 or more vms
+        if not roles or vms:
+            # Show all hosts if there is not a role given
+            # Show only a host if it has 1 or more vms when a role is given
             filtered_hosts.append(host)
     return filtered_hosts
 
