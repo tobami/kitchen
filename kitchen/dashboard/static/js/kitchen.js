@@ -2,13 +2,16 @@ function getSearchText() {
     /*
      * Gets the predefined search text from the &search page url parameter
      */
-    searchText = window.location.search.split("&search=")[1];
-    if (searchText == undefined) {
-        return "";
-    } else {
-        searchText = searchText.split("&")[0]
-        return searchText;
-    }
+    var searchText = '';
+    var qs = window.location.search.replace('?', '');
+    var pairs = qs.split('&');
+    $.each(pairs, function(i, v){
+        var pair = v.split('=');
+        if (pair[0] == 'search') {
+            searchText = pair[1];
+        }
+    });
+    return searchText;
 }
 
 function drawNodeListTable(searchText) {
