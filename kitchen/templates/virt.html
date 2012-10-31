@@ -41,7 +41,7 @@
                     <td>{{ node.hostname }}</td>
                     <td>{{ node.ipaddress }}</td>
                     <td class="node_ram">{{ node.memory.total|get_memory_in_GB }}</td>
-                    <td class="node_cpus">{{ node.cpu.total }}</td>
+                    <td class="node_cpus">{{ node.cpu.total|get_cpus }}</td>
                     <td>{{ node.chef_environment }}</td>
                     <td>{% for entry in node.run_list|get_role_list %}
                         {{ entry }}{% if not forloop.last %},{% endif %}
@@ -63,7 +63,7 @@
                         <td>{{ vm.hostname }}</td>
                         <td>{{ vm.ipaddress }}</td>
                         <td class="node_ram">{{ vm.memory.total|get_memory_in_GB }}</td>
-                        <td class="node_cpus">{{ vm.cpu.total }}</td>
+                        <td class="node_cpus">{{ vm.cpu.total|get_cpus }}</td>
                         <td>{{ vm.chef_environment }}</td>
                         <td>{% for entry in vm.run_list|get_role_list %}
                             {{ entry }}{% if not forloop.last %},{% endif %}

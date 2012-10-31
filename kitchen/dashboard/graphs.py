@@ -148,7 +148,7 @@ def generate_node_map(nodes, roles, show_hostnames=True):
         return result
 
 
-class GraphThread (threading.Thread):
+class GraphThread(threading.Thread):
     """Thread for pydot graph generation. Wraphs the file creation"""
 
     def __init__(self, filename, graph):

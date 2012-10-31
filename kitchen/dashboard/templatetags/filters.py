@@ -33,6 +33,11 @@ def get_memory_in_GB(memory_str):
         return ''
 
 
+@register.filter(name='get_cpus')
+def get_cpus(cpus):
+    return cpus if cpus is not None else "-"
+
+
 @register.filter(name='get_tag_class')
 def get_tag_class(tag):
     """Returns a button class for the given tag"""
