@@ -57,7 +57,8 @@ def generate_node_map(nodes, roles, show_hostnames=True):
 
     role_colors = {}
     color_index = 0
-    for role in get_role_groups(roles):
+    role_groups = get_role_groups(roles) + ['none']
+    for role in role_groups:
         clusters[role] = pydot.Cluster(
             role, label=role, color=COLORS[color_index], fontsize="12")
         graph.add_subgraph(clusters[role])
@@ -73,13 +74,13 @@ def generate_node_map(nodes, roles, show_hostnames=True):
         try:
             role_prefix = node['role'][0].split("_")[0]
             if role_prefix == REPO['EXCLUDE_ROLE_PREFIX']:
-                role_prefix = None
+                role_prefix = 'none'
                 role_prefix = node['role'][1].split("_")[0]
                 if role_prefix == REPO['EXCLUDE_ROLE_PREFIX']:
-                    role_prefix = None
+                    role_prefix = 'none'
             color = role_colors[role_prefix]
         except (IndexError, KeyError):
-            role_prefix = None
+            role_prefix = 'none'
         label = "\n".join([role for role in node['role']
                           if not role.startswith(REPO['EXCLUDE_ROLE_PREFIX'])])
         if show_hostnames:
@@ -89,10 +90,7 @@ def generate_node_map(nodes, roles, show_hostnames=True):
                 label = "norole"
             if label in node_labels:
                 if node_labels[label] == 1:
-                    if role_prefix:
-                        first_node = clusters[role_prefix].get_node(label)[0]
-                    else:
-                        first_node = graph.get_node(label)[0]
+                    first_node = clusters[role_prefix].get_node(label)[0]
                     first_node.set_name(label + " (1)")
                 node_labels[label] += 1
                 label += " ({0})".format(node_labels[label])
@@ -105,10 +103,7 @@ def generate_node_map(nodes, roles, show_hostnames=True):
                              fillcolor=color,
                              fontsize="9")
         graph_nodes[node['name']] = node_el
-        if role_prefix:
-            clusters[role_prefix].add_node(node_el)
-        else:
-            graph.add_node(node_el)
+        clusters[role_prefix].add_node(node_el)
     links = _build_links(nodes)
     for node in links:
         for client in links[node].get('client_nodes', []):
