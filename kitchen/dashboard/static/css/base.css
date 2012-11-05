@@ -5,7 +5,7 @@ body {
 
 .sidebar-nav { padding: 9px 0; }
 .sidebar_link { -moz-border-radius: 6px; border-radius: 6px; }
-.sidebar_link .badge { padding: 0px 7px; }
+.sidebar_link .badge { padding: 0px 7px; margin-top: 2px; }
 
 .brand img { margin: -10px 12px; }
 .badge { float: right; }
