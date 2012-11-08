@@ -40,7 +40,7 @@ class TestRepo(TestCase):
 
     def test_missing_node_data_json_error(self):
         """Should raise RepoError when there is a JSON error"""
-        nodes = chef._load_data("nodes")
+        nodes = chef._load_data("nodes")  # Load before mocking
         with patch.object(json, 'loads') as mock_method:
             mock_method.side_effect = json.decoder.JSONDecodeError(
                 "JSON syntax error", "", 10)
@@ -61,6 +61,12 @@ class TestData(TestCase):
         data = chef._data_loader('nodes')
         self.assertEqual(len(data), TOTAL_NODES)
         self.assertEqual(data[1]['name'], "testnode2")
+
+    def test_data_loader_json_error(self):
+        """Should raise RepoError when LittleChef raises SystemExit"""
+        with patch('kitchen.dashboard.chef.lib.get_nodes') as mock_method:
+            mock_method.side_effect = SystemExit()
+            self.assertRaises(chef.RepoError, chef._data_loader, 'nodes')
 
     def test_load_data_nodes(self):
         """Should return nodes when the given argument is 'nodes'"""
