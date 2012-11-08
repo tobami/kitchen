@@ -67,7 +67,6 @@ def _data_loader(data_type, name=None):
     """Loads data from LittleChef's kitchen"""
     current_dir = os.getcwd()
     os.chdir(KITCHEN_DIR)
-    data = None
     try:
         func = getattr(lib, "get_" + data_type)
         if name:
@@ -76,9 +75,12 @@ def _data_loader(data_type, name=None):
             data = func()
     except SystemExit as e:
         log.error(e)
+        raise RepoError('Error while loading {0} files. Possibly a JSON '
+                        'syntax error'.format(data_type))
+    else:
+        return data
     finally:
         os.chdir(current_dir)
-        return data
 
 
 def _load_data(data_type, name=None):
@@ -171,6 +173,7 @@ def get_node(name):
     """Returns the given node"""
     node = _load_data("node", name)
     if node == {'run_list': []}:
+        # Workaround LittleChef returning an empy node file when not found
         return None
     else:
         return node
