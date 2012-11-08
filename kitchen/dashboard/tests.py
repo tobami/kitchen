@@ -55,15 +55,16 @@ class TestRepo(TestCase):
 
 
 class TestData(TestCase):
-    def test_load_data_nodes(self):
+
+    def test_data_loader(self):
         """Should return nodes when the given argument is 'nodes'"""
-        data = chef._load_data('nodes')
+        data = chef._data_loader('nodes')
         self.assertEqual(len(data), TOTAL_NODES)
         self.assertEqual(data[1]['name'], "testnode2")
 
-    def test_get_nodes(self):
-        """Should return all nodes"""
-        data = chef.get_nodes()
+    def test_load_data_nodes(self):
+        """Should return nodes when the given argument is 'nodes'"""
+        data = chef._load_data('nodes')
         self.assertEqual(len(data), TOTAL_NODES)
         self.assertEqual(data[1]['name'], "testnode2")
 
@@ -74,8 +75,14 @@ class TestData(TestCase):
         self.assertEqual(data[0]['name'], "dbserver")
 
     def test_load_data_unsupported(self):
-        """Should return an empty dict when an invalid arg is given"""
+        """Should return None when an invalid arg is given"""
         self.assertEqual(chef._load_data('rolezzzz'), None)
+
+    def test_get_nodes(self):
+        """Should return all nodes when calling get_nodes()"""
+        data = chef.get_nodes()
+        self.assertEqual(len(data), TOTAL_NODES)
+        self.assertEqual(data[1]['name'], "testnode2")
 
     def test_get_environments(self):
         """Should return a list of all chef_environment values found"""

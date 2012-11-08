@@ -67,7 +67,6 @@ def _data_loader(data_type, name=None):
     """Loads data from LittleChef's kitchen"""
     current_dir = os.getcwd()
     os.chdir(KITCHEN_DIR)
-    data = None
     try:
         func = getattr(lib, "get_" + data_type)
         if name:
@@ -76,9 +75,10 @@ def _data_loader(data_type, name=None):
             data = func()
     except SystemExit as e:
         log.error(e)
+    else:
+        return data
     finally:
         os.chdir(current_dir)
-        return data
 
 
 def _load_data(data_type, name=None):
