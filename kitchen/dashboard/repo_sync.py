@@ -1,6 +1,5 @@
 """Repo sync module"""
 import os
-from datetime import timedelta
 from subprocess import Popen, PIPE
 from logbook import Logger, MonitoringFileHandler
 
@@ -12,7 +11,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'kitchen.settings'
 
 from kitchen.settings import (REPO, REPO_BASE_PATH, SYNCDATE_FILE, LOG_FILE,
                               DEBUG)
-from kitchen.dashboard import chef
+from kitchen.backends import lchef as chef
 
 file_log_handler = MonitoringFileHandler(LOG_FILE, bubble=DEBUG)
 file_log_handler.push_application()
