@@ -6,7 +6,7 @@ from mock import patch
 from kitchen.backends import lchef as chef
 
 chef.build_node_data_bag()
-TOTAL_NODES = 8
+TOTAL_NODES = 9
 
 
 class TestRepo(TestCase):
@@ -89,7 +89,7 @@ class TestData(TestCase):
         data = chef.get_environments(chef.get_nodes_extended())
         self.assertEqual(len(data), 3)
         expected = [{'counts': 1, 'name': 'none'},
-                    {'counts': 6, 'name': 'production'},
+                    {'counts': 7, 'name': 'production'},
                     {'counts': 1, 'name': 'staging'}]
         self.assertEqual(data, expected)
 
@@ -101,7 +101,7 @@ class TestData(TestCase):
     def test_filter_nodes_env(self):
         """Should filter nodes belonging to a given environment"""
         data = chef.filter_nodes(chef.get_nodes_extended(), 'production')
-        self.assertEqual(len(data), 6)
+        self.assertEqual(len(data), 7)
 
         data = chef.filter_nodes(chef.get_nodes_extended(), 'staging')
         self.assertEqual(len(data), 1)
@@ -134,7 +134,7 @@ class TestData(TestCase):
     def test_filter_nodes_virt(self):
         """Should filter nodes acording to their virt value"""
         total_guests = 7
-        total_hosts = 1
+        total_hosts = 2
         data = chef.filter_nodes(chef.get_nodes_extended(), virt_roles='guest')
         self.assertEqual(len(data), total_guests)
 
@@ -164,7 +164,7 @@ class TestData(TestCase):
     def test_group_by_hosts_without_filter_by_role(self):
         """Should group guests by hosts without given a role filter"""
         data = chef.group_nodes_by_host(chef.get_nodes_extended(), roles='')
-        self.assertEqual(len(data), 1)
+        self.assertEqual(len(data), 2)
         self.assertEqual(data[0]['name'], 'testnode5')
         vms = data[0]['virtualization']['guests']
         expected_vms = ['testnode7', 'testnode8']
@@ -178,7 +178,7 @@ class TestData(TestCase):
         """Should group guests by hosts without given a role filter"""
         data = chef.group_nodes_by_host(chef.get_nodes_extended(),
                                         roles='webserver')
-        self.assertEqual(len(data), 1)
+        self.assertEqual(len(data), 2)
         self.assertEqual(data[0]['name'], 'testnode5')
         vms = data[0]['virtualization']['guests']
         expected_vms = ['testnode7']

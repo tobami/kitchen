@@ -12,7 +12,7 @@ from kitchen.settings import STATIC_ROOT, REPO
 
 # We need to always regenerate the node data bag in case there where changes
 chef.build_node_data_bag()
-TOTAL_NODES = 8
+TOTAL_NODES = 9
 
 
 class TestViews(TestCase):
@@ -246,8 +246,8 @@ class TestGraph(TestCase):
         # Graph size with connections
         #min_size = 20000  # png
         #max_size = 23000  # png
-        min_size = 8000  # svg
-        max_size = 9000  # svg
+        min_size = 8100  # svg
+        max_size = 9500  # svg
         self.assertTrue(size > min_size and size < max_size,
                         "Size not between {0} and {1}: {2}".format(
                             min_size, max_size, size))
