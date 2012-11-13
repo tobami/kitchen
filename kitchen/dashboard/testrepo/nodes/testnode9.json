@@ -1,0 +1,36 @@
+{
+    "chef_environment": "production",
+    "ipaddress": "11.11.11.11",
+    "memory": {
+        "total": "16043000kB"
+    },
+    "cpu": {
+        "total": "4"
+    },
+    "virtualization": {
+        "role": "host",
+        "system": "xen",
+        "guests": [
+            {
+                "memory": {
+                    "total": "4043000kB"
+                },
+                "fqdn": "testnode1",
+                "cpu": {
+                    "total": "2"
+                }
+            },
+            {
+                "memory": {
+                    "total": "6000000kB"
+                },
+                "fqdn": "testnode2",
+                "cpu": {
+                    "total": "4"
+                }
+            }
+        ]
+    },
+    "run_list": [
+    ]
+}

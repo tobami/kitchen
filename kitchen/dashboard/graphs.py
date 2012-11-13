@@ -8,7 +8,7 @@ import pydot
 from logbook import Logger
 
 from kitchen.settings import STATIC_ROOT, REPO, COLORS
-from kitchen.dashboard.chef import get_role_groups
+from kitchen.backends.lchef import get_role_groups
 
 log = Logger(__name__)
 

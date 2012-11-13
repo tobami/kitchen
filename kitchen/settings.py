@@ -88,6 +88,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "kitchen.backends",
     "kitchen.dashboard",
     'django_nose',
 )

@@ -5,7 +5,7 @@ import json
 from django.http import HttpResponse, Http404
 from django.views.decorators.http import require_http_methods
 
-from kitchen.dashboard import chef
+from kitchen.backends import lchef as chef
 
 
 @require_http_methods(["GET"])
