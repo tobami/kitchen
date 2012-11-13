@@ -8,7 +8,7 @@ TEMPLATE_DEBUG = DEBUG
 BASE_PATH = os.path.abspath(os.path.dirname(__file__))
 
 # Kitchen settings #
-REPO_BASE_PATH = os.path.join(BASE_PATH, "dashboard")
+REPO_BASE_PATH = BASE_PATH
 REPO = {
     'NAME': "testrepo",
     'URL': "",
