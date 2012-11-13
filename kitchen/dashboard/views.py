@@ -9,9 +9,9 @@ from django.template import RequestContext
 from logbook import Logger
 
 from kitchen.backends.lchef import (get_nodes, get_nodes_extended, get_roles,
-                                   get_role_groups, get_environments,
-                                   filter_nodes, group_nodes_by_host,
-                                   RepoError)
+                                    get_role_groups, get_environments,
+                                    filter_nodes, group_nodes_by_host,
+                                    RepoError)
 from kitchen.dashboard import graphs
 from kitchen.settings import (REPO, SHOW_VIRT_VIEW, SHOW_HOST_NAMES,
                               SYNCDATE_FILE)
@@ -122,9 +122,9 @@ def graph(request):
         add_message(request, ERROR, str(e))
     else:
         if env_filter:
-            success, msg = graphs.generate_node_map(data['nodes_extended'],
-                                                    data.get('roles', []),
-                                                    'show_hostnames' in options)
+            success, msg = graphs.generate_node_map(
+                data['nodes_extended'], data.get('roles', []),
+                'show_hostnames' in options)
             data['draw_graph'] = success
             if not success:
                 add_message(request, ERROR, msg)

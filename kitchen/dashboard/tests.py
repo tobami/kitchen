@@ -96,8 +96,8 @@ class TestViews(TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertTrue(
             'class="btn btn-custom btn-warning disabled">WIP<' in resp.content)
-        self.assertTrue(
-            'class="btn btn-custom btn-danger disabled">dummy<' in resp.content)
+        expected_tag = 'class="btn btn-custom btn-danger disabled">dummy<'
+        self.assertTrue(expected_tag in resp.content)
 
     def test_graph_no_env(self):
         """Should not generate a graph when no environment is selected"""
@@ -106,7 +106,7 @@ class TestViews(TestCase):
         self.assertTrue("<title>Kitchen</title>" in resp.content)
         self.assertTrue("Environment" in resp.content)
         self.assertTrue("Please select an environment" in resp.content)
-        self.assertFalse('<img src="/static/img/node_map.svg">' in resp.content)
+        self.assertFalse('<img src="/static/img/node_map.svg"' in resp.content)
         self.assertTrue("webserver" in resp.content)
         self.assertTrue("staging" in resp.content)
         self.assertFalse(os.path.exists(self.filepath))
@@ -253,7 +253,8 @@ class TestGraph(TestCase):
                             min_size, max_size, size))
 
     def test_graph_timeout(self):
-        """Should display an error message when GraphViz excesses the timeout"""
+        """Should display an error message when GraphViz excesses the timeout
+        """
         error_msg = "Unable to draw graph, timeout exceeded"
         data = chef.filter_nodes(self.nodes, 'production')
 
@@ -334,8 +335,10 @@ class TestAPI(TestCase):
         """Should return a node hash when node name is found"""
         resp = self.client.get("/api/nodes/testnode6")
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(json.loads(resp.content),
-                         {'name': 'testnode6', 'run_list': ['role[webserver]']})
+        expected_response = {
+            'name': 'testnode6', 'run_list': ['role[webserver]']
+        }
+        self.assertEqual(json.loads(resp.content), expected_response)
 
     def test_get_node_not_found(self):
         """Should return NOT FOUND when node name does not exist"""
@@ -361,7 +364,7 @@ class TestTemplateTags(TestCase):
         self.assertEqual(len(expected_roles), 0)
 
     def test_role_filter_with_runlist_and_exclude_node_prefix(self):
-        """Should return a filtered role list when a run list with exclude node prefix is given"""
+        """Should exclude roles with prefix when EXCLUDE_ROLE_PREFIX is set"""
         role_to_filter = REPO['EXCLUDE_ROLE_PREFIX'] + "_filterthisrole"
         run_list_with_excluded = self.run_list + [role_to_filter]
         role_list = filters.get_role_list(run_list_with_excluded)
@@ -373,7 +376,8 @@ class TestTemplateTags(TestCase):
         self.assertEqual(len(expected_roles), 0)
 
     def test_role_filter_with_wrong_runlist(self):
-        """Should return an empty role list when an invalid run list is given"""
+        """Should return an empty role list when an invalid run list is given
+        """
         role_list = filters.get_role_list(None)
         self.assertEqual(role_list, [])
 
@@ -388,7 +392,8 @@ class TestTemplateTags(TestCase):
         self.assertEqual(len(expected_recipes), 0)
 
     def test_recipe_filter_with_wrong_runlist(self):
-        """Should return an empty recipe list when an invalid run list is given"""
+        """Should return an empty recipe list when an invalid run list is given
+        """
         recipe_list = filters.get_recipe_list(None)
         self.assertEqual(recipe_list, [])
 
