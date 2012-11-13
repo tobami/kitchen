@@ -239,15 +239,15 @@ class TestGraph(TestCase):
 
     def test_generate_connected_graph(self):
         """Should generate a connected graph when connected nodes are given"""
-        data = chef.filter_nodes(self.nodes, 'production')
+        data = chef.filter_nodes(self.nodes, 'production', virt_roles='guest')
         graphs.generate_node_map(data, self.roles)
         self.assertTrue(os.path.exists(self.filepath))
         size = os.path.getsize(self.filepath)
         # Graph size with connections
         #min_size = 20000  # png
         #max_size = 23000  # png
-        min_size = 8100  # svg
-        max_size = 9500  # svg
+        min_size = 5000  # svg
+        max_size = 7000  # svg
         self.assertTrue(size > min_size and size < max_size,
                         "Size not between {0} and {1}: {2}".format(
                             min_size, max_size, size))
