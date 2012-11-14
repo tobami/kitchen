@@ -4,6 +4,7 @@ from django.test import TestCase
 from mock import patch
 
 from kitchen.backends import lchef as chef
+from kitchen.backends import plugins
 
 chef.build_node_data_bag()
 TOTAL_NODES = 9
@@ -187,3 +188,22 @@ class TestData(TestCase):
             fqdn = vm['fqdn']
             self.assertTrue(fqdn in expected_vms)
             expected_vms.remove(fqdn)
+
+
+class TestPlugins(TestCase):
+
+    @patch('kitchen.settings.ENABLE_PLUGINS', ['bad_name'])
+    def test_import_plugin_not_found(self):
+        """Should not load plugin when module doesn't exist"""
+        reload(plugins)
+        self.assertEqual(len(plugins.plugins), 0)
+
+    @patch('kitchen.settings.ENABLE_PLUGINS', ['monitoring'])
+    def test_import_plugin(self):
+        """Should load plugin when module exists"""
+        reload(plugins)
+        self.assertEqual(len(plugins.plugins), 1)
+
+    @patch('kitchen.settings.ENABLE_PLUGINS', ['monitoring'])
+    def test_import_plugin(self):
+        """Should add monitoring link when plugin is applied"""
