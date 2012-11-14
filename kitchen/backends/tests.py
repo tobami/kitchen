@@ -4,6 +4,8 @@ from django.test import TestCase
 from mock import patch
 
 from kitchen.backends import lchef as chef
+from kitchen.backends import plugins
+from kitchen.backends.plugins import loader
 
 chef.build_node_data_bag()
 TOTAL_NODES = 9
@@ -187,3 +189,29 @@ class TestData(TestCase):
             fqdn = vm['fqdn']
             self.assertTrue(fqdn in expected_vms)
             expected_vms.remove(fqdn)
+
+
+class TestPlugins(TestCase):
+
+    @patch('kitchen.backends.plugins.loader.ENABLE_PLUGINS', ['bad_name'])
+    def test_import_plugin_not_found(self):
+        """Should not load plugin when module doesn't exist"""
+        self.assertEqual(len(loader.import_plugins()), 0)
+
+    @patch('kitchen.backends.plugins.loader.ENABLE_PLUGINS', ['monitoring'])
+    def test_import_plugin(self):
+        """Should load plugin when module exists"""
+        self.assertEqual(len(loader.import_plugins()), 1)
+
+    @patch('kitchen.backends.plugins.loader.ENABLE_PLUGINS', ['monitoring'])
+    def test_inject_plugin_data(self):
+        """Should add link data when plugin is applied"""
+        reload(plugins)
+        reload(chef)
+        node = {
+            'fqdn': {'testnode'},
+            'kitchen': {'data': {'links': [{"foo": "bar"}], 'other': {}}}
+        }
+        chef.inject_plugin_data([node])
+        self.assertTrue('other' in node['kitchen']['data'])
+        self.assertEqual(len(node['kitchen']['data']['links']), 2)
