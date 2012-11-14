@@ -22,6 +22,15 @@ class TestViews(TestCase):
         if os.path.exists(self.filepath):
             os.remove(self.filepath)
 
+    @patch('kitchen.backends.lchef.KITCHEN_DIR', '/badrepopath/')
+    def test_list_no_repo(self):
+        """Should display a RepoError message when repo dir doesn't exist"""
+        resp = self.client.get("/")
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue("<title>Kitchen</title>" in resp.content)
+        expected = "Repo dir doesn&#39;t exist at &#39;/badrepopath/&#39;"
+        self.assertTrue(expected in resp.content)
+
     def test_list(self):
         """Should display the default node list when no params are given"""
         resp = self.client.get("/")
@@ -33,20 +42,6 @@ class TestViews(TestCase):
         nodes = ["testnode" + str(i) for i in range(1, 4)]
         for node in nodes:
             self.assertTrue(node in resp.content, node)
-
-    def test_list_tags(self):
-        """Should display tags when selected nodes have tags"""
-        resp = self.client.get("/")
-        self.assertEqual(resp.status_code, 200)
-        self.assertTrue(
-            'class="btn btn-custom  disabled">ATest</a>' in resp.content)
-
-    def test_list_tags_class(self):
-        """Should display tags with css class when selected nodes have tags"""
-        resp = self.client.get("/")
-        self.assertEqual(resp.status_code, 200)
-        self.assertTrue(
-            'class="btn btn-custom btn-warning disabled">WIP<' in resp.content)
 
     def test_list_env(self):
         """Should display proper nodes when an environment is given"""
@@ -75,14 +70,27 @@ class TestViews(TestCase):
         self.assertTrue("<td>testnode4</td>" not in resp.content)
         self.assertTrue("<td>testnode6</td>" not in resp.content)
 
-    @patch('kitchen.backends.lchef.KITCHEN_DIR', '/badrepopath/')
-    def test_list_no_repo(self):
-        """Should display a RepoError message when repo dir doesn't exist"""
+    def test_list_tags(self):
+        """Should display tags when selected nodes have tags"""
         resp = self.client.get("/")
         self.assertEqual(resp.status_code, 200)
-        self.assertTrue("<title>Kitchen</title>" in resp.content)
-        expected = "Repo dir doesn&#39;t exist at &#39;/badrepopath/&#39;"
-        self.assertTrue(expected in resp.content)
+        self.assertTrue(
+            'class="btn btn-custom  disabled">ATest</a>' in resp.content)
+
+    def test_list_tags_class(self):
+        """Should display tags with css class when selected nodes have tags"""
+        resp = self.client.get("/")
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue(
+            'class="btn btn-custom btn-warning disabled">WIP<' in resp.content)
+
+    def test_list_links(self):
+        """Should display links when selected nodes have links"""
+        resp = self.client.get("/")
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue('href="http://testnode1:22002"' in resp.content)
+        self.assertTrue('src="http://haproxy.1wt.eu/img' in resp.content)
+        self.assertTrue('href="http://testnode1/api' in resp.content)
 
     def test_virt(self):
         """Should display nodes when repo is correct"""
@@ -448,16 +456,18 @@ class TestTemplateTags(TestCase):
             "url": "https://github.com/edelight/kitchen",
             "title": "api", "img": ""
         }
-        expected_link_html = ('<a href="{0}" title="{1}">{1}'
+        expected_link_html = ('<a href="{0}" title="{1}" class="btn '
+                              'btn-custom">{1}'
                               '</a>'.format(link['url'], link['title']))
         self.assertEqual(filters.get_link(link), expected_link_html)
 
-    def test_get_link_no_img(self):
+    def test_get_link(self):
         """Should return a text link when link has an empty img field"""
         link = {
             "url": "https://github.com/edelight/kitchen",
             "title": "api", "img": "http://foo/bar.png",
         }
-        expected_link_html = ('<a href="{url}" title="{title}"><img width="25"'
+        expected_link_html = ('<a href="{url}" title="{title}" class="'
+                              'btn-custom"><img width="25"'
                               ' height="25" src="{img}"></a>'.format(**link))
         self.assertEqual(filters.get_link(link), expected_link_html)

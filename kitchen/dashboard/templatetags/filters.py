@@ -55,11 +55,11 @@ def get_link(link):
     if not link.get('url'):
         return ""
     elif link.get('img'):
-        return ('<a href="{0}" title="{1}"><img width="25"'
+        return ('<a href="{0}" title="{1}" class="btn-custom"><img width="25"'
                 ' height="25" src="{2}">'
                 '</a>'.format(link['url'], link['title'], link['img']))
     elif link.get('title'):
-        return ('<a href="{0}" title="{1}">{1}'
+        return ('<a href="{0}" title="{1}" class="btn btn-custom">{1}'
                '</a>'.format(link['url'], link['title']))
     else:
         return ""
