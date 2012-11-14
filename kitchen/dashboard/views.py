@@ -13,8 +13,8 @@ from kitchen.backends.lchef import (get_nodes, get_nodes_extended, get_roles,
                                     filter_nodes, group_nodes_by_host,
                                     RepoError)
 from kitchen.dashboard import graphs
-from kitchen.settings import (REPO, SHOW_VIRT_VIEW, SHOW_HOST_NAMES,
-                              SYNCDATE_FILE)
+from kitchen.settings import (SHOW_VIRT_VIEW, SHOW_HOST_NAMES, SHOW_LINKS,
+                              REPO, SYNCDATE_FILE)
 
 log = Logger(__name__)
 
@@ -80,6 +80,7 @@ def main(request):
             add_message(request, WARNING,
                         "There are no nodes that fit the supplied criteria.")
     data['show_virt'] = SHOW_VIRT_VIEW
+    data['show_links'] = SHOW_LINKS
     data['query_string'] = request.META['QUERY_STRING']
     return render_to_response('main.html',
                               data, context_instance=RequestContext(request))
@@ -102,6 +103,7 @@ def virt(request):
         if not data['nodes_extended']:
             add_message(request, WARNING,
                         "There are no nodes that fit the supplied criteria.")
+    data['show_links'] = SHOW_LINKS
     data['query_string'] = request.META['QUERY_STRING']
     return render_to_response('virt.html',
                               data, context_instance=RequestContext(request))
