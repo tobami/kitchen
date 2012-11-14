@@ -121,7 +121,7 @@ def inject_plugin_data(nodes):
             try:
                 plugin.inject(node)
             except Exception as e:
-                log.error("Plugin '{0}' had an error: {1}".format(name, str(e)))
+                log.error("Plugin '{0}' had an error: {1}".format(name, e))
                 continue
 
 
