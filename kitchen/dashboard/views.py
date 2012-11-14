@@ -11,7 +11,7 @@ from logbook import Logger
 from kitchen.backends.lchef import (get_nodes, get_nodes_extended, get_roles,
                                     get_role_groups, get_environments,
                                     filter_nodes, group_nodes_by_host,
-                                    RepoError)
+                                    inject_plugin_data, RepoError)
 from kitchen.dashboard import graphs
 from kitchen.settings import (SHOW_VIRT_VIEW, SHOW_HOST_NAMES, SHOW_LINKS,
                               REPO, SYNCDATE_FILE)
@@ -39,6 +39,7 @@ def _get_data(request, env, roles, virt, group_by_host=False):
     if group_by_host:
         data['nodes_extended'] = group_nodes_by_host(data['nodes_extended'],
                                                      roles=roles)
+    inject_plugin_data(data['nodes_extended'])
     if not data['nodes_extended']:
         add_message(request, WARNING,
                     "There are no nodes that fit the supplied criteria.")

@@ -6,6 +6,7 @@ from littlechef import runner, lib, chef
 from logbook import Logger
 
 from kitchen.settings import REPO, REPO_BASE_PATH
+from kitchen.backends.plugins import plugins
 
 log = Logger(__name__)
 
@@ -111,6 +112,17 @@ def _load_extended_node_data(nodes):
                 error += ' "{0}":\n {1}'.format(filepath, str(e))
                 raise RepoError(error)
     return data
+
+
+def inject_plugin_data(nodes):
+    """Injects kitchen plugin data"""
+    for node in nodes:
+        for name, plugin in plugins.iteritems():
+            try:
+                plugin.inject(node)
+            except Exception as e:
+                log.error("Plugin '{0}' had an error: {1}".format(name, str(e)))
+                continue
 
 
 def group_nodes_by_host(nodes, roles=None):

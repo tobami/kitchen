@@ -1,9 +1,4 @@
-"""Plugin loading facility"""
-from kitchen.settings import ENABLE_PLUGINS
+"""Plugins package"""
+from kitchen.backends.plugins.loader import import_plugins
 
-plugins = {}
-for name in ENABLE_PLUGINS:
-    try:
-        plugins['name'] = __import__(name)
-    except ImportError as e:
-        continue
+plugins = import_plugins()
