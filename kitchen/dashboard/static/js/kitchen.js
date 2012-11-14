@@ -1,6 +1,7 @@
 function getDefaultDataTableConfig() {
     return {
         "bPaginate": false,
+        "bAutoWidth": false,
         "oLanguage": {
             "sSearch": "",
             "sInfo" : "Showing _TOTAL_ nodes",
