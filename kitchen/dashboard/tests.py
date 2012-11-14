@@ -92,6 +92,14 @@ class TestViews(TestCase):
         self.assertTrue('src="http://haproxy.1wt.eu/img' in resp.content)
         self.assertTrue('href="http://testnode1/api' in resp.content)
 
+    @patch('kitchen.dashboard.views.SHOW_LINKS', False)
+    def test_list_links_disabled(self):
+        """Should not display links when SHOW_LINKS is False"""
+        resp = self.client.get("/")
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue('href="http://testnode1:22002"' not in resp.content)
+        self.assertTrue('src="http://haproxy.1wt.eu/img' not in resp.content)
+
     def test_virt(self):
         """Should display nodes when repo is correct"""
         resp = self.client.get("/virt/")
@@ -106,6 +114,22 @@ class TestViews(TestCase):
             'class="btn btn-custom btn-warning disabled">WIP<' in resp.content)
         expected_tag = 'class="btn btn-custom btn-danger disabled">dummy<'
         self.assertTrue(expected_tag in resp.content)
+
+    def test_virt_links(self):
+        """Should display links when selected nodes have links"""
+        resp = self.client.get("/virt/")
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue('href="http://testnode1:22002"' in resp.content)
+        self.assertTrue('src="http://haproxy.1wt.eu/img' in resp.content)
+        self.assertTrue('href="http://testnode1/api' in resp.content)
+
+    @patch('kitchen.dashboard.views.SHOW_LINKS', False)
+    def test_virt_links_disabled(self):
+        """Should not display links when SHOW_LINKS is False"""
+        resp = self.client.get("/virt/")
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue('href="http://testnode1:22002"' not in resp.content)
+        self.assertTrue('src="http://haproxy.1wt.eu/img' not in resp.content)
 
     def test_graph_no_env(self):
         """Should not generate a graph when no environment is selected"""

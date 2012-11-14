@@ -30,7 +30,7 @@
                     <th class="node_role">Role</th>
                     <th class="node_recipe">Recipe</th>
                     <th class="node_tags">Tags</th>
-                    <th class="node_tags"></th>
+                    {% if show_links %}<th class="node_tags"></th>{% endif %}
                 </tr>
             </thead>
             <tbody>
@@ -55,7 +55,7 @@
                     <td class="node_tags">{% for entry in node.tags %}
                         <a href="#" class="btn btn-custom {{entry|get_tag_class}} disabled">{{entry}}</a>{% endfor %}
                     </td>
-                    <td class="node_tags">{% for entry in node.kitchen.data.links %}{{entry|get_link|safe}}{% endfor %}</td>
+                    {% if show_links %}<td class="node_tags">{% for entry in node.kitchen.data.links %}{{entry|get_link|safe}}{% endfor %}</td>{% endif %}
                 </tr>
                  {% for vm in node.virtualization.guests %}
                     <tr class="guest">
@@ -78,7 +78,7 @@
                         <td class="node_tags">{% for entry in vm.tags %}
                             <a href="#" class="btn btn-custom {{entry|get_tag_class}} disabled">{{entry}}</a>{% endfor %}
                         </td>
-                        <td class="node_tags">{% for entry in vm.kitchen.data.links %}{{entry|get_link|safe}}{% endfor %}</td>
+                        {% if show_links %}<td class="node_tags">{% for entry in vm.kitchen.data.links %}{{entry|get_link|safe}}{% endfor %}</td>{% endif %}
                     </tr>
                 {% endfor %}
             {% endfor %}
