@@ -13,13 +13,13 @@ from kitchen.backends.lchef import (get_nodes, get_nodes_extended, get_roles,
                                     filter_nodes, group_nodes_by_host,
                                     RepoError)
 from kitchen.dashboard import graphs
-from kitchen.settings import (REPO, SHOW_VIRT_VIEW, SHOW_HOST_NAMES,
-                              SYNCDATE_FILE)
+from kitchen.settings import (SHOW_VIRT_VIEW, SHOW_HOST_NAMES, SHOW_LINKS,
+                              REPO, SYNCDATE_FILE)
 
 log = Logger(__name__)
 
 
-def _get_data(env, roles, virt):
+def _get_data(request, env, roles, virt, group_by_host=False):
     """Returns processed repository data, filtering nodes based on given args
     """
     data = {'filter_env': env, 'filter_roles': roles, 'filter_virt': virt}
@@ -36,6 +36,12 @@ def _get_data(env, roles, virt):
                                               data['filter_env'],
                                               data['filter_roles'],
                                               data['filter_virt'])
+    if group_by_host:
+        data['nodes_extended'] = group_nodes_by_host(data['nodes_extended'],
+                                                     roles=roles)
+    if not data['nodes_extended']:
+        add_message(request, WARNING,
+                    "There are no nodes that fit the supplied criteria.")
     return data
 
 
@@ -69,17 +75,16 @@ def main(request):
     _show_repo_sync_date(request)
     data = {}
     try:
-        data = _get_data(request.GET.get('env', REPO['DEFAULT_ENV']),
+        data = _get_data(request,
+                         request.GET.get('env', REPO['DEFAULT_ENV']),
                          request.GET.get('roles', ''),
                          request.GET.get('virt', REPO['DEFAULT_VIRT']))
     except RepoError as e:
         add_message(request, ERROR, str(e))
     else:
         data['nodes'] = json.dumps(data['nodes'])
-        if not data['nodes_extended']:
-            add_message(request, WARNING,
-                        "There are no nodes that fit the supplied criteria.")
     data['show_virt'] = SHOW_VIRT_VIEW
+    data['show_links'] = SHOW_LINKS
     data['query_string'] = request.META['QUERY_STRING']
     return render_to_response('main.html',
                               data, context_instance=RequestContext(request))
@@ -88,20 +93,15 @@ def main(request):
 def virt(request):
     """Displays a view where the nodes are grouped by physical host"""
     _show_repo_sync_date(request)
-    roles = request.GET.get('roles', '')
     data = {}
     try:
-        data = _get_data(request.GET.get('env', REPO['DEFAULT_ENV']), '', None)
+        data = _get_data(request, request.GET.get('env', REPO['DEFAULT_ENV']),
+                         '', None, group_by_host=True)
     except RepoError as e:
         add_message(request, ERROR, str(e))
     else:
-        data['nodes_extended'] = group_nodes_by_host(data['nodes_extended'],
-                                                     roles=roles)
         data['nodes'] = json.dumps(data['nodes'])
-        data['filter_roles'] = roles
-        if not data['nodes_extended']:
-            add_message(request, WARNING,
-                        "There are no nodes that fit the supplied criteria.")
+    data['show_links'] = SHOW_LINKS
     data['query_string'] = request.META['QUERY_STRING']
     return render_to_response('virt.html',
                               data, context_instance=RequestContext(request))
@@ -117,7 +117,8 @@ def graph(request):
     options = _set_options(request.GET.get('options'))
     env_filter = request.GET.get('env', REPO['DEFAULT_ENV'])
     try:
-        data = _get_data(env_filter, request.GET.get('roles', ''), 'guest')
+        data = _get_data(request, env_filter, request.GET.get('roles', ''),
+                         'guest')
     except RepoError as e:
         add_message(request, ERROR, str(e))
     else:

@@ -52,32 +52,28 @@
                             Environment
                         </li>
                         {% for env in environments %}
-                        <li {% if env.name == filter_env %} class="active" {% endif %}>
+                        <li{% if env.name == filter_env %} class="active" {% endif %}>
                             <a href="#" data-type="env" data-name="{{env.name}}" class="sidebar_link">{{env.name}} <span class="badge badge-warning">{{env.counts}}</span></a>
-                        </li>
-                        {% endfor %}
+                        </li>{% endfor %}
                         <li class="nav-header">
                             Roles
                         </li>
                         {% for group in roles_groups %}
-                        <li {% if group in filter_roles %} class="active" {% endif %}>
+                        <li{% if group in filter_roles %} class="active" {% endif %}>
                             <a href="#" data-type="roles" data-name="{{group}}" class="sidebar_link">{{group}}</a>
-                        </li>
-                        {% endfor %}
+                        </li>{% endfor %}
                         {% if show_virt %}
                         <li class="nav-header">
                             Virtualization
                         </li>
                         {% for virt_role in virt_roles %}
-                        <li {% if virt_role in filter_virt %} class="active" {% endif %}>
+                        <li{% if virt_role in filter_virt %} class="active" {% endif %}>
                             <a href="#" data-type="virt" data-name="{{virt_role}}" class="sidebar_link">{{ virt_role }}</a>
-                        </li>
-                        {% endfor %}{% endif %}
+                        </li>{% endfor %}{% endif %}
                         {% block extranav %}{% endblock %}
                     </ul>
                 </div>
-                <div class="span10">
-                {% if messages %}
+                <div class="span10">{% if messages %}
                     {% for message in messages %}
                         <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}">
                             {{ message }}

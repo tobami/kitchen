@@ -1,4 +1,4 @@
-"""Functions to read and process data from a Chef repository"""
+"""Functions to read and process data from a LittleChef repository"""
 import os
 import simplejson as json
 
@@ -113,7 +113,7 @@ def _load_extended_node_data(nodes):
     return data
 
 
-def group_nodes_by_host(nodes, roles=''):
+def group_nodes_by_host(nodes, roles=None):
     """Returns a list of hosts with their virtual machines"""
     hosts = filter_nodes(nodes, virt_roles='host')
     guests = filter_nodes(nodes, virt_roles='guest')

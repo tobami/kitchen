@@ -2,6 +2,21 @@
     "chef_environment": "production",
     "ipaddress": "1.1.1.1",
     "tags": ["Node1"],
+    "kitchen": {
+        "data": {
+            "links": [
+                {
+                    "url": "http://testnode1:22002",
+                    "img": "http://haproxy.1wt.eu/img/logo-med.png",
+                    "title": "haproxy"
+                },
+                {
+                    "url": "http://testnode1/api/?query",
+                    "title": "api"
+                }
+            ]
+        }
+    },
     "run_list": [
         "role[loadbalancer]",
         "recipe[haproxy]"
