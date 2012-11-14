@@ -429,3 +429,35 @@ class TestTemplateTags(TestCase):
                           "node", "NoDe", "", "12", "", "_-_"]
         for undefined_tag in undefined_tags:
             self.assertEqual(filters.get_tag_class(undefined_tag), "")
+
+    def test_get_link_no_url(self):
+        """Should return an empty string when link has no url
+        """
+        link = {"title": "foo"}
+        self.assertEqual(filters.get_link(link), "")
+
+    def test_get_link_no_img_no_title(self):
+        """Should return an empty string when link has no img and no title key
+        """
+        link = {"url": "https://github.com/edelight/kitchen"}
+        self.assertEqual(filters.get_link(link), "")
+
+    def test_get_link_no_img(self):
+        """Should return a text link when link has an empty img field"""
+        link = {
+            "url": "https://github.com/edelight/kitchen",
+            "title": "api", "img": ""
+        }
+        expected_link_html = ('<a href="{0}" title="{1}">{1}'
+                              '</a>'.format(link['url'], link['title']))
+        self.assertEqual(filters.get_link(link), expected_link_html)
+
+    def test_get_link_no_img(self):
+        """Should return a text link when link has an empty img field"""
+        link = {
+            "url": "https://github.com/edelight/kitchen",
+            "title": "api", "img": "http://foo/bar.png",
+        }
+        expected_link_html = ('<a href="{url}" title="{title}"><img width="25"'
+                              ' height="25" src="{img}"></a>'.format(**link))
+        self.assertEqual(filters.get_link(link), expected_link_html)
