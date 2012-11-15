@@ -31,14 +31,15 @@ def _get_data(request, env, roles, virt, group_by_host=False):
     data['nodes'] = get_nodes()
     data['nodes_extended'] = get_nodes_extended(data['nodes'])
     data['environments'] = get_environments(data['nodes_extended'])
-    if data['filter_env'] or data['filter_roles'] or data['filter_virt']:
+    roles_to_filter = '' if group_by_host else data['filter_roles']
+    if data['filter_env'] or roles_to_filter or data['filter_virt']:
         data['nodes_extended'] = filter_nodes(data['nodes_extended'],
                                               data['filter_env'],
-                                              data['filter_roles'],
+                                              roles_to_filter,
                                               data['filter_virt'])
     if group_by_host:
-        data['nodes_extended'] = group_nodes_by_host(data['nodes_extended'],
-                                                     roles=roles)
+        data['nodes_extended'] = group_nodes_by_host(
+            data['nodes_extended'], roles=data['filter_roles'])
     inject_plugin_data(data['nodes_extended'])
     if not data['nodes_extended']:
         add_message(request, WARNING,
@@ -96,8 +97,10 @@ def virt(request):
     _show_repo_sync_date(request)
     data = {}
     try:
-        data = _get_data(request, request.GET.get('env', REPO['DEFAULT_ENV']),
-                         '', None, group_by_host=True)
+        data = _get_data(request,
+                         request.GET.get('env', REPO['DEFAULT_ENV']),
+                         request.GET.get('roles', ''),
+                         None, group_by_host=True)
     except RepoError as e:
         add_message(request, ERROR, str(e))
     else:
