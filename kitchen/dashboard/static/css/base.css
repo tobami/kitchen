@@ -95,3 +95,7 @@ table.table thead .sorting_desc_disabled {
 /* Bootstrap icons override*/
 .icon-chevron-right, .icon-chevron-down { opacity: .2; }
 .icon-chevron-right:hover, .icon-chevron-down:hover { opacity: .7; }
+
+.top {
+    clear: right;
+}
