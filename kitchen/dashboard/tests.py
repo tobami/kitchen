@@ -480,8 +480,8 @@ class TestTemplateTags(TestCase):
             "url": "https://github.com/edelight/kitchen",
             "title": "api", "img": ""
         }
-        expected_link_html = ('<a href="{0}" title="{1}" class="btn '
-                              'btn-custom">{1}'
+        expected_link_html = ('<a href="{0}" target="_blank" title="{1}"'
+                              ' class="btn btn-custom">{1}'
                               '</a>'.format(link['url'], link['title']))
         self.assertEqual(filters.get_link(link), expected_link_html)
 
@@ -491,7 +491,7 @@ class TestTemplateTags(TestCase):
             "url": "https://github.com/edelight/kitchen",
             "title": "api", "img": "http://foo/bar.png",
         }
-        expected_link_html = ('<a href="{url}" title="{title}" class="'
-                              'btn-custom"><img width="25"'
+        expected_link_html = ('<a href="{url}" target="_blank" title="{title}"'
+                              ' class="btn-custom"><img width="25"'
                               ' height="25" src="{img}"></a>'.format(**link))
         self.assertEqual(filters.get_link(link), expected_link_html)
