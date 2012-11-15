@@ -209,7 +209,7 @@ class TestPlugins(TestCase):
         reload(plugins)
         reload(chef)
         node = {
-            'fqdn': {'testnode'},
+            'fqdn': 'testnode',
             'kitchen': {'data': {'links': [{"foo": "bar"}], 'other': {}}}
         }
         chef.inject_plugin_data([node])
