@@ -42,7 +42,6 @@ td.node_ram, td.node_cpus {
     padding-right: 3.2em !important;
     white-space: nowrap;
 }
-th.node_tags { width: 4em !important;}
 
 #host_grouper {
     background-color: #EEE9E9;
