@@ -22,7 +22,7 @@ p.notfound {
 }
 p.notfound img { margin-right: 1em; }
 
-.btn-custom { padding: 3px 7px !important; margin: 2px; }
+.btn-custom { padding: 3px 7px !important; margin-top: 3px; }
 
 table#nodes th { cursor: pointer; width: 11em; }
 table#nodes tr.guest td:first-child { padding-left: 2em; }
@@ -42,7 +42,7 @@ td.node_ram, td.node_cpus {
     padding-right: 3.2em !important;
     white-space: nowrap;
 }
-th.node_tags { width: 8em; }
+th.node_tags { width: 3em !important;}
 
 #host_grouper {
     background-color: #EEE9E9;
@@ -64,7 +64,6 @@ input:-moz-placeholder { color:#cdc9c9; }
 .boolean { color: blue; }
 .null { color: magenta; }
 .key { color: red; }
-
 
 /* Bootstrap DataTables sorting */
 table.table thead .sorting,

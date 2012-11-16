@@ -74,15 +74,13 @@ class TestViews(TestCase):
         """Should display tags when selected nodes have tags"""
         resp = self.client.get("/")
         self.assertEqual(resp.status_code, 200)
-        self.assertTrue(
-            'class="btn btn-custom  disabled">ATest</a>' in resp.content)
+        self.assertTrue('btn-custom  disabled">ATest</a>' in resp.content)
 
     def test_list_tags_class(self):
         """Should display tags with css class when selected nodes have tags"""
         resp = self.client.get("/")
         self.assertEqual(resp.status_code, 200)
-        self.assertTrue(
-            'class="btn btn-custom btn-warning disabled">WIP<' in resp.content)
+        self.assertTrue('tn-custom btn-warning disabled">WIP<' in resp.content)
 
     def test_list_links(self):
         """Should display links when selected nodes have links"""
@@ -111,9 +109,9 @@ class TestViews(TestCase):
         resp = self.client.get("/virt/")
         self.assertEqual(resp.status_code, 200)
         self.assertTrue(
-            'class="btn btn-custom btn-warning disabled">WIP<' in resp.content)
-        expected_tag = 'class="btn btn-custom btn-danger disabled">dummy<'
-        self.assertTrue(expected_tag in resp.content)
+            'btn-small btn-custom btn-warning disabled">WIP<' in resp.content)
+        self.assertTrue(
+            'btn-custom btn-danger disabled">dummy<' in resp.content)
 
     def test_virt_links(self):
         """Should display links when selected nodes have links"""
@@ -481,7 +479,7 @@ class TestTemplateTags(TestCase):
             "title": "api", "img": ""
         }
         expected_link_html = ('<a href="{0}" target="_blank" title="{1}"'
-                              ' class="btn btn-custom">{1}'
+                              ' class="btn btn-small btn-custom">{1}'
                               '</a>'.format(link['url'], link['title']))
         self.assertEqual(filters.get_link(link), expected_link_html)
 
