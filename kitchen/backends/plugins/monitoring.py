@@ -1,4 +1,6 @@
 """Plugin that adds monitoring links"""
+
+
 def inject(node):
     link = {
         'url': "http://monitoring.mydomain.com/{0}".format(node['fqdn']),

@@ -59,7 +59,8 @@ def get_link(link):
                 '<img width="25" height="25" src="{2}">'
                 '</a>'.format(link['url'], link['title'], link['img']))
     elif link.get('title'):
-        return ('<a href="{0}" target="_blank" title="{1}" class="btn btn-small btn-custom">{1}'
-               '</a>'.format(link['url'], link['title']))
+        return ('<a href="{0}" target="_blank" title="{1}" '
+                'class="btn btn-small btn-custom">{1}'
+                '</a>'.format(link['url'], link['title']))
     else:
         return ""
