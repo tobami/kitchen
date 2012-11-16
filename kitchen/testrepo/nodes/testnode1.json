@@ -19,6 +19,6 @@
     },
     "run_list": [
         "role[loadbalancer]",
-        "recipe[haproxy]"
+        "recipe[haproxy::app_lb]"
     ]
 }
