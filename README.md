@@ -86,7 +86,9 @@ If you don't want to clutter your node files with link data, you can use link pl
 to generate the links on the fly. Just save the plugin in the `backends/plugins/` dir
 and add the plugin name to `ENABLE_PLUGINS`.
 
-# Special views
+The link column can be deactivated with the option `SHOW_LINKS`.
+
+# Views
 
 ## Virt
 
@@ -94,6 +96,9 @@ Virt groups nodes by host to present a close-to-the-hardware view to your
 nodes. That is done by fetching all nodes with the Chef attribute `virtualization/role`
 set to `host`, looking at all the `virtualization/guests` entries, and adding the
 corresponding "guest" nodes to the list.
+
+This view is optional and can be deactivated in `settings.py` by setting 
+`SHOW_VIRT_VIEW` to `False`.
 
 Note: Filtering by using the left nav bar will show all hosts with all their guests that
 have at least a guest containing one of the selected roles. Filtering by using the
