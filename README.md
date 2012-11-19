@@ -1,5 +1,7 @@
 # Kitchen
 
+![Example list view](http://ahye.edelight.net/s/B4SGViOc.png)
+
 Kitchen is a Dashboard where you can visualize and browse your servers.
 It has a node _list_ view, a hardware centric _virt_ view where nodes are grouped by
 host, and a _graph_ view that dynamically generates graphs of your infrastructure.
@@ -31,9 +33,9 @@ Distro package dependencies can be installed on Debian or Ubuntu by typing:
 
     $ apt-get install sqlite3 graphviz
 
-while all Python dependencies can be install by using `requirements.txt`:
+while all Python dependencies can be install by using `requirements.txt` and `test_requirements.txt`:
 
-    $ pip install -r requirements.txt
+    $ pip install -r requirements.txt && pip install -r test_requirements.txt
 
 ## Running the development server
 
@@ -90,6 +92,8 @@ and add the plugin name to `ENABLE_PLUGINS`.
 
 ## Virt
 
+![Example virt view](http://ahye.edelight.net/s/yWF1ixAv.png)
+
 Virt groups nodes by host to present a close-to-the-hardware view to your
 nodes. That is done by fetching all nodes with the Chef attribute `virtualization/role`
 set to `host`, looking at all the `virtualization/guests` entries, and adding the
@@ -100,6 +104,8 @@ have at least a guest containing one of the selected roles. Filtering by using t
 search field will only show matching guests.
 
 ## Graphs
+
+![Example graph](http://ahye.edelight.net/s/1SvFxpPi.png)
 
 The graph view dynamically generates a graph of your repository, acording to the
 current node selection. Dependencies between nodes are defined by the attributes
