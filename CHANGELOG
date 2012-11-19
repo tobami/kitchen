@@ -9,10 +9,11 @@ New features:
 * Move to DataTables
 * Search field
 * Hardware info
-* Tags
 * Node details
+* Tags
 * Links
 * Link plugins
+
 Bugs fixed:
 * Hanging dot processes
 

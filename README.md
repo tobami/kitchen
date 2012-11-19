@@ -1,8 +1,8 @@
 # Kitchen
 
 Kitchen is a Dashboard where you can visualize and browse your servers.
-I has a node list view, a hardware centric virt view where nodes are grouped by
-host, and a graph view that dynamically generates a dot graph of your infrastructure.
+It has a node list view, a hardware centric virt view where nodes are grouped by
+host, and a graph view that dynamically generates graphs of your infrastructure.
 It never has been easier to find and organize all your nodes!
 
 ## How it works
@@ -70,18 +70,17 @@ Available [bootstrap CSS styles](http://twitter.github.com/bootstrap/base-css.ht
 
 ## Links
 
-The dashboard will any links to external systems (for example monitoring or admin
-interfaces) it finds on `kitchen/data/links/`. The format is:
+The dashboard will show any links to external systems (for example monitoring or
+admin interfaces) it finds on `kitchen/data/links/`. The format is:
 
 ```javascript
 {
     "url": "http://testnode1:22002",
-    "img": "http://haproxy.1wt.eu/img/logo-med.png",
+    "img": "http://your.image.domain/haproxy-logo.png",
     "title": "haproxy"
 }
 ```
-
-If the "img" field is not present text instead of an image will be shown.
+If the "img" field is not present, a text link will be shown instead of an image.
 
 If you don't want to clutter your node files with link data, you can use link plugins
 to generate the links on the fly. Just save the plugin in the `backends/plugins/` dir
@@ -115,7 +114,6 @@ Using the test repo as an example:
         "apache2": {"client_roles": ["loadbalancer"]}
     }
 ```
-
 That will generate an arrow from `loadbalancer` nodes to `webserver` nodes,
 with `apache2` as label.
 
