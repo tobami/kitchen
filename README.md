@@ -1,8 +1,8 @@
 # Kitchen
 
 Kitchen is a Dashboard where you can visualize and browse your servers.
-It has a node list view, a hardware centric virt view where nodes are grouped by
-host, and a graph view that dynamically generates graphs of your infrastructure.
+It has a node _list_ view, a hardware centric _virt_ view where nodes are grouped by
+host, and a _graph_ view that dynamically generates graphs of your infrastructure.
 It never has been easier to find and organize all your nodes!
 
 ## How it works
@@ -43,7 +43,7 @@ To give the web interface a try use the development server on `localhost:8000`:
 
 ## Repo synching
 
-To resync a repo at any time you can run the repo_sync.py script:
+To resync a repo at any time you can run the `repo_sync.py` script:
 
     $ python repo_sync.py
 
