@@ -1,6 +1,6 @@
 # Kitchen
 
-![Example list view](http://ahye.edelight.net/s/B4SGViOc.png)
+![Example list view](http://ahye.edelight.net/s/FxW2nEJv.png)
 
 Kitchen is a Dashboard where you can visualize and browse your servers.
 It has a node _list_ view, a hardware centric _virt_ view where nodes are grouped by
@@ -94,7 +94,7 @@ The link column can be deactivated with the option `SHOW_LINKS`.
 
 ## Virt
 
-![Example virt view](http://ahye.edelight.net/s/yWF1ixAv.png)
+![Example virt view](http://ahye.edelight.net/s/TV7YyJlF.png)
 
 Virt groups nodes by host to present a close-to-the-hardware view to your
 nodes. That is done by fetching all nodes with the Chef attribute `virtualization/role`
@@ -110,7 +110,7 @@ search field will only show matching guests.
 
 ## Graphs
 
-![Example graph](http://ahye.edelight.net/s/1SvFxpPi.png)
+![Example graph](http://ahye.edelight.net/s/2vaU3Qc9.png)
 
 The graph view dynamically generates a graph of your repository, acording to the
 current node selection. Dependencies between nodes are defined by the attributes
