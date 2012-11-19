@@ -1,0 +1,31 @@
+=================
+Kitchen Changelog
+=================
+
+Version 0.3 November 19, 2012
+----------------------------------------
+New features:
+* Finished Virt view
+* Move to DataTables
+* Search field
+* Hardware info
+* Tags
+* Node details
+* Links
+* Link plugins
+Bugs fixed:
+* Hanging dot processes
+
+
+Version 0.2
+----------------------------------------
+New features:
+* Virt view
+
+
+Version 0.1
+----------------------------------------
+New features:
+* LittleChef backend
+* List view
+* Graph view
