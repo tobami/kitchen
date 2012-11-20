@@ -37,13 +37,15 @@ while all Python dependencies can be install by using `requirements.txt` and `te
 
     $ pip install -r requirements.txt && pip install -r test_requirements.txt
 
+We also provide [a chef cookbook for Kitchen](https://github.com/edelight/chef-kitchen) for deploying Kitchen.
+
 ## Running the development server
 
 To give the web interface a try use the development server on `localhost:8000`:
 
     $ python manage.py runserver
 
-## Repo synching
+## Repo syncing
 
 To resync a repo at any time you can run the `repo_sync.py` script:
 
