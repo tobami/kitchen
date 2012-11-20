@@ -196,6 +196,16 @@ class TestViews(TestCase):
         self.assertTrue("returned unexpected result: None" in str(resp))
 
     @patch('kitchen.backends.plugins.loader.ENABLE_PLUGINS', ['monitoring'])
+    def test_plugin_interface_no_view(self):
+        """Should evaluate view if a requested plugin does exist"""
+        reload(plugins)
+        reload(chef)
+        with self.settings(DEBUG=True):
+            resp = self.client.get("/plugins/monitoring/inject")
+        self.assertEqual(resp.status_code, 404)
+        self.assertTrue("is not defined as a view" in str(resp))
+
+    @patch('kitchen.backends.plugins.loader.ENABLE_PLUGINS', ['monitoring'])
     def test_plugin_interface(self):
         """Should evaluate view if a requested plugin does exist"""
         reload(plugins)

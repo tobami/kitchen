@@ -160,7 +160,7 @@ def plugins(request, name, method):
     nodes = get_nodes_extended(nodes)
     inject_plugin_data(nodes)
     if not getattr(func, '__is_view__', False):
-        raise Http404("It is not a fucking view!")
+        raise Http404("Plugin method '{0}.{1}' is not defined as a view".format(name, method))
     try:
         result = func(request, nodes)
     except TypeError:
