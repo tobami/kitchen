@@ -5,7 +5,7 @@ import simplejson as json
 from django.test import TestCase
 from mock import patch
 
-from kitchen.backends import lchef as chef
+from kitchen.backends import lchef as chef, plugins
 from kitchen.dashboard import graphs
 from kitchen.dashboard.templatetags import filters
 from kitchen.settings import STATIC_ROOT, REPO
@@ -164,6 +164,46 @@ class TestViews(TestCase):
         self.assertTrue(error_msg in resp.content,
                         "Did not find expected string '{0}'".format(error_msg))
         self.assertFalse(os.path.exists(self.filepath))
+
+    @patch('kitchen.backends.plugins.loader.ENABLE_PLUGINS', [])
+    def test_plugin_interface_no_plugin(self):
+        """Should return a 404 if a requested plugin does not exist"""
+        reload(plugins)
+        reload(chef)
+        with self.settings(DEBUG=True):
+            resp = self.client.get("/plugins/name/method")
+        self.assertEqual(resp.status_code, 404)
+        self.assertTrue("Requested plugin &#39;name&#39;&#39; not found" in str(resp))
+
+    @patch('kitchen.backends.plugins.loader.ENABLE_PLUGINS', ['monitoring'])
+    def test_plugin_interface_missing_method(self):
+        """Should evaluate view if a requested plugin does exist"""
+        reload(plugins)
+        reload(chef)
+        with self.settings(DEBUG=True):
+            resp = self.client.get("/plugins/monitoring/boo")
+        self.assertEqual(resp.status_code, 404)
+        self.assertTrue("has no method &#39;boo&#39;" in str(resp))
+
+    @patch('kitchen.backends.plugins.loader.ENABLE_PLUGINS', ['monitoring'])
+    def test_plugin_interface_wrong_arguments(self):
+        """Should evaluate view if a requested plugin does exist"""
+        reload(plugins)
+        reload(chef)
+        with self.settings(DEBUG=True):
+            resp = self.client.get("/plugins/monitoring/links")
+        self.assertEqual(resp.status_code, 404)
+        self.assertTrue("returned unexpected result: None" in str(resp))
+
+    @patch('kitchen.backends.plugins.loader.ENABLE_PLUGINS', ['monitoring'])
+    def test_plugin_interface(self):
+        """Should evaluate view if a requested plugin does exist"""
+        reload(plugins)
+        reload(chef)
+        resp = self.client.get("/plugins/monitoring/links?fqdn=testnode1")
+        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(
+            resp['location'], 'http://monitoring.mydomain.com/testnode1')
 
 
 class TestGraph(TestCase):

@@ -215,3 +215,13 @@ class TestPlugins(TestCase):
         chef.inject_plugin_data([node])
         self.assertTrue('other' in node['kitchen']['data'])
         self.assertEqual(len(node['kitchen']['data']['links']), 2)
+
+    @patch('kitchen.backends.plugins.loader.ENABLE_PLUGINS', ['monitoring'])
+    def test_plugin_view(self):
+        """Should load plugin when module exists"""
+        plugins = loader.import_plugins()
+        self.assertEqual(len(plugins), 1)
+        inject = getattr(plugins['monitoring'], 'inject')
+        self.assertFalse(getattr(inject, '__is_view__', False))
+        links = getattr(plugins['monitoring'], 'links')
+        self.assertTrue(getattr(links, '__is_view__'))
