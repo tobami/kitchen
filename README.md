@@ -1,6 +1,6 @@
 # Kitchen
 
-![Example list view](http://ahye.edelight.net/s/vbjz2Jwa.png)
+![Example list view](http://ahye.edelight.net/s/LCPEXJyQ.png)
 
 Kitchen is a Dashboard where you can visualize and browse your servers.
 It has a node _list_ view, a hardware centric _virt_ view where nodes are grouped by
@@ -37,15 +37,13 @@ while all Python dependencies can be install by using `requirements.txt` and `te
 
     $ pip install -r requirements.txt && pip install -r test_requirements.txt
 
-We also provide [a chef cookbook for Kitchen](https://github.com/edelight/chef-kitchen) for deploying Kitchen.
-
-## Running the development server
+### Running the development server
 
 To give the web interface a try use the development server on `localhost:8000`:
 
     $ python manage.py runserver
 
-## Repo syncing
+### Repo syncing
 
 To resync a repo at any time you can run the `repo_sync.py` script:
 
@@ -57,6 +55,10 @@ periodically.
 You should be able to play around with the test kitchen straightaway. You can
 configure you own repo in `settings.py` by properly configuring the `REPO_BASE_PATH`
 and `REPO` variables.
+
+## Deploying
+
+We also provide [a chef cookbook for Kitchen](https://github.com/edelight/chef-kitchen) for deploying Kitchen on a server.
 
 ## Tags
 
