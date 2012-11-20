@@ -15,7 +15,7 @@ from kitchen.backends import lchef as chef
 
 file_log_handler = MonitoringFileHandler(LOG_FILE, bubble=DEBUG)
 file_log_handler.push_application()
-log = Logger("kitchen.sync")
+log = Logger("kitchen.backends.sync")
 
 
 class SyncRepo():
