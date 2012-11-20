@@ -1,3 +1,5 @@
+/* Common JS functions */
+
 function getDefaultDataTableConfig() {
     return {
         "bPaginate": false,
@@ -19,7 +21,6 @@ function getDefaultDataTableConfig() {
         "sDom": '<"top"if>rt<"bottom"lp><"clear">'
     }
 }
-
 
 function getSearchText() {
     /*
