@@ -3,6 +3,7 @@
 from django.shortcuts import redirect
 from kitchen.backends.plugins import is_view
 
+
 def inject(node):
     link = {
         'url': "http://monitoring.mydomain.com/{0}".format(node['fqdn']),
@@ -15,7 +16,7 @@ def inject(node):
     node['kitchen']['data']['links'].append(link)
 
 
-@is_view
+@is_view('list')
 def links(request, nodes):
     try:
         fqdn = request.GET['fqdn']

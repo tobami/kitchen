@@ -143,7 +143,7 @@ def graph(request):
                               data, context_instance=RequestContext(request))
 
 
-def plugins(request, name, method):
+def plugins(request, name, method, plugin_type='list'):
     """Plugin interface view which either response with the page created by the
     plugin method, or returns a 404 HTTP Error
 
@@ -160,6 +160,13 @@ def plugins(request, name, method):
         raise Http404("Plugin method '{0}.{1}' is not defined as a view".format(name, method))
     nodes = get_nodes()
     nodes = get_nodes_extended(nodes)
+    if plugin_type in ('v', 'virt'):
+        if func.__p_type__ != 'virt':
+            raise Http404("Plugin '{0}.{1}' has wrong type".format(name, method))
+        nodes = group_nodes_by_host(nodes, roles=None)
+    else:
+        if func.__p_type__ != 'list':
+            raise Http404("Plugin '{0}.{1}' has wrong type".format(name, method))
     inject_plugin_data(nodes)
     try:
         result = func(request, nodes)
