@@ -173,7 +173,7 @@ class TestViews(TestCase):
         with self.settings(DEBUG=True):
             resp = self.client.get("/plugins/name/method")
         self.assertEqual(resp.status_code, 404)
-        self.assertTrue("Requested plugin &#39;name&#39;&#39; not found" in str(resp))
+        self.assertTrue("Requested plugin &#39;name&#39; not found" in str(resp))
 
     @patch('kitchen.backends.plugins.loader.ENABLE_PLUGINS', ['monitoring'])
     def test_plugin_interface_missing_method(self):
