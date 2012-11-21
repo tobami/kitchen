@@ -151,16 +151,16 @@ def plugins(request, name, method):
     try:
         plugin = PLUGINS[name]
     except KeyError:
-        raise Http404("Requested plugin '{0}'' not found".format(name))
+        raise Http404("Requested plugin '{0}' not found".format(name))
     try:
         func = getattr(plugin, method)
     except AttributeError:
         raise Http404("Plugin '{0}' has no method '{1}'".format(name, method))
+    if not getattr(func, '__is_view__', False):
+        raise Http404("Plugin method '{0}.{1}' is not defined as a view".format(name, method))
     nodes = get_nodes()
     nodes = get_nodes_extended(nodes)
     inject_plugin_data(nodes)
-    if not getattr(func, '__is_view__', False):
-        raise Http404("Plugin method '{0}.{1}' is not defined as a view".format(name, method))
     try:
         result = func(request, nodes)
     except TypeError:
