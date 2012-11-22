@@ -167,7 +167,7 @@ class TestViews(TestCase):
 
     @patch('kitchen.backends.plugins.loader.ENABLE_PLUGINS', [])
     def test_plugin_interface_no_plugin(self):
-        """Should return a 404 if a requested plugin does not exist"""
+        """Should return a 404 when a requested plugin does not exist"""
         reload(plugins)
         reload(chef)
         with self.settings(DEBUG=True):
@@ -177,7 +177,7 @@ class TestViews(TestCase):
 
     @patch('kitchen.backends.plugins.loader.ENABLE_PLUGINS', ['monitoring'])
     def test_plugin_interface_missing_method(self):
-        """Should evaluate view if a requested plugin does exist"""
+        """Should evaluate view when a requested plugin does exist"""
         reload(plugins)
         reload(chef)
         with self.settings(DEBUG=True):
@@ -187,7 +187,7 @@ class TestViews(TestCase):
 
     @patch('kitchen.backends.plugins.loader.ENABLE_PLUGINS', ['monitoring'])
     def test_plugin_interface_wrong_arguments(self):
-        """Should evaluate view if a requested plugin does exist"""
+        """Should evaluate view when a requested plugin does exist"""
         reload(plugins)
         reload(chef)
         with self.settings(DEBUG=True):
@@ -197,7 +197,7 @@ class TestViews(TestCase):
 
     @patch('kitchen.backends.plugins.loader.ENABLE_PLUGINS', ['monitoring'])
     def test_plugin_interface_no_view(self):
-        """Should evaluate view if a requested plugin does exist"""
+        """Should evaluate view when a requested plugin does exist"""
         reload(plugins)
         reload(chef)
         with self.settings(DEBUG=True):
@@ -207,7 +207,7 @@ class TestViews(TestCase):
 
     @patch('kitchen.backends.plugins.loader.ENABLE_PLUGINS', ['monitoring'])
     def test_plugin_interface(self):
-        """Should evaluate view if a requested plugin does exist"""
+        """Should evaluate view when a requested plugin does exist"""
         reload(plugins)
         reload(chef)
         resp = self.client.get("/plugins/monitoring/links?fqdn=testnode1")
