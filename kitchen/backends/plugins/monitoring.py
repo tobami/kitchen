@@ -24,7 +24,12 @@ def links(request, nodes):
         return None
     for node in nodes:
         if fqdn == node['fqdn']:
-            links = node['kitchen']['data']['links']
+            try:
+                links = node['kitchen']['data']['links']
+            except KeyError:
+                return None
             for link in links:
                 if link.get('title') == 'monitoring':
                     return redirect(link['url'])
+            else:
+                return None

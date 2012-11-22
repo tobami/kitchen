@@ -164,9 +164,8 @@ def plugins(request, name, method, plugin_type='list'):
         if func.__p_type__ != 'virt':
             raise Http404("Plugin '{0}.{1}' has wrong type".format(name, method))
         nodes = group_nodes_by_host(nodes, roles=None)
-    else:
-        if func.__p_type__ != 'list':
-            raise Http404("Plugin '{0}.{1}' has wrong type".format(name, method))
+    elif func.__p_type__ != 'list':
+        raise Http404("Plugin '{0}.{1}' has wrong type".format(name, method))
     inject_plugin_data(nodes)
     try:
         result = func(request, nodes)

@@ -48,7 +48,12 @@ def links(request, hosts):
         if current_node:
             break
     if current_node:
-        links = current_node['kitchen']['data']['links']
+        try:
+            links = current_node['kitchen']['data']['links']
+        except KeyError:
+            return None
         for link in links:
             if link.get('title') == 'monitoring':
                 return redirect(link['url'])
+        else:
+            return None
