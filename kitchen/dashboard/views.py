@@ -6,12 +6,13 @@ import json
 from django.contrib.messages import add_message, ERROR, WARNING
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.http import Http404, HttpResponseRedirect
 from logbook import Logger
 
 from kitchen.backends.lchef import (get_nodes, get_nodes_extended, get_roles,
                                     get_role_groups, get_environments,
                                     filter_nodes, group_nodes_by_host,
-                                    inject_plugin_data, RepoError)
+                                    inject_plugin_data, RepoError, plugins as PLUGINS)
 from kitchen.dashboard import graphs
 from kitchen.settings import (SHOW_VIRT_VIEW, SHOW_HOST_NAMES, SHOW_LINKS,
                               REPO, SYNCDATE_FILE)
@@ -140,3 +141,37 @@ def graph(request):
     data['query_string'] = request.META['QUERY_STRING']
     return render_to_response('graph.html',
                               data, context_instance=RequestContext(request))
+
+
+def plugins(request, name, method, plugin_type='list'):
+    """Plugin interface view which either response with the page created by the
+    plugin method, or returns a 404 HTTP Error
+
+    """
+    try:
+        plugin = PLUGINS[name]
+    except KeyError:
+        raise Http404("Requested plugin '{0}' not found".format(name))
+    try:
+        func = getattr(plugin, method)
+    except AttributeError:
+        raise Http404("Plugin '{0}' has no method '{1}'".format(name, method))
+    if not getattr(func, '__is_view__', False):
+        raise Http404("Plugin method '{0}.{1}' is not defined as a view".format(name, method))
+    nodes = get_nodes()
+    nodes = get_nodes_extended(nodes)
+    if plugin_type in ('v', 'virt'):
+        if func.__p_type__ != 'virt':
+            raise Http404("Plugin '{0}.{1}' has wrong type".format(name, method))
+        nodes = group_nodes_by_host(nodes, roles=None)
+    elif func.__p_type__ != 'list':
+        raise Http404("Plugin '{0}.{1}' has wrong type".format(name, method))
+    inject_plugin_data(nodes)
+    try:
+        result = func(request, nodes)
+    except TypeError:
+        raise Http404("Failed running plugin '{0}.{1}'".format(name, method))
+    if not isinstance(result, HttpResponseRedirect):
+        raise Http404("Plugin '{0}.{1}' returned unexpected result: {2}".format(name, method, result))
+    else:
+        return result
